@@ -63,3 +63,7 @@ from app.routers.expenses import router as expenses_router
 app.include_router(expenses_router)
 from app.routers.documents import router as documents_router
 app.include_router(documents_router)
+from app.routers.extractions import router as extractions_router
+app.include_router(extractions_router)
+from app.routers.accountability import router as accountability_router
+app.include_router(accountability_router)

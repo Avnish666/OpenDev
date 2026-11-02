@@ -9,3 +9,5 @@ python-dotenv==1.2.4
 # Bounded receipt validation (isolated parser process).
 Pillow==12.2.0
 pypdf==6.12.0
+# Free local PDF text/raster pipeline (AGPL/commercial dual license).
+PyMuPDF==1.26.7

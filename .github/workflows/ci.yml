@@ -44,6 +44,9 @@ jobs:
             backend/requirements-payments.txt
             backend/requirements-dev.txt
 
+      - name: Install local OCR runtime
+        run: sudo apt-get update && sudo apt-get install -y tesseract-ocr tesseract-ocr-eng fonts-dejavu-core
+
       - name: Install dependencies
         working-directory: backend
         run: |

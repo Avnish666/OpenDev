@@ -1,3 +1,4 @@
+import ReceiptExtraction from './ReceiptExtraction';
 import { useEffect, useState, type FormEvent } from 'react';
 import { api, uploadReceipt } from '../api/client';
 
@@ -32,6 +33,7 @@ export default function ExpenseDocuments({ expenseId, canManage, expensePublishe
       {file && <p>{file.name} · {(file.size / 1024).toFixed(1)} KiB</p>}<button disabled={busy || !file}>{busy ? 'Uploading / validating…' : 'Upload privately'}</button></form>}
     {error && <p role="alert">{error}</p>}{success && <p role="status">{success}</p>}{loading && <p role="status">Loading documents…</p>}{!loading && !documents.length && <p>{canManage ? 'No attached documents.' : 'No approved redacted evidence has been published.'}</p>}
     <ul>{documents.map(doc => <li key={doc.id}><p>{doc.original_filename} · {doc.detected_mime_type} · {doc.file_size_bytes} bytes · {doc.publication_status}{doc.duplicate_in_project ? ' · Duplicate in project' : ''}</p><button disabled={busy} onClick={() => void download(doc.id)}>Download (60-second link)</button>
+      {canManage && !doc.is_redacted_version && <ReceiptExtraction documentId={doc.id} />}
       {canManage && doc.is_redacted_version && doc.publication_status === 'private' && expensePublished && <form onSubmit={event => { event.preventDefault(); void publication(doc.id, true); }}><label className="checkbox"><input type="checkbox" required />I reviewed this version for personal data, secrets, hidden text and metadata and approve public disclosure.</label><button disabled={busy}>Publish reviewed redaction</button></form>}
       {canManage && doc.publication_status === 'published' && <button disabled={busy} onClick={() => void publication(doc.id, false)}>Make private</button>}</li>)}</ul>
     <div className="actions"><button disabled={!page || busy} onClick={() => { setLoading(true); setPage(page - 1); }}>Previous documents</button><button disabled={documents.length < 20 || busy} onClick={() => { setLoading(true); setPage(page + 1); }}>Next documents</button></div>

@@ -21,3 +21,7 @@ from app.models.expense import Expense
 __all__.append('Expense')
 from app.models.expense_document import ExpenseDocument
 __all__.append('ExpenseDocument')
+from app.models.receipt_extraction import ReceiptExtraction, ExtractionAttempt
+__all__.extend(['ReceiptExtraction', 'ExtractionAttempt'])
+from app.models.finding_review import FindingReview
+__all__.append('FindingReview')

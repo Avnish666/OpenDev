@@ -83,3 +83,27 @@ class Storage:
 
 
 storage = Storage()
+
+
+def download_private(storage_client, key, target, max_bytes):
+    """Authenticated streaming read. No signed/public URL is ever generated."""
+    import time
+    storage_client.require_private()
+    base,bucket,headers=storage_client.configuration()
+    if not re.fullmatch(r'receipts/[0-9a-f-]{36}',key):
+        raise HTTPException(502,'Invalid private object reference')
+    size=0;deadline=time.monotonic()+20
+    try:
+        with httpx.Client(timeout=10,follow_redirects=False,transport=storage_client.transport) as client:
+            with client.stream('GET',f'{base}/storage/v1/object/authenticated/{bucket}/{key}',headers=headers) as response:
+                response.raise_for_status()
+                if int(response.headers.get('content-length','0'))>max_bytes: raise HTTPException(413,'Stored document exceeds size limit')
+                with open(target,'wb') as output:
+                    for chunk in response.iter_bytes(65536):
+                        size+=len(chunk)
+                        if size>max_bytes: raise HTTPException(413,'Stored document exceeds size limit')
+                        if time.monotonic()>deadline: raise HTTPException(504,'Private document download timed out')
+                        output.write(chunk)
+        return size
+    except (httpx.HTTPError,ValueError):
+        raise HTTPException(502,'Private document download failed') from None

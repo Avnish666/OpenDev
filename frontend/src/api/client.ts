@@ -43,10 +43,12 @@ export interface Budget { category: string; allocated_cents: number }
 export interface Project { id: number; title: string; description: string; github_repo_url: string; funding_goal_cents: number; currency: string; status: string; owner_id: number }
 export interface ProjectDetail extends Project { budget: Budget[]; maintainers: Pick<AuthUser, 'id' | 'username' | 'avatar_url'>[]; can_manage: boolean }
 export interface Reward { id: number; name: string; description: string; price_cents: number; currency: string; benefits: { title: string; description: string }[]; quantity_limit: number | null; active: boolean }
+export class APIError extends Error { status: number; constructor(status: number, message: string) { super(message); this.status = status; } }
+
 export async function api<T>(path: string, method = 'GET', body?: unknown): Promise<T> {
   const response = await fetch(`${API_URL}${path}`, { method, credentials: 'include', headers: body === undefined ? {} : { 'Content-Type': 'application/json' }, body: body === undefined ? undefined : JSON.stringify(body) });
   const data = await response.json().catch(() => null);
-  if (!response.ok) throw new Error(typeof data?.detail === 'string' ? data.detail : `Request failed (${response.status}). Check form values and try again.`);
+  if (!response.ok) throw new APIError(response.status, typeof data?.detail === 'string' ? data.detail : `Request failed (${response.status}). Check form values and try again.`);
   return data as T;
 }
 
