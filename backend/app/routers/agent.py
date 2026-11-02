@@ -1,0 +1,36 @@
+import json
+from fastapi import APIRouter, Depends, HTTPException, Request
+from pydantic import ValidationError
+from sqlalchemy.orm import Session
+from starlette.concurrency import run_in_threadpool
+from app.core.database import get_db
+from app.routers.expenses import RecordID
+from app.agent.contracts import AgentQuestion, AgentAnswer
+from app.agent.tools import EvidenceTools
+from app.agent.answers import answer
+from app.agent import limits
+from app.services.accountability import read_snapshot
+
+router=APIRouter(prefix='/api/projects',tags=['Public accountability baseline'])
+
+
+def query(db,question):
+    if not limits.slots.acquire(blocking=False):raise HTTPException(429,'Evidence queries busy',headers={'Retry-After':'5'})
+    try:
+        with read_snapshot(db) as reader:return answer(EvidenceTools(reader),question)
+    finally:limits.slots.release()
+
+
+@router.post('/{project_id}/agent/query',response_model=AgentAnswer,
+    openapi_extra={'requestBody':{'required':True,'content':{'application/json':{'schema':AgentQuestion.model_json_schema()}}}})
+async def ask(project_id: RecordID,request: Request,db: Session=Depends(get_db)):
+    limits.limiter.check(request.client.host if request.client else 'unknown')
+    if request.headers.get('content-type','').split(';')[0].strip().lower()!='application/json':raise HTTPException(415,'JSON required')
+    data=bytearray()
+    async for chunk in request.stream():
+        if len(data)+len(chunk)>4096:raise HTTPException(413,'Question body exceeds 4096 bytes')
+        data.extend(chunk)
+    try:question=AgentQuestion.model_validate(json.loads(data))
+    except (ValueError,ValidationError,RecursionError):raise HTTPException(422,'Invalid question; provide project_id and 3..1000 character question') from None
+    if question.project_id!=project_id:raise HTTPException(422,'Project identifier mismatch')
+    return await run_in_threadpool(query,db,question)

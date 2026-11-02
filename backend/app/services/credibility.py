@@ -129,18 +129,7 @@ def profile(db,uid,now):
         ('delivery_evidence','Delivered assertions with recorded GitHub support',sum(bool(r['evidence_links_at_delivery']) for r in history),sum(r['status']=='delivered' and r['evidence_links_at_delivery'] is not None for r in history),sum(r['status']=='delivered' and r['evidence_links_at_delivery'] is not None for r in history),'Delivered milestones with active GitHub links at their latest delivery assertion / delivered milestones whose repository evidence remains publicly available; unknown/private evidence excluded.'),
         ('independently_reviewed','Independently reviewed delivery',None,None,0,'Unavailable: no independent delivery review mechanism exists.')]
     delivery=[indicator(key,label,n,d,s,now,max((p.updated_at for p in owned),default=None) if key=='public_projects_owned' else None if key=='independently_reviewed' else updated,formula,[DELIVERY_LIMIT,SCOPE],links) for key,label,n,d,s,formula in values]
-    rewards=[];pairs=db.execute(select(Entitlement,Contribution).join(Contribution,Entitlement.contribution_id==Contribution.id).where(Contribution.project_id.in_(ids))).all() if ids else []
-    currencies={p.id:p.currency for p in owned}
-    eligible=[(e,c) for e,c in pairs if c.status=='completed' and c.capture_id and c.currency==currencies[c.project_id] and e.status in ('granted','fulfilled')]
-    issued=len(pairs);fulfilled=sum(e.status=='fulfilled' for e,c in eligible);updated_rewards=None
-    reward_notes=['Sandbox entitlements only. Refunded/reversed/non-completed contributions and revoked/invalid entitlements are excluded from the fulfillment ratio. No backer identities or fulfillment notes are disclosed.', 'Fulfillment is a maintainer mark, not independent proof. Individual reward records and notes remain private; only aggregates are disclosed. No fulfillment deadline or status-change timestamp is stored; last_updated_at is unknown.']
-    for key,label,n,d,s,formula in [
-        ('issued','Entitlements issued',issued,None,issued,'Count distinct persisted entitlement IDs, including subsequently revoked records.'),
-        ('fulfilled','Rewards marked fulfilled',fulfilled,len(eligible),len(eligible),'Eligible fulfilled entitlement IDs / all eligible granted-or-fulfilled IDs with completed captures.'),
-        ('pending','Rewards pending fulfillment',len(eligible)-fulfilled,len(eligible),len(eligible),'Eligible granted entitlement IDs / all eligible IDs.'),
-        ('excluded','Excluded/revoked entitlements',issued-len(eligible),issued,issued,'Issued minus currently eligible, including refunded/reversed or revoked records.'),
-        ('overdue','Overdue rewards',None,None,0,'Unavailable: no explicit reward fulfillment deadlines exist.')]:
-        rewards.append(indicator(key,label,n,d,s,now,updated_rewards,formula,reward_notes,[f'/api/maintainers/{uid}/credibility']))
+    rewards=reward_statistics(db,owned,now,uid)
     financial=[];github=[]
     for p in owned:
         summary=transparency.overview(db,p);s=summary['financial_summary']
@@ -168,3 +157,20 @@ def profile(db,uid,now):
         'Metrics are calculated now from a read-only snapshot. Last source update may be unknown; calculation time is not a provider verification time.',
         'Public scope can shrink when a project becomes non-active. No project publication/ownership history exists, so outcomes reflect current owner attribution, not guaranteed historical ownership.',
         'Amounts stay per project/currency; exact partial refunds remain unavailable under the existing conservative policy.'])
+
+
+def reward_statistics(db,owned,now,uid=None):
+    ids=[p.id for p in owned]
+    rewards=[];pairs=db.execute(select(Entitlement,Contribution).join(Contribution,Entitlement.contribution_id==Contribution.id).where(Contribution.project_id.in_(ids))).all() if ids else []
+    currencies={p.id:p.currency for p in owned}
+    eligible=[(e,c) for e,c in pairs if c.status=='completed' and c.capture_id and c.currency==currencies[c.project_id] and e.status in ('granted','fulfilled')]
+    issued=len(pairs);fulfilled=sum(e.status=='fulfilled' for e,c in eligible);updated_rewards=None
+    reward_notes=['Sandbox entitlements only. Refunded/reversed/non-completed contributions and revoked/invalid entitlements are excluded from the fulfillment ratio. No backer identities or fulfillment notes are disclosed.', 'Fulfillment is a maintainer mark, not independent proof. Individual reward records and notes remain private; only aggregates are disclosed. No fulfillment deadline or status-change timestamp is stored; last_updated_at is unknown.']
+    for key,label,n,d,s,formula in [
+        ('issued','Entitlements issued',issued,None,issued,'Count distinct persisted entitlement IDs, including subsequently revoked records.'),
+        ('fulfilled','Rewards marked fulfilled',fulfilled,len(eligible),len(eligible),'Eligible fulfilled entitlement IDs / all eligible granted-or-fulfilled IDs with completed captures.'),
+        ('pending','Rewards pending fulfillment',len(eligible)-fulfilled,len(eligible),len(eligible),'Eligible granted entitlement IDs / all eligible IDs.'),
+        ('excluded','Excluded/revoked entitlements',issued-len(eligible),issued,issued,'Issued minus currently eligible, including refunded/reversed or revoked records.'),
+        ('overdue','Overdue rewards',None,None,0,'Unavailable: no explicit reward fulfillment deadlines exist.')]:
+        rewards.append(indicator(key,label,n,d,s,now,updated_rewards,formula,reward_notes,[f'/api/maintainers/{uid}/credibility'] if uid is not None else [f'/api/projects/{p.id}/agent/query' for p in owned]))
+    return rewards

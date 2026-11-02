@@ -90,3 +90,5 @@ from app.routers.credibility import router as credibility_router
 app.include_router(credibility_router)
 from app.routers.progress import router as progress_router
 app.include_router(progress_router)
+from app.routers.agent import router as agent_router
+app.include_router(agent_router)
