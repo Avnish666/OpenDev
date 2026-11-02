@@ -12,3 +12,8 @@ __all__ = [
     "ProjectMember",
     "BudgetAllocation",
 ]
+
+from app.models.reward_tier import RewardTier
+__all__.append('RewardTier')
+from app.models.funding import Contribution, Entitlement, WebhookEvent
+__all__.extend(['Contribution', 'Entitlement', 'WebhookEvent'])

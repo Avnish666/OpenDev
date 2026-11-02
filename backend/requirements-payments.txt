@@ -1,0 +1,2 @@
+# HTTPX REST adapter; no PayPal SDK symbols are used.
+httpx==0.28.1
