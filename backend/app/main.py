@@ -69,3 +69,13 @@ from app.routers.accountability import router as accountability_router
 app.include_router(accountability_router)
 from app.routers.transparency import router as transparency_router
 app.include_router(transparency_router)
+
+
+@app.middleware("http")
+async def private_api_headers(request, call_next):
+    response = await call_next(request)
+    if request.url.path.startswith("/api/"):
+        response.headers["Cache-Control"] = "no-store"
+        response.headers["Referrer-Policy"] = "no-referrer"
+        response.headers["X-Content-Type-Options"] = "nosniff"
+    return response

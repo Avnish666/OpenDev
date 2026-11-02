@@ -1,5 +1,6 @@
 
-const API_URL = import.meta.env.VITE_API_URL;
+const API_URL = import.meta.env.VITE_API_URL ?? '';
+// An unset URL uses same-origin /api routing, preserving session cookies.
 
 export interface AuthUser {
   id: number;

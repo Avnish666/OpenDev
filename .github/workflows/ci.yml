@@ -57,6 +57,10 @@ jobs:
         working-directory: backend
         run: python -m alembic upgrade head
 
+      - name: Check migration consistency
+        working-directory: backend
+        run: python -m alembic check
+
       - name: Run backend tests
         working-directory: backend
         run: python -m pytest -v
@@ -79,6 +83,10 @@ jobs:
       - name: Install dependencies
         working-directory: frontend
         run: npm ci
+
+      - name: Frontend integration tests and lint
+        working-directory: frontend
+        run: npm test && npm run lint
 
       - name: Build frontend
         working-directory: frontend
