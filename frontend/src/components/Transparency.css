@@ -1,0 +1,13 @@
+.transparency { padding-top: 24px; border-top: 2px solid #cdd7e0; text-align: left; }
+.transparency p { margin: 10px 0; }
+.financial-value { font-size: 1.5rem; font-weight: 700; color: #075c98; }
+.budget-track { height: 12px; background: #e6edf3; border-radius: 3px; overflow: hidden; }
+.budget-track span { display: block; height: 100%; }
+.allocation-bar { background: #075c98; }
+.spending-bar { background: #94500b; }
+.ledger-filters { max-width: none; display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 190px), 1fr)); gap: 16px; align-items: end; }
+.ledger-table { overflow-x: auto; }
+.ledger-table table { border-collapse: collapse; width: 100%; text-align: left; }
+.ledger-table th, .ledger-table td { padding: 12px; border-bottom: 1px solid #cdd7e0; overflow-wrap: anywhere; }
+.ledger-table caption { text-align: left; padding: 12px 0; }
+.transparency aside { background: #eaf2f8; padding: 20px; border-radius: 10px; }

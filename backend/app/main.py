@@ -67,3 +67,5 @@ from app.routers.extractions import router as extractions_router
 app.include_router(extractions_router)
 from app.routers.accountability import router as accountability_router
 app.include_router(accountability_router)
+from app.routers.transparency import router as transparency_router
+app.include_router(transparency_router)
