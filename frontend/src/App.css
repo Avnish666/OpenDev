@@ -19,3 +19,4 @@ button:disabled { opacity: .55; cursor: wait; }
 .description { white-space: pre-wrap; overflow-wrap: anywhere; }
 .badge { display: inline-block; background: #dcebe5; border-radius: 20px; padding: 5px 14px; }
 @media (max-width: 600px) { main { padding: 14px; } h1 { font-size: 1.7rem; } }
+select { display: block; width: 100%; padding: 10px; margin-top: 6px; font: inherit; }

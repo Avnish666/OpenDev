@@ -59,3 +59,7 @@ from app.routers.me import router as me_router
 app.include_router(me_router)
 from app.routers.funding import router as funding_router
 app.include_router(funding_router)
+from app.routers.expenses import router as expenses_router
+app.include_router(expenses_router)
+from app.routers.documents import router as documents_router
+app.include_router(documents_router)
