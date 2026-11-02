@@ -18,7 +18,10 @@ class Settings:
         self.FRONTEND_URL = os.getenv(
             "FRONTEND_URL", "http://localhost:5173"
         )
-
+        
+        self.GITHUB_CLIENT_ID = os.getenv("GITHUB_CLIENT_ID")
+        self.GITHUB_CLIENT_SECRET = os.getenv("GITHUB_CLIENT_SECRET")
+        self.GITHUB_CALLBACK_URL = os.getenv("GITHUB_CALLBACK_URL")
         self.DATABASE_URL = os.getenv("DATABASE_URL")
 
         if not self.DATABASE_URL:

@@ -1,32 +1,40 @@
 
 const API_URL = import.meta.env.VITE_API_URL;
 
-export interface HealthResponse {
-  status: string;
+export interface AuthUser {
+  id: number;
+  github_id: number;
+  username: string;
+  avatar_url: string | null;
 }
 
-export interface DatabaseHealthResponse {
-  status: string;
-  database: string;
-  result: number;
-}
+export async function getCurrentUser(): Promise<AuthUser | null> {
+  const response = await fetch(`${API_URL}/api/auth/me`, {
+    credentials: "include",
+  });
 
-export async function getHealth(): Promise<HealthResponse> {
-  const response = await fetch(`${API_URL}/api/health`);
+  if (response.status === 401) {
+    return null;
+  }
 
   if (!response.ok) {
-    throw new Error("Backend health check failed");
+    throw new Error(`Authentication check failed: ${response.status}`);
   }
 
   return response.json();
 }
 
-export async function getDatabaseHealth(): Promise<DatabaseHealthResponse> {
-  const response = await fetch(`${API_URL}/api/db-health`);
+export function loginWithGitHub() {
+  window.location.assign(`${API_URL}/api/auth/github/login`);
+}
+
+export async function logoutUser(): Promise<void> {
+  const response = await fetch(`${API_URL}/api/auth/logout`, {
+    method: "POST",
+    credentials: "include",
+  });
 
   if (!response.ok) {
-    throw new Error("Database health check failed");
+    throw new Error(`Logout failed: ${response.status}`);
   }
-
-  return response.json();
 }

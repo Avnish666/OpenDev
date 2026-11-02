@@ -11,6 +11,16 @@ app = FastAPI(
     version="0.1.0"
 )
 
+from app.routers.projects import router as projects_router
+
+app.include_router(projects_router)
+
+
+from app.routers.auth import router as auth_router
+
+app.include_router(auth_router)
+
+
 from app.core.config import settings
 
 app.add_middleware(
@@ -20,10 +30,7 @@ app.add_middleware(
     allow_methods=[
         "GET", "POST", "PUT", "PATCH", "DELETE"
     ],
-    allow_headers=[
-        "Content-Type",
-        "Authorization"
-    ],
+    allow_headers=["*"],
 )
 
 
