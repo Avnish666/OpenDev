@@ -27,3 +27,4 @@ from app.models.finding_review import FindingReview
 __all__.append('FindingReview')
 from app.models.github_progress import GitHubSyncRun, GitHubRepositorySnapshot, GitHubMilestoneSnapshot, GitHubIssueSnapshot, GitHubPullRequestSnapshot
 from app.models.roadmap import ProjectRoadmapMilestone, MilestoneGitHubEvidence, MilestoneStatusHistory
+from app.models.roadmap_dependency import RoadmapDependency

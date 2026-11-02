@@ -1,0 +1,7 @@
+export const emptyCounts = () => ({ total: 0, planned: 0, in_progress: 0, submitted_for_review: 0, delivered: 0, cancelled: 0, overdue_unfinished: 0, reopened: 0, on_time: 0, late: 0, unknown_delivery_timing: 0 });
+export function progressFixture() {
+  return { project_id: 5, github_repository_id: 100, calculated_at: '2026-11-02T12:00:00Z', roadmap_updated_at: null, counts: emptyCounts(), linked_issues: null, linked_merged_pull_requests: null, github_available: false, linked_evidence_stale: null,
+    sync: { latest: null, last_successful_sync_at: null, stale: true }, snapshot_age_seconds: null, activity: null, github_milestones: [], delivery_history_preview: [], recent_changes: [],
+    owner: { identity: { user_id: 9, username: 'synthetic-owner' }, public_projects: 1, delivery: emptyCounts(), profile_href: '#/maintainers/9', scope: 'Owner outcomes only; team participation is separate.' },
+    financial: { currency: 'USD', gross_completed_funding_cents: 0, refund_excluded_cents: 0, reversal_excluded_cents: 0, net_recorded_funding_cents: 0, published_reported_spending_cents: 0, funding_minus_reported_expenditure_cents: 0, expenses_with_documents_count: 0, expenses_with_documents_cents: 0, published_expense_count: 0, public_unresolved_discrepancy_count: 0, notes: ['Sandbox records and reported spending do not prove vendor payment.'] }, links: {}, limitations: ['Synthetic fixture; no provider calls.'] };
+}

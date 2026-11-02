@@ -1,3 +1,4 @@
+import { progressFixture } from './progress-fixture.mjs';
 import { before, after, test } from 'node:test';
 import assert from 'node:assert/strict';
 import ts from 'typescript';
@@ -7,10 +8,10 @@ import { pathToFileURL } from 'node:url';
 import { createElement } from 'react';
 import { renderToStaticMarkup } from 'react-dom/server';
 
-let folder, displayMoney, transparencyAPI, Transparency, GitHubProgress, Roadmap;
+let folder, displayMoney, transparencyAPI, Transparency, GitHubProgress, Roadmap, MaintainerProfile, MetricCards, credibility, ProjectProgress, ProgressOverview, GitHubActivity, progress;
 before(async () => {
   folder = await mkdtemp(join(import.meta.dirname, '.compiled-'));
-  for (const file of ['api/client.ts', 'api/transparency.ts', 'components/Transparency.tsx', 'components/GitHubProgress.tsx', 'components/Roadmap.tsx']) {
+  for (const file of ['api/client.ts', 'api/transparency.ts', 'components/Transparency.tsx', 'components/GitHubProgress.tsx', 'components/Roadmap.tsx', 'api/credibility.ts', 'pages/Maintainer.tsx', 'api/progress.ts', 'components/ProjectProgress.tsx']) {
     let source = await readFile(new URL('../src/' + file, import.meta.url), 'utf8');
     source = source.replace('import.meta.env', "({ VITE_API_URL: 'https://api.invalid' })");
     source = source.replace("import './Transparency.css';", '');
@@ -26,6 +27,10 @@ before(async () => {
   ({ default: Transparency } = await import(pathToFileURL(join(folder, 'components/Transparency.js'))));
   ({ default: GitHubProgress } = await import(pathToFileURL(join(folder, 'components/GitHubProgress.js'))));
   ({ default: Roadmap } = await import(pathToFileURL(join(folder, 'components/Roadmap.js'))));
+  ({ default: MaintainerProfile, MetricCards } = await import(pathToFileURL(join(folder, 'pages/Maintainer.js'))));
+  credibility = await import(pathToFileURL(join(folder, 'api/credibility.js')));
+  ({ default: ProjectProgress, ProgressOverview, GitHubActivity } = await import(pathToFileURL(join(folder, 'components/ProjectProgress.js'))));
+  progress = await import(pathToFileURL(join(folder, 'api/progress.js')));
 });
 after(async () => { if (folder) await rm(folder, { recursive: true, force: true }); });
 
@@ -81,4 +86,68 @@ test('Roadmap renders public loading and maintainer-only create controls', () =>
   assert.doesNotMatch(visitor, />Create milestone</);
   assert.match(manager, />Create milestone</);
   assert.match(visitor, /never automatically mark delivery/);
+});
+
+
+test('maintainer profile loads publicly without an auth provider', () => {
+  const html = renderToStaticMarkup(createElement(MaintainerProfile, { userId: 1 }));
+  assert.match(html, /Loading public maintainer profile/);
+  assert.match(html, /No trust score/);
+});
+
+test('new and unsupported indicators are not rendered as zero reputation', () => {
+  const base = { key: 'delivery', label: 'Delivery', numerator: 0, denominator: 0, sample_size: 0, state: 'insufficient_history', formula: 'Count public records', calculated_at: '2026-11-02T12:00:00Z', last_updated_at: null, limitations: ['No independent review'], source_links: [] };
+  assert.equal(credibility.indicatorValue(base), 'Insufficient history');
+  assert.equal(credibility.indicatorValue({ ...base, state: 'unavailable', numerator: null }), 'Unavailable');
+  assert.equal(credibility.indicatorValue({ ...base, state: 'recorded', numerator: 1, denominator: 2 }), '1 / 2');
+  const html = renderToStaticMarkup(createElement(MetricCards, { items: [base] }));
+  assert.match(html, /Insufficient history/); assert.match(html, /Sample size: 0/);
+  assert.doesNotMatch(html, /0%/);
+});
+
+test('public source links stay on configured API paths', () => {
+  assert.match(credibility.sourceHref('/api/roadmap/1/history'), /\/api\/roadmap\/1\/history$/);
+  assert.throws(() => credibility.sourceHref('https://evil.invalid/private'));
+  assert.throws(() => credibility.sourceHref('//evil.invalid'));
+});
+
+
+test('public progress renders loading, keyboard navigation and one roadmap/list switch', () => {
+  const html = renderToStaticMarkup(createElement(ProjectProgress, { projectId: 5, canManage: false }));
+  assert.match(html, /Loading public progress summary/);
+  assert.match(html, /Project progress sections/);
+  assert.equal((html.match(/>Timeline<\/button>/g) ?? []).length, 1);
+  assert.doesNotMatch(html, /Maintainer GitHub sync controls/);
+  assert.doesNotMatch(html, /Create milestone/);
+});
+
+test('empty progress has missing-data and insufficient-history disclosures', () => {
+  const data = progressFixture();
+  const overview = renderToStaticMarkup(createElement(ProgressOverview, { data }));
+  assert.match(overview, /Insufficient history/);
+  assert.match(overview, /Stale or missing GitHub data/);
+  assert.match(overview, /not available cash/);
+  assert.match(renderToStaticMarkup(createElement(GitHubActivity, { data })), /No conclusion about abandonment/);
+});
+
+test('progress separates original-deadline timing from unfinished commitments', () => {
+  const data = progressFixture(); Object.assign(data.counts, { total: 6, delivered: 3, on_time: 1, late: 1, unknown_delivery_timing: 1, reopened: 2, overdue_unfinished: 2 });
+  assert.equal(progress.onTimeLabel(data.counts), '1 / 2 dated delivery assertions were on time');
+  const html = renderToStaticMarkup(createElement(ProgressOverview, { data }));
+  assert.match(html, /2 overdue unfinished/); assert.match(html, /1 delivered with unknown timing/);
+});
+
+test('failed sync preserves displayed observations and distinct timestamps', () => {
+  const data = progressFixture(); data.sync.latest = { status: 'failed', started_at: '2026-11-02T11:00:00Z', completed_at: '2026-11-02T11:01:00Z', error_code: 'RATE_LIMITED' }; data.sync.last_successful_sync_at = '2026-11-01T12:00:00Z'; data.snapshot_age_seconds = 86400;
+  const html = renderToStaticMarkup(createElement(ProgressOverview, { data }));
+  assert.match(html, /Last successful GitHub sync/); assert.match(html, /Last attempted GitHub sync/); assert.match(html, /86400 seconds/); assert.match(html, /preserves previous observations/);
+});
+
+test('GitHub titles render as escaped text and sources reject injected URLs', () => {
+  const data = progressFixture(); data.github_available = true; data.activity = { repository: { full_name: 'owner/repo' }, issues: [{ github_id: 1, number: 1, title: '<img src=x onerror=alert(1)>', state: 'closed', updated_at: '2026-11-01T12:00:00Z' }], pull_requests: [], recent_commits: [] };
+  const html = renderToStaticMarkup(createElement(GitHubActivity, { data }));
+  assert.match(html, /&lt;img/); assert.doesNotMatch(html, /<img src=x/);
+  assert.equal(progress.githubSource('owner/repo', 'issues', 1), 'https://github.com/owner/repo/issues/1');
+  assert.throws(() => progress.githubSource('https://evil.invalid', 'issues', 1));
+  assert.throws(() => progress.githubSource('owner/..', 'issues', 1));
 });

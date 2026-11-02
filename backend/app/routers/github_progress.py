@@ -29,16 +29,7 @@ def status(project_id: RecordID,db: Session=Depends(get_db),user: User | None=De
 def activity(project_id: RecordID,limit: int=Query(20,ge=1,le=100),offset: int=Query(0,ge=0),db: Session=Depends(get_db),user: User | None=Depends(get_optional_user)):
     with accountability.read_snapshot(db) as reader:
         service.read_project(reader,project_id,user)
-        counts={}
-        for model,prefix in [(Issue,'issues'),(Pull,'pull_requests')]:
-            for state in ('open','closed'):
-                counts[prefix+'_'+state]=reader.scalar(select(func.count()).select_from(model).where(model.project_id==project_id,model.state==state))
-        counts['pull_requests_merged']=reader.scalar(select(func.count()).select_from(Pull).where(Pull.project_id==project_id,Pull.merged_at.is_not(None)))
-        repo=reader.get(Repo,project_id)
-        return dict(sync=service.status(reader,project_id),repository=repo.metadata_json if repo else None,counts=counts,
-            issues=reader.scalars(select(Issue).where(Issue.project_id==project_id).order_by(Issue.updated_at.desc(),Issue.github_id).limit(limit).offset(offset)).all(),
-            pull_requests=reader.scalars(select(Pull).where(Pull.project_id==project_id).order_by(Pull.updated_at.desc(),Pull.github_id).limit(limit).offset(offset)).all(),
-            recent_commits=repo.recent_commits if repo else [],limit=limit,offset=offset)
+        return service.public_activity(reader,project_id,limit,offset)
 
 
 @router.get('/milestones',response_model=MilestonesResponse)

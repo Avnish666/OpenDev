@@ -156,7 +156,11 @@ def view(db,row,user):
 def history(db,row,user,limit,offset):
     manager=can_manage(db,db.get(Project,row.project_id),user)
     rows=db.scalars(select(History).where(History.milestone_id==row.id).order_by(History.version.desc()).limit(limit).offset(offset)).all()
+    return [history_view(r,manager) for r in rows]
+
+
+def history_view(r,manager=False):
     allowed=set(FIELDS+['status','actual_completion_date'])
-    return [dict(id=r.id,version=r.version,previous_status=r.previous_status,new_status=r.new_status,actor_id=r.actor_id,action=r.action,reason=r.reason,
+    return dict(id=r.id,version=r.version,previous_status=r.previous_status,new_status=r.new_status,actor_id=r.actor_id,action=r.action,reason=r.reason,
         before=r.before_json if manager else {k:v for k,v in r.before_json.items() if k in allowed},
-        after=r.after_json if manager else {k:v for k,v in r.after_json.items() if k in allowed},created_at=r.created_at) for r in rows]
+        after=r.after_json if manager else {k:v for k,v in r.after_json.items() if k in allowed},created_at=r.created_at)

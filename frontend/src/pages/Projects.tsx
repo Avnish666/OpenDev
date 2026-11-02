@@ -1,7 +1,7 @@
 import Expenses from './Expenses';
 import Roadmap from '../components/Roadmap';
 import GitHubProgress from '../components/GitHubProgress';
-import Transparency from '../components/Transparency';
+import ProjectProgress from '../components/ProjectProgress';
 import { CheckoutButton, FundingHistory } from './Funding';
 import { useEffect, useState, type FormEvent } from 'react';
 import { api, type Project, type ProjectDetail, type Reward } from '../api/client';
@@ -88,13 +88,13 @@ export function ProjectPage({ id }: { id: number }) {
   const refresh = () => { setEditor(null); setEditing(false); setVersion(v => v + 1); };
   async function publish() { setBusy(true); try { await api(`/api/projects/${id}/publish`, 'POST'); refresh(); } catch (e) { setError(errorMessage(e)); } finally { setBusy(false); } }
   if (!project) return error ? <p role="alert">{error}</p> : <p role="status">Loading project…</p>;
-  return <section><h2>{project.title}</h2>{error && <p role="alert">{error}</p>}<p className="badge">{project.status}</p><p className="description">{project.description}</p><a href={project.github_repo_url} target="_blank" rel="noreferrer">GitHub Repository</a><h3>Funding Goal</h3><p>{money(project.funding_goal_cents, project.currency)}</p><h3>Maintainers</h3><ul>{project.maintainers.map(m => <li key={m.id}>{m.username}</li>)}</ul><h3>Planned Budget</h3><ul>{project.budget.map(b => <li key={b.category}>{b.category}: {money(b.allocated_cents, project.currency)}</li>)}</ul>
+  return <section><h2>{project.title}</h2>{error && <p role="alert">{error}</p>}<p className="badge">{project.status}</p><p className="description">{project.description}</p><a href={project.github_repo_url} target="_blank" rel="noreferrer">GitHub Repository</a><h3>Funding Goal</h3><p>{money(project.funding_goal_cents, project.currency)}</p><h3>Maintainers</h3><ul>{project.maintainers.map(m => <li key={m.id}><a href={`#/maintainers/${m.id}`}>{m.username}</a></li>)}</ul><h3>Planned Budget</h3><ul>{project.budget.map(b => <li key={b.category}>{b.category}: {money(b.allocated_cents, project.currency)}</li>)}</ul>
     {project.can_manage && project.status === 'draft' && <div className="actions"><button onClick={() => setEditing(!editing)}>Edit Draft</button><button disabled={busy} onClick={() => void publish()}>{busy ? 'Publishing…' : 'Publish Project'}</button></div>}
     {editing && <ProjectForm project={project} done={refresh} />}
     <h3>Backer Rewards</h3><p>Sandbox demo only. No real funds are collected.</p><div className="grid">{rewards.map(r => <article key={r.id}><h4>{r.name} · {money(r.price_cents, r.currency)}</h4><p>{r.description}</p><ul>{r.benefits.map((b, i) => <li key={i}>{b.title}{b.description && ` — ${b.description}`}</li>)}</ul><p>{r.quantity_limit === null ? 'Unlimited quantity' : `Quantity limit: ${r.quantity_limit}`} · {r.active ? 'Active' : 'Inactive'}</p>{r.active && <CheckoutButton tierId={r.id} />}{project.can_manage && <button onClick={() => setEditor(r)}>Edit Tier</button>}</article>)}</div>{!rewards.length && <p>No reward tiers yet.</p>}
-    {(project.can_manage || project.status === 'active') && <GitHubProgress key={`github-${id}-${project.status}`} projectId={id} canManage={project.can_manage} active={project.status === 'active'} />}
-    {(project.can_manage || project.status === 'active') && <Roadmap key={`roadmap-${id}`} projectId={id} canManage={project.can_manage} />}
-    {project.status === 'active' && <Transparency key={id} projectId={id} />}
+    {project.can_manage && project.status !== 'active' && <GitHubProgress key={`github-${id}-${project.status}`} projectId={id} canManage={project.can_manage} active={project.status === 'active'} />}
+    {project.can_manage && project.status !== 'active' && <Roadmap key={`roadmap-${id}`} projectId={id} canManage={project.can_manage} />}
+    {project.status === 'active' && <ProjectProgress key={id} projectId={id} canManage={project.can_manage} />}
     {project.can_manage && project.status !== 'draft' && <Expenses projectId={id} canManage={project.can_manage} />}
     {project.can_manage && <FundingHistory projectId={id} />}
     {project.can_manage && <><button onClick={() => setEditor('new')}>Create Reward Tier</button>{editor && <><RewardForm key={editor === 'new' ? 'new' : editor.id} projectId={id} tier={editor === 'new' ? undefined : editor} done={refresh} /><button onClick={() => setEditor(null)}>Cancel</button></>}</>}

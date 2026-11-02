@@ -121,10 +121,15 @@ def snapshot(db,project,user):
     for allocation in db.scalars(select(BudgetAllocation).where(BudgetAllocation.project_id==project.id)):
         key=allocation.category.strip().casefold()
         categories.setdefault(key,dict(category=key,allocated_cents=0,reported_spending_cents=0))['allocated_cents']+=allocation.allocated_cents
+    public_support=set()
+    if not private and project.status in ('active','paused','completed'):
+        public_support=set(db.scalars(select(ExpenseDocument.expense_id).join(Expense).where(
+            Expense.project_id==project.id,Expense.publication_status=='published',ExpenseDocument.publication_status=='published',
+            ExpenseDocument.redacted_from_id.is_not(None),ExpenseDocument.approved_by.is_not(None),ExpenseDocument.approved_at.is_not(None))))
     for expense in published:
         key=expense.category.strip().casefold()
         categories.setdefault(key,dict(category=key,allocated_cents=0,reported_spending_cents=0))['reported_spending_cents']+=expense.amount_cents
-        result=verification(db,expense,user)
+        result=verification(db,expense,user) if private else dict(classification='document_attached' if expense.id in public_support else 'self_reported',supporting_document_count=int(expense.id in public_support),unresolved_discrepancy_count=None)
         bucket=coverage.setdefault(result['classification'],dict(classification=result['classification'],expense_count=0,amount_cents=0))
         bucket['expense_count']+=1;bucket['amount_cents']+=expense.amount_cents
         if result['supporting_document_count']:with_count+=1;with_amount+=expense.amount_cents

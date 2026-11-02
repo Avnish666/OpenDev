@@ -29,11 +29,14 @@ def gh(ac,monkeypatch):
         if state.get('timeout'):raise httpx.ReadTimeout('synthetic timeout')
         if state['code']:return httpx.Response(state['code'],headers={'Retry-After':'120'})
         path=request.url.path
-        if path.startswith('/repositories/'):
+        if path.startswith('/repositories/') or path == '/repos/'+state['repo']['full_name']:
             if state.get('conditional') and request.headers.get('if-none-match'): return httpx.Response(304)
-            return httpx.Response(200,json=state['repo'],headers={'etag':'"repo-v1"'})
+            return httpx.Response(200,json=state.get('named_repo',state['repo']) if path.startswith('/repos/') else state['repo'],headers={'etag':'"repo-v1"'})
         kind=path.rsplit('/',1)[-1]
-        if kind=='commits':return httpx.Response(200,json=[{'sha':'a'*40,'commit':{'committer':{'date':DATE}}}])
+        if kind=='commits':return httpx.Response(200,json=[{'sha':'a'*40,'commit':{'committer':{'date':state.get('commit_date',DATE)}}}])
+        if state.get('paged_rows'):
+            page=int(request.url.params.get('page',1));rows=state[kind]
+            return httpx.Response(200,json=rows[(page-1)*100:page*100],headers={'Link':'<https://api.github.com/next>; rel="next"'} if len(rows)>page*100 else {})
         if state.get('endless') and kind=='issues':return httpx.Response(200,json=state[kind],headers={'Link':'<https://api.github.com/next>; rel="next"'})
         if state['pages'] and kind=='issues':
             if request.url.params.get('page')=='1':return httpx.Response(200,json=state[kind],headers={'Link':'<https://evil.invalid/next>; rel="next"'})
@@ -169,3 +172,56 @@ def test_optional_token_never_persisted_or_returned(gh,monkeypatch):
     assert all(r.headers.get('authorization')=='Bearer synthetic-private-progress-token' for r in s['calls'])
     assert 'synthetic-private-progress-token' not in response.text+activity(ac).text
     assert 'synthetic-private-progress-token' not in str(ac.db.scalars(select(Run)).all())
+
+
+def test_repository_name_reused_during_sync_rejected_atomically(gh):
+    ac,s=gh;assert sync(ac).json()['status']=='completed'
+    s['milestones'][0]['title']='Contaminated by reused repository name'
+    s['named_repo']={**s['repo'],'id':999}
+    run=sync(ac).json()
+    assert run['error_code']=='REPOSITORY_IDENTITY_CHANGED'
+    assert ac.db.get(Milestone,(ac.p.id,101)).title=='Beta'
+    ac.identity[0]=None
+    assert activity(ac).status_code==404
+
+
+@pytest.mark.parametrize('size',[2,100,500])
+def test_overlapping_pages_are_deduplicated_and_batched(gh,tmp_path,size):
+    from sqlalchemy import event
+    ac,s=gh
+    s['paged_rows']=True
+    s['issues']=[dict(ISSUE,id=1000+i,number=10+i) for i in range(size-1)]+[dict(ISSUE,id=1000,number=10,title='Older duplicate',updated_at='2026-10-31T12:00:00Z')]
+    s['pulls']=[dict(PULL,id=2000+i,number=200+i) for i in range(size)]
+    statements=[];all_queries=[]
+    def capture(conn,cursor,statement,*args):
+        all_queries.append(statement)
+        if statement.startswith('INSERT INTO github_'):statements.append(statement)
+    event.listen(ac.engine,'before_cursor_execute',capture)
+    import time, json, os
+    from pathlib import Path
+    start=time.perf_counter()
+    try:run=sync(ac).json()
+    finally:event.remove(ac.engine,'before_cursor_execute',capture)
+    elapsed=(time.perf_counter()-start)*1000
+    assert run['status']=='completed' and run['counters']['issues']==size-1
+    assert ac.db.get(Issue,(ac.p.id,1000)).title=='Work item'
+    # One run and repository insert, plus one per snapshot collection.
+    assert len(statements)==3+((size-2)//100+1)+((size-1)//100+1)
+    assert ac.db.scalar(select(func.count()).select_from(Issue))==size-1
+    output=Path(os.getenv('PHASE4_BENCHMARK_DIR',str(tmp_path)));output.mkdir(parents=True,exist_ok=True)
+    (output/f'phase4-sync-{size}.json').write_text(json.dumps(dict(provider_rows=2*size+1,unique_issues=size-1,pull_requests=size,sql_statements=len(all_queries),insert_statements=len(statements),mock_http_requests=len(s['calls']),elapsed_ms=round(elapsed,2)),indent=2)+'\n')
+    assert sync(ac).json()['status']=='completed'
+    assert ac.db.scalar(select(func.count()).select_from(Issue))==size-1
+
+
+@pytest.mark.parametrize('change,error',[
+    ({'named_repo':{'id':1,'full_name':'owner/repo','private':True}},'REPOSITORY_NOT_PUBLIC'),
+    ({'commit_date':'2026-11-01T12:00:00'},'MALFORMED_RESPONSE'),
+])
+def test_late_private_repository_and_naive_commit_dates_fail_closed(gh,change,error):
+    ac,s=gh;assert sync(ac).json()['status']=='completed'
+    s.update(change);s['milestones'][0]['title']='Uncommitted malformed import'
+    assert sync(ac).json()['error_code']==error
+    assert ac.db.get(Milestone,(ac.p.id,101)).title=='Beta'
+    if error=='REPOSITORY_NOT_PUBLIC':
+        ac.identity[0]=None;assert activity(ac).status_code==404

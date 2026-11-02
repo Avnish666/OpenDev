@@ -89,7 +89,16 @@ class GitHubClient:
                 sha=commit['sha']
                 if not isinstance(sha,str) or len(sha)!=40 or any(c not in '0123456789abcdef' for c in sha):raise SyncError('MALFORMED_RESPONSE')
                 date=datetime.fromisoformat(commit['commit']['committer']['date'].replace('Z','+00:00'))
+                if date.tzinfo is None:raise SyncError('MALFORMED_RESPONSE')
                 observed.append({'sha':sha,'committed_at':date.isoformat()})
+            # A name can be renamed and reused while paginated reads are in flight.
+            # Recheck the name-to-ID binding before any fetched rows become durable.
+            named,_,_=self.get(client,base)
+            if not isinstance(named,dict):raise SyncError('MALFORMED_RESPONSE')
+            if named.get('private') is not False:raise SyncError('REPOSITORY_NOT_PUBLIC')
+            named_repo=RepositoryData.model_validate(named)
+            if named_repo.id!=repo.id or named_repo.full_name!=repo.full_name:
+                raise SyncError('REPOSITORY_IDENTITY_CHANGED')
             return (repo,etag,[MilestoneData.model_validate(row) for row in milestones],
                     [IssueData.model_validate(row) for row in issues if 'pull_request' not in row],
                     [PullData.model_validate(row) for row in pulls],observed)
@@ -98,9 +107,20 @@ class GitHubClient:
 client = GitHubClient()
 
 
-def upsert(db, model, values):
-    stmt=insert(model).values(**values)
-    db.execute(stmt.on_conflict_do_update(index_elements=['project_id','github_id'],set_={k:v for k,v in values.items() if k not in ('project_id','github_id')}))
+def upsert_batch(db, model, values):
+    # Overlapping provider pages can repeat a canonical ID. Keep the newest
+    # observation, then issue bounded multi-row statements (not N round trips).
+    unique={}
+    for row in values:
+        old=unique.get(row['github_id'])
+        if old is None or row.get('updated_at',row['last_synced_at']) >= old.get('updated_at',old['last_synced_at']):
+            unique[row['github_id']]=row
+    rows=list(unique.values())
+    for offset in range(0,len(rows),100):
+        stmt=insert(model).values(rows[offset:offset+100])
+        db.execute(stmt.on_conflict_do_update(index_elements=['project_id','github_id'],
+            set_={key:getattr(stmt.excluded,key) for key in rows[0] if key not in ('project_id','github_id')}))
+    return len(rows)
 
 
 def sync(db, project_id, user):
@@ -122,19 +142,22 @@ def sync(db, project_id, user):
             cached=db.get(Repo,project_id)
             repo,etag,milestones,issues,pulls,commits=client.collect(project,cached,since)
             now=NOW()
-            for model,rows in [(Milestone,milestones),(Issue,issues),(Pull,pulls)]:
+            counters={}
+            for model,rows,key in [(Milestone,milestones,'milestones'),(Issue,issues,'issues'),(Pull,pulls,'pull_requests')]:
+                batch=[]
                 for row in rows:
                     values=row.model_dump();values['github_id']=values.pop('id')
                     if model is Milestone: values['due_date']=values.pop('due_on')
                     if model is Issue:
                         milestone=values.pop('milestone');values['milestone_github_id']=milestone['id'] if milestone else None
-                    upsert(db,model,dict(project_id=project_id,last_synced_at=now,**values))
+                    batch.append(dict(project_id=project_id,last_synced_at=now,**values))
+                counters[key]=upsert_batch(db,model,batch)
             values=dict(publicly_accessible=True,github_repo_id=repo.id,metadata_json=repo.model_dump(mode='json'),recent_commits=commits,etag=etag,last_synced_at=now)
             if cached:
                 for key,value in values.items():setattr(cached,key,value)
             else:db.add(Repo(project_id=project_id,**values))
             run.status='completed';run.completed_at=now
-            run.counters={'milestones':len(milestones),'issues':len(issues),'pull_requests':len(pulls),'sampled_commits':len(commits)}
+            run.counters={**counters,'sampled_commits':len(commits)}
             db.commit()
         except Exception as exc:
             db.rollback();run=db.get(Run,run.id)
@@ -164,3 +187,16 @@ def status(db, project_id):
     success=db.scalar(select(Run).where(Run.project_id==project_id,Run.status=='completed').order_by(Run.started_at.desc()).limit(1))
     timestamp=success.completed_at if success else None
     return dict(latest=latest,last_successful_sync_at=timestamp,stale=not timestamp or NOW()-timestamp>timedelta(hours=6) or bool(latest and latest.status!='completed'))
+
+
+def public_activity(db,project_id,limit=10,offset=0):
+    counts={}
+    for model,prefix in [(Issue,'issues'),(Pull,'pull_requests')]:
+        for state in ('open','closed'):
+            counts[prefix+'_'+state]=db.scalar(select(func.count()).select_from(model).where(model.project_id==project_id,model.state==state))
+    counts['pull_requests_merged']=db.scalar(select(func.count()).select_from(Pull).where(Pull.project_id==project_id,Pull.merged_at.is_not(None)))
+    repo=db.get(Repo,project_id)
+    return dict(sync=status(db,project_id),repository=repo.metadata_json if repo else None,counts=counts,
+        issues=db.scalars(select(Issue).where(Issue.project_id==project_id).order_by(Issue.updated_at.desc(),Issue.github_id).limit(limit).offset(offset)).all(),
+        pull_requests=db.scalars(select(Pull).where(Pull.project_id==project_id).order_by(Pull.updated_at.desc(),Pull.github_id).limit(limit).offset(offset)).all(),
+        recent_commits=repo.recent_commits if repo else [],limit=limit,offset=offset)

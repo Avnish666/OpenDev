@@ -84,3 +84,9 @@ from app.routers.github_progress import router as github_progress_router
 app.include_router(github_progress_router)
 from app.routers.roadmap import router as roadmap_router
 app.include_router(roadmap_router)
+from app.routers.roadmap_dependencies import router as roadmap_dependencies_router
+app.include_router(roadmap_dependencies_router)
+from app.routers.credibility import router as credibility_router
+app.include_router(credibility_router)
+from app.routers.progress import router as progress_router
+app.include_router(progress_router)

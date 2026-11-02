@@ -1,0 +1,249 @@
+{
+  "assessment_date_local": "2026-11-03",
+  "timezone": "Asia/Calcutta",
+  "scope": "Synthetic local PostgreSQL/TestClient and mocked GitHub; not production or Render Free measurements.",
+  "hardware": {
+    "os": "Linux 6.18.57 x86_64 glibc 2.41",
+    "python": "3.12.14",
+    "node": "24.19.0",
+    "visible_logical_cpus": 5,
+    "cgroup_cpu_quota_cores": 4,
+    "cgroup_memory_limit_bytes": 34359738368,
+    "chromium": "154.0.8037.57 (Debian 13)"
+  },
+  "method": {
+    "read_routes": "One warmup then three complete TestClient responses; median milliseconds. Engine SQL counter excludes BEGIN/COMMIT.",
+    "sync": "Single initial import per fixture, not warmed throughput; excludes separate advisory-lock connection and fixture authentication.",
+    "memory": "Peak RSS from full pytest process, including earlier tests/OCR; not an isolated production worker. Browser metrics include dev/HMR and a final explicit GC diagnostic."
+  },
+  "read_scenarios": [
+    {
+      "scenario": {
+        "owned_projects": 1,
+        "milestones": 35,
+        "histories": 35,
+        "published_expenses": 21,
+        "issue_snapshots": 80,
+        "pr_snapshots": 40,
+        "contributions": 0,
+        "documents": 0
+      },
+      "hardware": {
+        "platform": "Linux-6.18.57-x86_64-with-glibc2.41",
+        "python": "3.12.14",
+        "logical_cpus": 5
+      },
+      "progress_summary": {
+        "query_count": 31,
+        "median_ms": 29.84,
+        "samples_ms": [
+          31.32,
+          29.84,
+          25.32
+        ],
+        "response_bytes": 17785
+      },
+      "credibility": {
+        "query_count": 23,
+        "median_ms": 17.65,
+        "samples_ms": [
+          18.87,
+          16.35,
+          17.65
+        ],
+        "response_bytes": 18340
+      },
+      "delivery_page": {
+        "query_count": 7,
+        "median_ms": 9.21,
+        "samples_ms": [
+          10.25,
+          9.21,
+          8.59
+        ],
+        "response_bytes": 16198
+      },
+      "process_peak_rss_kib": 243552
+    },
+    {
+      "scenario": {
+        "owned_projects": 8,
+        "milestones": 280,
+        "histories": 280,
+        "published_expenses": 161,
+        "issue_snapshots": 640,
+        "pr_snapshots": 320,
+        "contributions": 0,
+        "documents": 0
+      },
+      "hardware": {
+        "platform": "Linux-6.18.57-x86_64-with-glibc2.41",
+        "python": "3.12.14",
+        "logical_cpus": 5
+      },
+      "progress_summary": {
+        "query_count": 31,
+        "median_ms": 29.87,
+        "samples_ms": [
+          29.87,
+          31.42,
+          29.06
+        ],
+        "response_bytes": 17788
+      },
+      "credibility": {
+        "query_count": 128,
+        "median_ms": 66.69,
+        "samples_ms": [
+          66.69,
+          65.46,
+          72.57
+        ],
+        "response_bytes": 47472
+      },
+      "delivery_page": {
+        "query_count": 7,
+        "median_ms": 11.21,
+        "samples_ms": [
+          12.44,
+          11.21,
+          10.45
+        ],
+        "response_bytes": 46367
+      },
+      "process_peak_rss_kib": 244192
+    }
+  ],
+  "sync_scenarios": [
+    {
+      "provider_rows": 5,
+      "unique_issues": 1,
+      "pull_requests": 2,
+      "sql_statements": 12,
+      "insert_statements": 5,
+      "mock_http_requests": 6,
+      "elapsed_ms": 337.86
+    },
+    {
+      "provider_rows": 201,
+      "unique_issues": 99,
+      "pull_requests": 100,
+      "sql_statements": 12,
+      "insert_statements": 5,
+      "mock_http_requests": 6,
+      "elapsed_ms": 67.74
+    },
+    {
+      "provider_rows": 1001,
+      "unique_issues": 499,
+      "pull_requests": 500,
+      "sql_statements": 20,
+      "insert_statements": 13,
+      "mock_http_requests": 14,
+      "elapsed_ms": 325.26
+    }
+  ],
+  "browser": {
+    "scope": "Synthetic two-task Vite dev page; sampled Chromium renderer metrics; final explicit GC diagnostic only, no peak/leak guarantee",
+    "memory": [
+      {
+        "stage": "two_tasks_rendered",
+        "metrics": [
+          {
+            "name": "Documents",
+            "value": 2
+          },
+          {
+            "name": "JSEventListeners",
+            "value": 295
+          },
+          {
+            "name": "Nodes",
+            "value": 793
+          },
+          {
+            "name": "JSHeapUsedSize",
+            "value": 34364968
+          },
+          {
+            "name": "JSHeapTotalSize",
+            "value": 41050112
+          }
+        ]
+      },
+      {
+        "stage": "after_repeated_navigation",
+        "metrics": [
+          {
+            "name": "Documents",
+            "value": 9
+          },
+          {
+            "name": "JSEventListeners",
+            "value": 2984
+          },
+          {
+            "name": "Nodes",
+            "value": 5091
+          },
+          {
+            "name": "JSHeapUsedSize",
+            "value": 59947064
+          },
+          {
+            "name": "JSHeapTotalSize",
+            "value": 84041728
+          }
+        ]
+      },
+      {
+        "stage": "after_navigation_explicit_gc_diagnostic",
+        "metrics": [
+          {
+            "name": "Documents",
+            "value": 5
+          },
+          {
+            "name": "JSEventListeners",
+            "value": 469
+          },
+          {
+            "name": "Nodes",
+            "value": 1041
+          },
+          {
+            "name": "JSHeapUsedSize",
+            "value": 38359496
+          },
+          {
+            "name": "JSHeapTotalSize",
+            "value": 39895040
+          }
+        ]
+      }
+    ]
+  },
+  "production_frontend_build": {
+    "units": "decimal KB",
+    "entry_js": {
+      "raw": 300.29,
+      "gzip": 88.27
+    },
+    "gantt_js": {
+      "raw": 1946.8,
+      "gzip": 604.0
+    },
+    "gantt_css": {
+      "raw": 385.38,
+      "gzip": 68.63
+    },
+    "font_woff2_raw": 158.22,
+    "font_ttf_raw": 426.11
+  },
+  "limitations": [
+    "No external/provider latency or hosted load measurement.",
+    "No concurrent different-project saturation or largest-supported timeline benchmark.",
+    "Short browser run is not a leak-free guarantee.",
+    "Full pytest peak RSS includes preceding tests; no production memory estimate."
+  ]
+}

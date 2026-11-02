@@ -63,7 +63,7 @@ class SyncStatus(BaseModel):
     latest: RunResponse | None
     last_successful_sync_at: datetime | None
     stale: bool
-    notice: str = 'GitHub observations are development signals, not proof of funded deliverable completion.'
+    notice: str = 'GitHub observations are development signals, not proof of funded deliverable completion. A successful bounded incremental sync does not establish exhaustive repository coverage.'
 
 
 class MilestoneResponse(BaseModel):

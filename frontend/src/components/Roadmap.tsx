@@ -1,6 +1,14 @@
-import { useEffect, useState, type FormEvent } from 'react';
+import { Component, lazy, Suspense, useEffect, useState, type FormEvent, type ReactNode } from 'react';
 import { api } from '../api/client';
 import type { RoadmapPage, RoadmapMilestone, RoadmapStatus, RoadmapHistory } from '../api/roadmap';
+
+class TimelineBoundary extends Component<{ children: ReactNode }, { failed: boolean }> {
+  state = { failed: false };
+  static getDerivedStateFromError() { return { failed: true }; }
+  render() { return this.state.failed ? <p role="alert">Unable to render the timeline. Use the milestone list or refresh the page.</p> : this.props.children; }
+}
+
+const Timeline = lazy(() => import('./RoadmapTimeline'));
 
 const message = (error: unknown) => error instanceof Error ? error.message : 'Roadmap request failed';
 const transitions: Record<RoadmapStatus, RoadmapStatus[]> = {
@@ -78,6 +86,7 @@ function MilestoneCard({ row, canManage, done }: { row: RoadmapMilestone; canMan
 }
 
 export default function Roadmap({ projectId, canManage }: { projectId: number; canManage: boolean }) {
+  const [view, setView] = useState<'list' | 'timeline'>('list');
   const [data, setData] = useState<RoadmapPage>(); const [error, setError] = useState('');
   const [page, setPage] = useState(0); const [version, setVersion] = useState(0); const [creating, setCreating] = useState(false);
   useEffect(() => {
@@ -87,10 +96,13 @@ export default function Roadmap({ projectId, canManage }: { projectId: number; c
   }, [projectId, page, version]);
   function refresh() { setData(undefined); setVersion(v => v + 1); setCreating(false); }
   return <section><h3>Project roadmap and funding deliverables</h3><p>Maintainer commitments are separate from synchronized GitHub milestones. Issue closure and PR merges never automatically mark delivery.</p>
-    <button onClick={refresh}>Refresh roadmap</button>{canManage && <button onClick={() => setCreating(!creating)}>Create milestone</button>}
+    <div className="actions"><button aria-pressed={view === 'list'} onClick={() => { setView('list'); refresh(); }}>Milestone list</button><button aria-pressed={view === 'timeline'} onClick={() => setView('timeline')}>Timeline</button></div>
+    {view === 'timeline' && <TimelineBoundary><Suspense fallback={<p role="status">Loading timeline module…</p>}><Timeline projectId={projectId} canManage={canManage} /></Suspense></TimelineBoundary>}
+    <div hidden={view !== 'list'}><button onClick={refresh}>Refresh roadmap</button>{canManage && <button onClick={() => setCreating(!creating)}>Create milestone</button>}
     {creating && <CommitmentForm projectId={projectId} done={refresh} />}
     {error && <p role="alert">{error}</p>}{!data && !error && <p role="status">Loading roadmap…</p>}
     {data && <>{!data.total && <p>No roadmap commitments have been published yet.</p>}{data.items.map(row => <MilestoneCard key={`${row.id}-${row.version}`} row={row} canManage={canManage} done={refresh} />)}
       <div className="actions"><button disabled={!page} onClick={() => { setData(undefined); setPage(p => p - 1); }}>Previous roadmap milestones</button><span>Page {page + 1}</span><button disabled={(page + 1) * 10 >= data.total} onClick={() => { setData(undefined); setPage(p => p + 1); }}>Next roadmap milestones</button></div></>}
+    </div>
   </section>;
 }
