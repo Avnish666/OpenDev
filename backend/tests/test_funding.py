@@ -26,7 +26,8 @@ def payments(ctx,monkeypatch):
             body=json.loads(r.content);assert body['webhook_id']=='sandbox-test' and 'webhook_event' in body
             return httpx.Response(200,json={'verification_status':'SUCCESS' if state['valid'] else 'FAILURE'})
         c=db.scalar(select(Contribution))
-        order={'id':'ORDER1','status':'COMPLETED' if state['captured'] else 'APPROVED','purchase_units':[{'custom_id':c.id,'payee':{'merchant_id':'sandbox-test'},'amount':{'currency_code':'USD','value':state['amount']},'payments':{'captures':[{'id':'CAP1'}] if state['captured'] else []}}]}
+        order={'intent':'CAPTURE','id':'ORDER1','status':'COMPLETED' if state['captured'] else 'APPROVED','purchase_units':[{'custom_id':c.id,'payee':{'merchant_id':'sandbox-test'},'amount':{'currency_code':'USD','value':state['amount']},'payments':{'captures':[{'id':'CAP1'}] if state['captured'] else []}}]}
+        order.update(state.get('order_override',{}))
         if r.url.path=='/v2/checkout/orders' and r.method=='POST':
             body=json.loads(r.content);assert body['purchase_units'][0]['amount']['value']=='5.00';assert r.headers['paypal-request-id']==c.id
             return httpx.Response(201,json={'id':'ORDER1','links':[{'rel':'payer-action','href':'https://www.sandbox.paypal.com/checkoutnow?token=ORDER1'}]})
@@ -35,8 +36,9 @@ def payments(ctx,monkeypatch):
             if state['failure']:raise httpx.ReadTimeout('test')
             state['captured']=True;order['purchase_units'][0]['payments']['captures']=[{'id':'CAP1'}]
             return httpx.Response(201,json=order)
+        if r.url.path=='/v2/checkout/orders/ORDER1' and state.get('order_expired'): return httpx.Response(404,json={})
         if r.url.path=='/v2/checkout/orders/ORDER1':return httpx.Response(200,json=order)
-        if r.url.path=='/v2/payments/captures/CAP1':return httpx.Response(200,json={'id':'CAP1','status':state['status'],'final_capture':True,'amount':{'currency_code':'USD','value':state['amount']}})
+        if r.url.path=='/v2/payments/captures/CAP1':return httpx.Response(200,json={'id':'CAP1','status':state['status'],**({} if state.get('omit_final') else {'final_capture':True}),'amount':{'currency_code':'USD','value':state['amount']}})
         raise AssertionError(r.url)
     monkeypatch.setattr(funding,'paypal',PayPal(httpx.MockTransport(handler)))
     return *ctx,tier,state
@@ -147,3 +149,97 @@ def test_missing_signature_and_no_secrets_in_responses(payments):
     assert client.post('/api/paypal/webhook',json=event(c)).status_code==400
     assert 'sandbox-test' not in json.dumps(c)
     assert 'access_token' not in json.dumps(c)
+
+
+@pytest.mark.parametrize('override', [{'intent':'AUTHORIZE'},{'id':'OTHER'},{'purchase_units':[{'custom_id':'OTHER','payee':{'merchant_id':'sandbox-test'},'amount':{'currency_code':'USD','value':'5.00'}}]}])
+def test_reject_mismatched_order_before_capture(payments,override):
+    client,db,*_=payments;state=payments[-1];c=checkout(payments).json();state['order_override']=override
+    assert client.post(f"/api/funding/{c['id']}/capture").status_code==502
+    assert not any(r.url.path.endswith('/capture') for r in state['calls'])
+    assert db.scalar(select(func.count()).select_from(Entitlement))==0
+
+
+def test_optional_final_capture(payments):
+    client,db,*_=payments;state=payments[-1];c=checkout(payments).json();state['omit_final']=True
+    assert client.post(f"/api/funding/{c['id']}/capture").json()['status']=='completed'
+    assert db.scalar(select(func.count()).select_from(Entitlement))==1
+
+
+def test_refund_before_completion_with_stale_capture_read(payments):
+    client,db,*_=payments;state=payments[-1];c=checkout(payments).json();state['captured']=True
+    refunded=event(c,'REFUND-FIRST','PAYMENT.CAPTURE.REFUNDED')
+    refunded['resource']['supplementary_data']['related_ids']['capture_id']='CAP1'
+    assert client.post('/api/paypal/webhook',json=refunded,headers=headers).status_code==200
+    assert db.scalar(select(Contribution)).status=='refunded'
+    assert db.scalar(select(func.count()).select_from(Entitlement))==0
+    assert client.post('/api/paypal/webhook',json=event(c,'LATE-COMPLETED'),headers=headers).status_code==200
+    assert db.scalar(select(func.count()).select_from(Entitlement))==0
+
+
+def test_late_refund_after_order_expiration(payments):
+    client,db,*_=payments;state=payments[-1];c=checkout(payments).json()
+    client.post(f"/api/funding/{c['id']}/capture")
+    state['order_expired']=True
+    refund=event(c,'LATE-REFUND','PAYMENT.CAPTURE.REFUNDED')
+    refund['resource']['supplementary_data']['related_ids']['capture_id']='CAP1'
+    assert client.post('/api/paypal/webhook',json=refund,headers=headers).status_code==200
+    assert db.scalar(select(Entitlement)).status=='revoked'
+
+
+@pytest.mark.parametrize('operation', ['orders','capture','cancel','fulfill'])
+@pytest.mark.parametrize('origin', ['', 'https://evil.example'])
+def test_all_payment_writes_require_csrf(payments,operation,origin):
+    client,db,*_=payments;c=checkout(payments).json()
+    path='/api/funding/orders' if operation=='orders' else f"/api/funding/{c['id']}/{operation}"
+    response=client.request('PATCH' if operation=='fulfill' else 'POST',path,json={'note':'test'} if operation=='fulfill' else {},headers={'Origin':origin})
+    assert response.status_code==403
+
+
+def test_cancelled_reservation_is_retained(payments):
+    from app.models.reward_tier import RewardTier
+    client,db,p,users,identity,tier,state=payments
+    t=db.get(RewardTier,tier['id']);t.quantity_limit=1;db.commit()
+    c=checkout(payments).json()
+    client.post(f"/api/funding/{c['id']}/cancel")
+    assert checkout(payments).status_code==409
+    assert db.scalar(select(func.count()).select_from(Entitlement))==0
+
+
+def test_late_denied_event_cannot_downgrade_completion(payments):
+    client,db,*_=payments;c=checkout(payments).json()
+    client.post(f"/api/funding/{c['id']}/capture")
+    payments[-1]['status']='DECLINED'
+    assert client.post('/api/paypal/webhook',json=event(c,'LATE-DENIED','PAYMENT.CAPTURE.DENIED'),headers=headers).status_code==200
+    assert db.scalar(select(Contribution)).status=='completed'
+    assert db.scalar(select(func.count()).select_from(Entitlement))==1
+
+
+def test_oauth_failure_is_sanitized(payments,monkeypatch,caplog):
+    client,db,*_=payments
+    def failed(request):
+        return httpx.Response(401,json={'error':'invalid_client','detail':'sensitive-test-value'})
+    monkeypatch.setattr(funding,'paypal',PayPal(httpx.MockTransport(failed)))
+    result=checkout(payments)
+    assert result.status_code==502
+    assert 'sensitive-test-value' not in result.text + caplog.text
+    assert 'sandbox-test' not in result.text + caplog.text
+    assert db.scalar(select(func.count()).select_from(Entitlement))==0
+
+
+def test_capture_lock_wait_does_not_block_event_loop(payments,monkeypatch):
+    import asyncio
+    import time
+    from fastapi import HTTPException
+    from app.main import app
+    def blocked_lock(*args):
+        time.sleep(0.25)
+        raise HTTPException(409,'simulated lock wait')
+    monkeypatch.setattr(funding,'own',blocked_lock)
+    async def exercise():
+        async with httpx.AsyncClient(transport=httpx.ASGITransport(app=app),base_url='http://testserver',headers={'Origin':__import__('app.core.config',fromlist=['settings']).settings.FRONTEND_URL}) as client:
+            capture=asyncio.create_task(client.post(f'/api/funding/{uuid4()}/capture'))
+            await asyncio.sleep(0.04)
+            assert (await client.get('/api/health')).status_code==200
+            assert not capture.done(), 'database lock wait blocked unrelated requests'
+            assert (await capture).status_code==409
+    asyncio.run(exercise())

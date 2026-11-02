@@ -1,3 +1,7 @@
+import Expenses from './Expenses';
+import Roadmap from '../components/Roadmap';
+import GitHubProgress from '../components/GitHubProgress';
+import Transparency from '../components/Transparency';
 import { CheckoutButton, FundingHistory } from './Funding';
 import { useEffect, useState, type FormEvent } from 'react';
 import { api, type Project, type ProjectDetail, type Reward } from '../api/client';
@@ -88,6 +92,10 @@ export function ProjectPage({ id }: { id: number }) {
     {project.can_manage && project.status === 'draft' && <div className="actions"><button onClick={() => setEditing(!editing)}>Edit Draft</button><button disabled={busy} onClick={() => void publish()}>{busy ? 'Publishing…' : 'Publish Project'}</button></div>}
     {editing && <ProjectForm project={project} done={refresh} />}
     <h3>Backer Rewards</h3><p>Sandbox demo only. No real funds are collected.</p><div className="grid">{rewards.map(r => <article key={r.id}><h4>{r.name} · {money(r.price_cents, r.currency)}</h4><p>{r.description}</p><ul>{r.benefits.map((b, i) => <li key={i}>{b.title}{b.description && ` — ${b.description}`}</li>)}</ul><p>{r.quantity_limit === null ? 'Unlimited quantity' : `Quantity limit: ${r.quantity_limit}`} · {r.active ? 'Active' : 'Inactive'}</p>{r.active && <CheckoutButton tierId={r.id} />}{project.can_manage && <button onClick={() => setEditor(r)}>Edit Tier</button>}</article>)}</div>{!rewards.length && <p>No reward tiers yet.</p>}
+    {(project.can_manage || project.status === 'active') && <GitHubProgress key={`github-${id}-${project.status}`} projectId={id} canManage={project.can_manage} active={project.status === 'active'} />}
+    {(project.can_manage || project.status === 'active') && <Roadmap key={`roadmap-${id}`} projectId={id} canManage={project.can_manage} />}
+    {project.status === 'active' && <Transparency key={id} projectId={id} />}
+    {project.can_manage && project.status !== 'draft' && <Expenses projectId={id} canManage={project.can_manage} />}
     {project.can_manage && <FundingHistory projectId={id} />}
     {project.can_manage && <><button onClick={() => setEditor('new')}>Create Reward Tier</button>{editor && <><RewardForm key={editor === 'new' ? 'new' : editor.id} projectId={id} tier={editor === 'new' ? undefined : editor} done={refresh} /><button onClick={() => setEditor(null)}>Cancel</button></>}</>}
   </section>;

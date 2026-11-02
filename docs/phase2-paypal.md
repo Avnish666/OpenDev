@@ -48,7 +48,7 @@ writes; stable independent create/capture PayPal-Request-Id values cover ambiguo
 provider failures. Order/capture IDs and entitlement contribution IDs are unique.
 The only entitlement-creation branch is a matching canonical `COMPLETED` capture:
 order ID, one purchase unit, custom contribution ID, configured merchant, currency,
-exact amount, one bound final capture are checked server-side. Duplicate completion
+exact amount, one bound exact-amount capture are checked server-side. Duplicate completion
 or out-of-order pending/denied events never grant another entitlement. Refunds and
 reversals revoke entitlements; they cannot undo manually delivered rewards.
 
@@ -93,9 +93,9 @@ These REST wire contracts, not remembered SDK symbol names, govern the adapter.
 ## Setup and manual Sandbox flow (not executed here)
 
 1. Use the existing backend Python environment; install
-   `python -m pip install -r requirements-payments.txt` from `backend/` if needed.
-   The separate pre-existing backend requirements problem remains documented in
-   Phase 1 setup; this extra file declares the adapter's HTTPX dependency only.
+   `python -m pip install -r requirements-app.txt` from `backend/` if needed.
+   For tests, use `requirements-dev.txt`. The old scientific `requirements.txt`
+   is retained separately and is not the web application installation target.
 2. Securely configure **backend-only** `PAYPAL_CLIENT_ID`, `PAYPAL_CLIENT_SECRET`,
    `PAYPAL_MERCHANT_ID` (the Sandbox business merchant ID), and `PAYPAL_WEBHOOK_ID`.
    Use credentials from a PayPal **Sandbox** REST app, never live credentials.
@@ -149,8 +149,12 @@ Use a fresh local `opendev_test_*` database; set `DATABASE_URL` and
 `/workspace/opendev-setup/test-step7.py` harness creates such a fresh database,
 checks migration drift and runs all tests. It does not use Neon.
 
-Validation: **30 tests passed, zero failed/skipped**; migration upgrade and Alembic
+Validation: **48 tests passed, zero failed/skipped**; migration upgrade and Alembic
 check pass. Frontend `npx tsc -b`, build and lint pass, with two existing AuthContext
 warnings. HTTPX TestClient has its existing deprecation warning. Concurrency is
 protected with row locks/unique constraints; tests exercise sequential duplicate
 redelivery, not a multi-process stress test. No automated browser run was performed.
+
+Pre-deployment audit and remaining issues: see `docs/phase2-review.md`. Refund/
+reversal event handling, pre-capture checks, worker execution, response schemas,
+CI configuration, and frontend recovery were corrected during that review.

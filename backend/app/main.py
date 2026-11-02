@@ -59,3 +59,28 @@ from app.routers.me import router as me_router
 app.include_router(me_router)
 from app.routers.funding import router as funding_router
 app.include_router(funding_router)
+from app.routers.expenses import router as expenses_router
+app.include_router(expenses_router)
+from app.routers.documents import router as documents_router
+app.include_router(documents_router)
+from app.routers.extractions import router as extractions_router
+app.include_router(extractions_router)
+from app.routers.accountability import router as accountability_router
+app.include_router(accountability_router)
+from app.routers.transparency import router as transparency_router
+app.include_router(transparency_router)
+
+
+@app.middleware("http")
+async def private_api_headers(request, call_next):
+    response = await call_next(request)
+    if request.url.path.startswith("/api/"):
+        response.headers["Cache-Control"] = "no-store"
+        response.headers["Referrer-Policy"] = "no-referrer"
+        response.headers["X-Content-Type-Options"] = "nosniff"
+    return response
+
+from app.routers.github_progress import router as github_progress_router
+app.include_router(github_progress_router)
+from app.routers.roadmap import router as roadmap_router
+app.include_router(roadmap_router)
