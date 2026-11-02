@@ -45,3 +45,9 @@ def get_current_user(
         )
 
     return user
+
+
+def get_optional_user(db: Session = Depends(get_db), app_session: str | None = Cookie(default=None, alias=SESSION_COOKIE)) -> User | None:
+    if not app_session:
+        return None
+    return get_current_user(db, app_session)

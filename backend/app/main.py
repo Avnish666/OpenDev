@@ -54,3 +54,8 @@ def database_health(db: Session = Depends(get_db)):
             status_code=503,
             detail="Database unavailable"
         )
+
+from app.routers.me import router as me_router
+app.include_router(me_router)
+from app.routers.funding import router as funding_router
+app.include_router(funding_router)
