@@ -7,10 +7,10 @@ import { pathToFileURL } from 'node:url';
 import { createElement } from 'react';
 import { renderToStaticMarkup } from 'react-dom/server';
 
-let folder, displayMoney, transparencyAPI, Transparency;
+let folder, displayMoney, transparencyAPI, Transparency, GitHubProgress, Roadmap;
 before(async () => {
   folder = await mkdtemp(join(import.meta.dirname, '.compiled-'));
-  for (const file of ['api/client.ts', 'api/transparency.ts', 'components/Transparency.tsx']) {
+  for (const file of ['api/client.ts', 'api/transparency.ts', 'components/Transparency.tsx', 'components/GitHubProgress.tsx', 'components/Roadmap.tsx']) {
     let source = await readFile(new URL('../src/' + file, import.meta.url), 'utf8');
     source = source.replace('import.meta.env', "({ VITE_API_URL: 'https://api.invalid' })");
     source = source.replace("import './Transparency.css';", '');
@@ -24,6 +24,8 @@ before(async () => {
   }
   ({ displayMoney, transparencyAPI } = await import(pathToFileURL(join(folder, 'api/transparency.js'))));
   ({ default: Transparency } = await import(pathToFileURL(join(folder, 'components/Transparency.js'))));
+  ({ default: GitHubProgress } = await import(pathToFileURL(join(folder, 'components/GitHubProgress.js'))));
+  ({ default: Roadmap } = await import(pathToFileURL(join(folder, 'components/Roadmap.js'))));
 });
 after(async () => { if (folder) await rm(folder, { recursive: true, force: true }); });
 
@@ -59,4 +61,24 @@ test('public client uses ledger contracts, encoded filters and safe errors', asy
     globalThis.fetch = async () => ({ ok: false, status: 404, json: async () => ({ detail: 'Project not found' }) });
     await assert.rejects(transparencyAPI.overview(5), /Project not found/);
   } finally { globalThis.fetch = original; }
+});
+
+
+test('GitHub loading and maintainer-only sync controls render without authentication context', () => {
+  const visitor = renderToStaticMarkup(createElement(GitHubProgress, { projectId: 5, canManage: false, active: true }));
+  const manager = renderToStaticMarkup(createElement(GitHubProgress, { projectId: 5, canManage: true, active: true }));
+  assert.match(visitor, /Loading repository progress/);
+  assert.doesNotMatch(visitor, />Sync GitHub</);
+  assert.match(manager, />Sync GitHub</);
+  assert.match(visitor, /does not prove funded deliverables/);
+});
+
+
+test('Roadmap renders public loading and maintainer-only create controls', () => {
+  const visitor = renderToStaticMarkup(createElement(Roadmap, { projectId: 5, canManage: false }));
+  const manager = renderToStaticMarkup(createElement(Roadmap, { projectId: 5, canManage: true }));
+  assert.match(visitor, /Loading roadmap/);
+  assert.doesNotMatch(visitor, />Create milestone</);
+  assert.match(manager, />Create milestone</);
+  assert.match(visitor, /never automatically mark delivery/);
 });

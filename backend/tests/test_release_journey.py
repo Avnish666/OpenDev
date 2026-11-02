@@ -173,6 +173,8 @@ def test_phase1_records_survive_forward_migration_chain(ac):
             assert conn.scalar(text('SELECT funding_goal_cents FROM projects WHERE id=900')) == 10000
             assert conn.scalar(text('SELECT sum(allocated_cents) FROM budget_allocations WHERE project_id=900')) == 10000
             assert conn.scalar(text('SELECT username FROM users WHERE id=900')) == 'existing'
-            assert conn.scalar(text('SELECT version_num FROM alembic_version')) == 'a684112224e6'
+            from alembic.config import Config
+            from alembic.script import ScriptDirectory
+            assert conn.scalar(text('SELECT version_num FROM alembic_version')) == ScriptDirectory.from_config(Config('alembic.ini')).get_current_head()
     finally:
         engine.dispose()

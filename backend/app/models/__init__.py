@@ -25,3 +25,5 @@ from app.models.receipt_extraction import ReceiptExtraction, ExtractionAttempt
 __all__.extend(['ReceiptExtraction', 'ExtractionAttempt'])
 from app.models.finding_review import FindingReview
 __all__.append('FindingReview')
+from app.models.github_progress import GitHubSyncRun, GitHubRepositorySnapshot, GitHubMilestoneSnapshot, GitHubIssueSnapshot, GitHubPullRequestSnapshot
+from app.models.roadmap import ProjectRoadmapMilestone, MilestoneGitHubEvidence, MilestoneStatusHistory

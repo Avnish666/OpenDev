@@ -79,3 +79,8 @@ async def private_api_headers(request, call_next):
         response.headers["Referrer-Policy"] = "no-referrer"
         response.headers["X-Content-Type-Options"] = "nosniff"
     return response
+
+from app.routers.github_progress import router as github_progress_router
+app.include_router(github_progress_router)
+from app.routers.roadmap import router as roadmap_router
+app.include_router(roadmap_router)
