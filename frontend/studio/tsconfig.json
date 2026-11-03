@@ -1,0 +1,1 @@
+{"extends":"../tsconfig.app.json","compilerOptions":{"tsBuildInfoFile":"./node_modules/.tmp/studio.tsbuildinfo"},"include":["./*.tsx","../src/api/analytics.ts"]}

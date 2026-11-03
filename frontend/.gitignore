@@ -22,3 +22,8 @@ dist-ssr
 *.njsproj
 *.sln
 *.sw?
+
+# Local analytics/Studio configuration and license material
+.env
+.env.*
+!.env.example

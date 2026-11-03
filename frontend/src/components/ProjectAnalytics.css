@@ -1,0 +1,6 @@
+.project-analytics { border-top:2px solid #cdd7e0; padding-top:24px; overflow-wrap:anywhere; min-width:0; }
+.analytics-charts { display:grid; grid-template-columns:repeat(auto-fit,minmax(min(100%,350px),1fr)); gap:18px; }
+.analytics-chart { height:350px; min-width:0; }
+.analytics-grid { height:380px; width:100%; }
+.project-analytics .actions { align-items:end; }
+.project-analytics .actions label { min-width:220px; margin:0; }
