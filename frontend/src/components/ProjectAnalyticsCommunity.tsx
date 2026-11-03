@@ -5,11 +5,12 @@ import { AgGridReact } from 'ag-grid-react';
 import { AllCommunityModule, ModuleRegistry, type ColDef } from 'ag-grid-community';
 import { safeBudget, type AnalyticsOverview, type AnalyticsExpense } from '../api/analytics';
 import { displayMoney } from '../api/transparency';
+import {MaintainerFacts} from './DevelopmentFacts';
 import DevelopmentCommunity from './DevelopmentCommunity';
 import { FinancialOverview, FinancialTables } from './FinancialFacts';
 ModuleRegistry.registerModules([AllCommunityModule]);ChartsRegistry.registerModules([ChartsCommunityModule]);
-export default function ProjectAnalyticsCommunity({data,view='financial'}:{data:AnalyticsOverview;view?:'financial'|'development'}){return view==='development'?<DevelopmentCommunity data={data}/>:<FinancialCommunity data={data}/>;}
-function FinancialCommunity({data}:{data:AnalyticsOverview}){
+export default function ProjectAnalyticsCommunity({data,view='financial'}:{data:AnalyticsOverview;view?:'financial'|'development'|'spending'|'maintainer'}){return view==='maintainer'?<MaintainerFacts data={data}/>:view==='development'?<DevelopmentCommunity data={data}/>:<FinancialCommunity data={data} spending={view==='spending'}/>;}
+function FinancialCommunity({data,spending=false}:{data:AnalyticsOverview;spending?:boolean}){
  const rows=useMemo(()=>safeBudget(data).map(r=>({...r,allocated:r.allocated_cents/100,reported:r.reported_spending_cents/100,remaining:r.remaining_cents/100})),[data]);
  const options=useMemo<AgChartOptions[]>(()=>{
   const categories=data.expense_analysis.categories.filter(r=>Number.isSafeInteger(r.amount_cents)).map(r=>({...r,amount:r.amount_cents/100}));
@@ -23,12 +24,12 @@ function FinancialCommunity({data}:{data:AnalyticsOverview}){
   return charts;
  },[rows,data]);
  const columns=useMemo<ColDef<AnalyticsExpense>[]>(()=>[{field:'id',headerName:'Public detail',minWidth:155,cellRenderer:(p:{value:number})=><a href={`#/projects/${data.project_id}/expenses/${p.value}`}>Expense {p.value}</a>},{field:'category',headerName:'Published category',flex:1,minWidth:160},{field:'amount_cents',headerName:'Reported amount',valueFormatter:p=>displayMoney(p.value,data.currency),minWidth:170},{field:'expense_date',headerName:'Expense date',minWidth:145},{field:'approved_public_support',headerName:'Public document support',valueFormatter:p=>p.value?'Approved redacted support':'No public documents',minWidth:210},{field:'public_category_finding_count',headerName:'Category findings',minWidth:155}], [data.currency,data.project_id]);
- return <div><p className="badge">AG Charts Community + AG Grid Community · not AG Studio</p><FinancialOverview data={data}/>
+ return <div><p className="badge">AG Charts Community + AG Grid Community · not AG Studio</p>{!spending&&<FinancialOverview data={data}/>}<h4>{spending?'Spending & Evidence':'Financial Overview'}</h4>
   {(rows.length!==data.budget.length||[...data.expense_analysis.categories,...data.expense_analysis.months].some(r=>!Number.isSafeInteger(r.amount_cents))||![data.financial.expenses_with_documents_cents,data.financial.expenses_without_documents_cents].every(Number.isSafeInteger))&&<p role="status">Some amounts exceed safe browser chart range. Inspect exact API values; unsafe amounts are not charted.</p>}
   <div className="analytics-charts">{options.map((option,i)=><div key={i} className="analytics-chart" role="region" aria-label={String(option.title?.text)}><AgCharts options={option}/></div>)}</div>
   <FinancialTables data={data}/>
   <h4>Published expense analytics · current page</h4><p>Expense charts use all matching records. Months are maintainer-reported expense dates, not receipt uploads or PayPal capture dates. Months with no observations are omitted.</p>
-  {!data.expenses.length?<p>No published expense rows match these filters.</p>:<div className="analytics-grid" aria-label="Published expense detail grid"><AgGridReact<AnalyticsExpense> rowData={data.expenses} columnDefs={columns} defaultColDef={{sortable:true,resizable:true,editable:false}} getRowId={p=>String(p.data.id)} /></div>}
+  {!data.expenses.length?<p>No published expense rows match these filters.</p>:<div className="analytics-grid" aria-label="Published expense detail grid"><AgGridReact<AnalyticsExpense> rowData={data.expenses} columnDefs={columns} rowSelection={{mode:'singleRow',checkboxes:false,enableClickSelection:true}} defaultColDef={{sortable:true,resizable:true,editable:false}} getRowId={p=>String(p.data.id)} /></div>}
   <p>Column sorting applies to the current page. Use expense order above for server-side date sorting across all pages. Category findings describe full-project categories, not individual payment allegations.</p>
  </div>;
 }

@@ -1,4 +1,5 @@
 """Read-only adapters over authoritative financial/progress/public history services."""
+from app.schemas.dashboard_filters import DashboardDimensions
 from fastapi import HTTPException
 from sqlalchemy import select, func
 from app.models.project import Project
@@ -36,7 +37,8 @@ def expense_analysis(db, project, filters, category_values=None):
     return dict(categories=groups[0], months=groups[1], expense_count=count, reported_spending_cents=amount)
 
 
-def overview(db,project_id,limit=50,offset=0,filters=None,milestone_offset=0):
+def overview(db,project_id,limit=50,offset=0,filters=None,milestone_offset=0,dimensions=None):
+    dimensions=dimensions or DashboardDimensions()
     filters = filters or ExpenseFilters()
     p=transparency.public_project(db,project_id)
     owned=credibility.owned_ids(p.owner_id)
@@ -53,16 +55,17 @@ def overview(db,project_id,limit=50,offset=0,filters=None,milestone_offset=0):
     summary=transparency.overview(db,p,public_context=context)
     s=summary['financial_summary']
     category_values = None
-    if filters.category:
+    if filters.category or dimensions.discrepancy!='all':
         # Bounded by source preflight. Resolve exact canonical categories once, not per row.
         category_values = [value for value in db.scalars(select(Expense.category).where(
             Expense.project_id == p.id, Expense.publication_status == 'published').distinct())
-            if value.strip().casefold() == filters.category.strip().casefold()]
+            if (not filters.category or value.strip().casefold()==filters.category.strip().casefold()) and
+            (dimensions.discrepancy=='all' or ((value.strip().casefold() in {r['category'] for r in s['budget_variance'] if r['overspend_cents']>0}) == (dimensions.discrepancy=='with')))]
     ledger=transparency.ledger(db,p,limit,offset,filters.sort,'',filters.category,filters.evidence,filters.date_from,filters.date_to,summary=summary,category_values=category_values)
     grouped_expenses=expense_analysis(db,p,filters,category_values)
     rows=db.scalars(select(Milestone).where(Milestone.project_id.in_(owned)).order_by(Milestone.id)).all()
     derived=credibility.delivery_rows(db,rows)
-    development=analytics_development.dataset(db,p,s['calculated_at'],derived,limit,milestone_offset)
+    development=analytics_development.dataset(db,p,s['calculated_at'],derived,limit,milestone_offset,dimensions)
     profile=credibility.profile(db,p.owner_id,s['calculated_at'],public_context=context,
         milestone_rows=rows,delivery_history=derived,include_github=False)
     result=AnalyticsOverview.model_validate(dict(project_id=p.id,currency=p.currency,as_of=s['calculated_at'],funding_goal_cents=p.funding_goal_cents,
@@ -70,7 +73,7 @@ def overview(db,project_id,limit=50,offset=0,filters=None,milestone_offset=0):
             approved_public_support=bool(r['evidence']),public_category_finding_count=len(r['findings'])) for r in ledger['items']],
         expense_analysis=grouped_expenses,expense_filters=filters,public_unresolved_finding_count=summary['public_unresolved_discrepancy_count'],funding_trend={},
         expense_total=ledger['total'],expense_limit=limit,expense_offset=offset,
-        development=development,
+        dashboard_filters=dimensions,development=development,
         maintainer=dict(project_rewards=credibility.reward_statistics(db,[p],s['calculated_at']),owner_id=p.owner_id,participation=profile['participation'],delivery=profile['delivery'],rewards=profile['rewards'],financial=profile['financial'],scope=profile['scope'],attribution=profile['attribution']),
         limitations=[*s['notes'],*profile['limitations'],*analytics_development.LIMITATIONS,
             'Expense and milestone rows are bounded pages. Financial/category totals and development counts use their full current public source scope.',

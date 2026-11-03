@@ -1,3 +1,4 @@
+from app.schemas.dashboard_filters import DashboardDimensions
 from datetime import date
 from typing import Literal
 from fastapi import APIRouter, Depends, Query, HTTPException
@@ -13,9 +14,11 @@ router=APIRouter(prefix='/api/projects',tags=['Public analytics'])
 def overview(project_id:RecordID,limit:int=Query(50,ge=1,le=100),offset:int=Query(0,ge=0,le=10000),
              milestone_offset:int=Query(0,ge=0,le=10000),scope:Literal['public']='public',category:str=Query('',max_length=100),
              evidence:Literal['all','supported','unsupported']='all',date_from:date|None=None,date_to:date|None=None,
-             sort:Literal['date_desc','date_asc']='date_desc',db:Session=Depends(get_db)):
+             sort:Literal['date_desc','date_asc']='date_desc',dimensions:DashboardDimensions=Depends(),db:Session=Depends(get_db)):
     if date_from and date_to and date_from > date_to:
         raise HTTPException(422,'Expense date range is reversed')
+    if dimensions.planned_from and dimensions.planned_to and dimensions.planned_from>dimensions.planned_to:
+        raise HTTPException(422,'Planned deadline range is reversed')
     filters=ExpenseFilters(category=category,evidence=evidence,date_from=date_from,date_to=date_to,sort=sort)
     with accountability.read_snapshot(db) as reader:
-        return analytics.overview(reader,project_id,limit,offset,filters,milestone_offset)
+        return analytics.overview(reader,project_id,limit,offset,filters,milestone_offset,dimensions)

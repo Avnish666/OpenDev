@@ -13,7 +13,7 @@ LIMITATIONS = [
 ]
 
 
-def github(db, project, now):
+def github(db, project, now,filters):
     repo = db.get(Repo, project.id)
     sync = github_progress.status(db, project.id)
     available = bool(repo and repo.publicly_accessible and repo.github_repo_id == project.github_repo_id)
@@ -36,17 +36,32 @@ def github(db, project, now):
         result.update(counts=counts,issues=activity['issues'],pull_requests=activity['pull_requests'],
             milestones=db.scalars(select(GitHubMilestone).where(GitHubMilestone.project_id==project.id).order_by(GitHubMilestone.number,GitHubMilestone.github_id).limit(10)).all(),
             recent_commits=activity['recent_commits'][:30])
+    if available and (filters.github_category!='all' or filters.github_freshness!='all'):
+        counts={}; cutoff=now-timedelta(hours=6)
+        for model,kind,key in [(Issue,'issue','issues'),(Pull,'pull_request','pull_requests'),(GitHubMilestone,'milestone','milestones')]:
+            stmt=select(model).where(model.project_id==project.id)
+            if filters.github_freshness!='all':stmt=stmt.where(model.last_synced_at<cutoff if filters.github_freshness=='stale' else model.last_synced_at>=cutoff)
+            selected=filters.github_category in ('all',kind)
+            rows=db.scalars(stmt.order_by(model.github_id)).all() if selected else []
+            if selected:
+                counts.update({key+'_'+state:sum(r.state==state for r in rows) for state in ('open','closed')})
+                if model is Pull:counts['pull_requests_merged']=sum(r.merged_at is not None for r in rows)
+            result[key if key!='milestones' else 'milestones']=rows[:10]
+        result['counts']=counts
+        keep=filters.github_category in ('all','commit') and (filters.github_freshness=='all' or ((repo.last_synced_at<cutoff)==(filters.github_freshness=='stale')))
+        result['recent_commits']=result['recent_commits'] if keep else []
     return result
 
 
-def dataset(db,project,now,derived,limit,offset):
+def dataset(db,project,now,derived,limit,offset,filters):
     own = [r for r in derived if r['project_id']==project.id]
+    own=[r for r in own if (filters.milestone_status=='all' or r['status']==filters.milestone_status) and (filters.delivery=='all' or ((r['status']=='delivered')==(filters.delivery=='delivered'))) and (filters.outcome=='all' or r['timing']==filters.outcome) and (not filters.planned_from or r['current_deadline']>=filters.planned_from) and (not filters.planned_to or r['current_deadline']<=filters.planned_to)]
     rows = []
     for row in own[offset:offset+limit]:
         original, current, actual = row['original_deadline'],row['current_deadline'],row['actual_completion_date']
         rows.append(dict(**row,overdue=bool(progress.counts([row],now)['overdue_unfinished']),
             deadline_shift_days=(current-original).days if original else None,
             delivery_delay_days=(actual-original).days if actual and original else None))
-    gh = github(db,project,now)
+    gh = github(db,project,now,filters)
     return dict(counts=progress.counts(own,now),milestones=rows,total=len(own),limit=limit,offset=offset,
         github=gh,github_counts=gh['counts'],last_successful_sync_at=gh['sync']['last_successful_sync_at'],github_stale=gh['sync']['stale'])

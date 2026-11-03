@@ -11,9 +11,9 @@ export default function App() {
   const [path, setPath] = useState(window.location.hash || '#/explore');
   const { user, loading } = useAuth();
   useEffect(() => { const change = () => setPath(window.location.hash || '#/explore'); window.addEventListener('hashchange', change); return () => window.removeEventListener('hashchange', change); }, []);
-  const maintainer = path.match(/^#\/maintainers\/(\d+)$/);
-  const expense = path.match(/^#\/projects\/(\d+)\/expenses\/(\d+)$/);
-  const match = path.match(/^#\/projects\/(\d+)(?:\/roadmap)?$/);
+  const maintainer = path.split('?')[0].match(/^#\/maintainers\/(\d+)$/);
+  const expense = path.split('?')[0].match(/^#\/projects\/(\d+)\/expenses\/(\d+)$/);
+  const match = path.split('?')[0].match(/^#\/projects\/(\d+)(?:\/roadmap)?$/);
   return <main><header><h1>Open Source Funding</h1><p>Fund open source. Reward backers. Prove progress.</p><nav><a href="#/explore">Explore Projects</a><a href="#/my">My Projects</a><a href="#/create">Create Project</a><a href="#/history">My Funding & Rewards</a></nav><GitHubLogin /></header>
     {loading ? <p role="status">Checking session…</p> : (path === '#/my' || path === '#/create' || path === '#/history' || path.startsWith('#/funding-')) && !user ? <p>Sign in with GitHub to manage projects.</p> : path === '#/history' ? <FundingHistory /> : path.startsWith('#/funding-') ? <FundingReturn key={path} cancelled={path === '#/funding-cancel'} /> : path === '#/create' ? <ProjectForm done={id => { window.location.hash = `/projects/${id}`; }} /> : maintainer ? <MaintainerProfile key={maintainer[1]} userId={Number(maintainer[1])} /> : expense ? <PublicExpensePage projectId={Number(expense[1])} expenseId={Number(expense[2])} /> : match ? <ProjectPage key={`${match[1]}-${user?.id ?? 'public'}`} id={Number(match[1])} /> : <ProjectList key={`${path}-${user?.id ?? 'public'}`} mine={path === '#/my'} />}
   </main>;

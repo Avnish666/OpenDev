@@ -1,4 +1,5 @@
 """Bounded public analytics projections; no private analytics mode is exposed."""
+from app.schemas.dashboard_filters import DashboardDimensions
 from datetime import date, datetime
 from typing import Literal
 from pydantic import BaseModel
@@ -80,6 +81,7 @@ class MaintainerDataset(BaseModel):
     attribution: str
 
 class AnalyticsOverview(BaseModel):
+    dashboard_filters: DashboardDimensions = DashboardDimensions()
     schema_version: Literal['1'] = '1'
     project_id: int
     currency: str

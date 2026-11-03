@@ -7,7 +7,7 @@ export interface ExpenseFilters {category:string;evidence:'all'|'supported'|'uns
 export const defaultExpenseFilters:ExpenseFilters={category:'',evidence:'all',date_from:'',date_to:'',sort:'date_desc'};
 export interface AnalyticsMilestone extends DeliveryRow {revision_count:number;deadline_revision_count:number;overdue:boolean;deadline_shift_days:number|null;delivery_delay_days:number|null}
 export interface AnalyticsGithub {available:boolean;repository_name:string|null;counts:Record<string,number>|null;sync:ProgressSummary['sync'];observed_at:string|null;snapshot_age_seconds:number|null;issues:NonNullable<ProgressSummary['activity']>['issues'];pull_requests:NonNullable<ProgressSummary['activity']>['pull_requests'];milestones:ProgressSummary['github_milestones'];recent_commits:{sha:string;committed_at:string}[];exhaustive:false;limitations:string[]}
-export type AnalyticsView='financial'|'development';
+export type AnalyticsView='financial'|'development'|'spending'|'maintainer';
 export interface AnalyticsOverview {
  schema_version:'1'; project_id:number; currency:string; as_of:string; visibility:'public_active_project'; funding_goal_cents:number;
  financial:{ project_id:number; currency:string; audience:'public_evidence_only'; gross_completed_funding_cents:number; refund_excluded_cents:number; reversal_excluded_cents:number; exact_refund_total_cents:null; net_recorded_funding_cents:number; published_reported_spending_cents:number; funding_minus_reported_expenditure_cents:number; published_expense_count:number; expenses_with_documents_count:number; expenses_with_documents_cents:number; expenses_without_documents_count:number; expenses_without_documents_cents:number; unresolved_expenses_count:null; unresolved_discrepancy_count:null; independently_payment_matched_cents:0; evidence_coverage:{classification:string;expense_count:number;amount_cents:number}[];budget_variance:BudgetVariance[];calculated_at:string;notes:string[] };
@@ -17,8 +17,9 @@ export interface AnalyticsOverview {
  development:{counts:Counts;milestones:AnalyticsMilestone[];github:AnalyticsGithub;total:number;limit:number;offset:number;github_counts:Record<string,number>|null;last_successful_sync_at:string|null;github_stale:boolean};
  maintainer:{project_rewards:Indicator[];owner_id:number;participation:Record<string,number>;delivery:Indicator[];rewards:Indicator[];financial:Profile['financial'];scope:string;attribution:string};limitations:string[];
 }
-export async function loadAnalytics(projectId:number,offset:number,signal:AbortSignal,filters:ExpenseFilters=defaultExpenseFilters,milestoneOffset=0):Promise<AnalyticsOverview>{
+export async function loadAnalytics(projectId:number,offset:number,signal:AbortSignal,filters:ExpenseFilters=defaultExpenseFilters,milestoneOffset=0,dimensions:object={}):Promise<AnalyticsOverview>{
  const params=new URLSearchParams({limit:'50',offset:String(offset),milestone_offset:String(milestoneOffset)});for(const [key,value] of Object.entries(filters))if(value)params.set(key,value);
+ for(const [key,value] of Object.entries(dimensions))if(value&&!['participation','reward'].includes(key))params.set(key,value);
  const response=await fetch(`${import.meta.env.VITE_API_URL??''}/api/projects/${projectId}/analytics/overview?${params}`,{credentials:'include',cache:'no-store',signal});
  if(!response.ok)throw new Error(response.status===404?'Public project unavailable.':response.status===413?'This public dataset exceeds the bounded analytics capacity.':'Unable to load analytics. Please retry.');
  const data:AnalyticsOverview=await response.json();

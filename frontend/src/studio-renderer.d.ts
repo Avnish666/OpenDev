@@ -1,5 +1,5 @@
 declare module '@opendev/studio-renderer' {
  import type { ComponentType } from 'react';
- const Renderer: ComponentType<{data:import('./api/analytics').AnalyticsOverview;view?:'financial'|'development'}>;
+ const Renderer: ComponentType<{data:import('./api/analytics').AnalyticsOverview;view?:'financial'|'development'|'spending'|'maintainer'}>;
  export default Renderer;
 }
