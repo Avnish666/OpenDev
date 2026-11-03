@@ -5,20 +5,30 @@ import { AgGridReact } from 'ag-grid-react';
 import { AllCommunityModule, ModuleRegistry, type ColDef } from 'ag-grid-community';
 import { safeBudget, type AnalyticsOverview, type AnalyticsExpense } from '../api/analytics';
 import { displayMoney } from '../api/transparency';
+import DevelopmentCommunity from './DevelopmentCommunity';
+import { FinancialOverview, FinancialTables } from './FinancialFacts';
 ModuleRegistry.registerModules([AllCommunityModule]);ChartsRegistry.registerModules([ChartsCommunityModule]);
-export default function ProjectAnalyticsCommunity({data}:{data:AnalyticsOverview}){
- const rows=useMemo(()=>safeBudget(data),[data]);
- const options=useMemo<AgChartOptions[]>(()=>[
-  {data:rows,title:{text:`Budget versus reported spending (${data.currency} minor units)`},series:[{type:'bar',xKey:'category',yKey:'allocated_cents',yName:'Allocated',tooltip:{enabled:false}},{type:'bar',xKey:'category',yKey:'reported_spending_cents',yName:'Reported spending',tooltip:{enabled:false}}]},
-  {data:rows.filter(r=>r.reported_spending_cents>0),title:{text:`Published spending by category (${data.currency} minor units)`},series:[{type:'pie',angleKey:'reported_spending_cents',legendItemKey:'category',tooltip:{enabled:false}}]},
- ],[rows,data.currency]);
- const columns=useMemo<ColDef<AnalyticsExpense>[]>(()=>[{field:'category',headerName:'Published category',flex:1,minWidth:160},{field:'amount_cents',headerName:'Reported amount',valueFormatter:p=>displayMoney(p.value,data.currency),minWidth:170},{field:'expense_date',headerName:'Expense date',minWidth:145},{field:'approved_public_support',headerName:'Approved public support',minWidth:190},{field:'public_category_finding_count',headerName:'Category findings',minWidth:155}], [data.currency]);
- const cards=[['Net recorded funding',data.financial.net_recorded_funding_cents],['Published reported spending',data.financial.published_reported_spending_cents],['Calculated difference · not cash balance',data.financial.funding_minus_reported_expenditure_cents],['Funding goal',data.funding_goal_cents]] as const;
- return <div><p className="badge">AG Charts Community + AG Grid Community · not AG Studio</p><div className="grid">{cards.map(([label,value])=><article key={label}><h4>{label}</h4><p>{displayMoney(value,data.currency)}</p></article>)}</div>
-  {rows.length!==data.budget.length&&<p role="status">Some amounts exceed safe browser chart range. Inspect exact API values; unsafe amounts are not charted.</p>}
-  {!rows.length?<p>No public budget or spending categories yet.</p>:<div className="analytics-charts">{options.map((option,i)=><div key={i} className="analytics-chart"><AgCharts options={option}/></div>)}</div>}
-  <details><summary>Exact category values and chart alternative</summary><ul>{data.budget.map(r=><li key={r.category}>{r.category}: allocated {displayMoney(r.allocated_cents,data.currency)}; reported {displayMoney(r.reported_spending_cents,data.currency)}; remaining {displayMoney(r.remaining_cents,data.currency)}; overrun {displayMoney(r.overspend_cents,data.currency)}</li>)}</ul></details>
-  <h4>Published expense analytics · current page</h4>{!data.expenses.length?<p>No published expense rows in this page.</p>:<div className="analytics-grid"><AgGridReact<AnalyticsExpense> rowData={data.expenses} columnDefs={columns} defaultColDef={{sortable:true,filter:true,resizable:true,editable:false}} getRowId={p=>String(p.data.id)} /></div>}
-  <p>Approved public support is not payment verification. Category findings are not receipt-level allegations. Full totals are separate from paged expense rows.</p>
+export default function ProjectAnalyticsCommunity({data,view='financial'}:{data:AnalyticsOverview;view?:'financial'|'development'}){return view==='development'?<DevelopmentCommunity data={data}/>:<FinancialCommunity data={data}/>;}
+function FinancialCommunity({data}:{data:AnalyticsOverview}){
+ const rows=useMemo(()=>safeBudget(data).map(r=>({...r,allocated:r.allocated_cents/100,reported:r.reported_spending_cents/100,remaining:r.remaining_cents/100})),[data]);
+ const options=useMemo<AgChartOptions[]>(()=>{
+  const categories=data.expense_analysis.categories.filter(r=>Number.isSafeInteger(r.amount_cents)).map(r=>({...r,amount:r.amount_cents/100}));
+  const months=data.expense_analysis.months.filter(r=>Number.isSafeInteger(r.amount_cents)).map(r=>({...r,amount:r.amount_cents/100}));
+  const coverage=[{support:'With public documents',amount:data.financial.expenses_with_documents_cents/100},{support:'Without public documents',amount:data.financial.expenses_without_documents_cents/100}];
+  const charts:AgChartOptions[]=[];
+  if(rows.length)charts.push({data:rows,title:{text:`Budget comparison (${data.currency})`},series:[{type:'bar',xKey:'category',yKey:'allocated',yName:'Planned allocation',tooltip:{enabled:false}},{type:'bar',xKey:'category',yKey:'reported',yName:'Reported spending',tooltip:{enabled:false}},{type:'bar',xKey:'category',yKey:'remaining',yName:'Remaining (negative = overrun)',tooltip:{enabled:false}}]});
+  if(categories.length)charts.push({data:categories,title:{text:`Filtered spending by category (${data.currency})`},series:[{type:'pie',angleKey:'amount',legendItemKey:'key',tooltip:{enabled:false}}]});
+  if(months.length)charts.push({data:months,title:{text:`Filtered expenses by month (${data.currency})`},series:[{type:'bar',xKey:'key',yKey:'amount',yName:'Reported expense amount',tooltip:{enabled:false}}]});
+  if([data.financial.expenses_with_documents_cents,data.financial.expenses_without_documents_cents].every(Number.isSafeInteger)&&data.financial.published_expense_count>0)charts.push({data:coverage,title:{text:`Public document coverage (${data.currency})`},series:[{type:'pie',angleKey:'amount',legendItemKey:'support',tooltip:{enabled:false}}]});
+  return charts;
+ },[rows,data]);
+ const columns=useMemo<ColDef<AnalyticsExpense>[]>(()=>[{field:'id',headerName:'Public detail',minWidth:155,cellRenderer:(p:{value:number})=><a href={`#/projects/${data.project_id}/expenses/${p.value}`}>Expense {p.value}</a>},{field:'category',headerName:'Published category',flex:1,minWidth:160},{field:'amount_cents',headerName:'Reported amount',valueFormatter:p=>displayMoney(p.value,data.currency),minWidth:170},{field:'expense_date',headerName:'Expense date',minWidth:145},{field:'approved_public_support',headerName:'Public document support',valueFormatter:p=>p.value?'Approved redacted support':'No public documents',minWidth:210},{field:'public_category_finding_count',headerName:'Category findings',minWidth:155}], [data.currency,data.project_id]);
+ return <div><p className="badge">AG Charts Community + AG Grid Community · not AG Studio</p><FinancialOverview data={data}/>
+  {(rows.length!==data.budget.length||[...data.expense_analysis.categories,...data.expense_analysis.months].some(r=>!Number.isSafeInteger(r.amount_cents))||![data.financial.expenses_with_documents_cents,data.financial.expenses_without_documents_cents].every(Number.isSafeInteger))&&<p role="status">Some amounts exceed safe browser chart range. Inspect exact API values; unsafe amounts are not charted.</p>}
+  <div className="analytics-charts">{options.map((option,i)=><div key={i} className="analytics-chart" role="region" aria-label={String(option.title?.text)}><AgCharts options={option}/></div>)}</div>
+  <FinancialTables data={data}/>
+  <h4>Published expense analytics · current page</h4><p>Expense charts use all matching records. Months are maintainer-reported expense dates, not receipt uploads or PayPal capture dates. Months with no observations are omitted.</p>
+  {!data.expenses.length?<p>No published expense rows match these filters.</p>:<div className="analytics-grid" aria-label="Published expense detail grid"><AgGridReact<AnalyticsExpense> rowData={data.expenses} columnDefs={columns} defaultColDef={{sortable:true,resizable:true,editable:false}} getRowId={p=>String(p.data.id)} /></div>}
+  <p>Column sorting applies to the current page. Use expense order above for server-side date sorting across all pages. Category findings describe full-project categories, not individual payment allegations.</p>
  </div>;
 }

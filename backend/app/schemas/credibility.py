@@ -42,6 +42,8 @@ class ProjectPage(BaseModel):
 
 
 class DeliveryRow(BaseModel):
+    revision_count: int = 0
+    deadline_revision_count: int = 0
     milestone_id: int
     project_id: int
     title: str

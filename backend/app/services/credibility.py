@@ -11,7 +11,7 @@ from app.models.funding import Contribution, Entitlement
 from app.models.expense import Expense
 from app.models.expense_document import ExpenseDocument
 from app.models.github_progress import GitHubRepositorySnapshot as Repo, GitHubIssueSnapshot as Issue, GitHubPullRequestSnapshot as Pull
-from app.services import transparency, github_progress
+from app.services import transparency, github_progress, accountability
 
 SCOPE='Active public projects only. Draft, paused and completed projects are excluded, including when the requester is the owner.'
 ATTRIBUTION='Outcome metrics cover owned projects only. Maintainer/collaborator participation is listed separately, without attributing the whole team’s results to an individual.'
@@ -57,9 +57,13 @@ def iso_date(value):
 
 def delivery_row(db,row,events=None,repository=...):
     if events is None:events=db.scalars(select(History).where(History.milestone_id==row.id).order_by(History.version)).all()
+    deadline_revisions=0;last_deadline=None
     original=None;actual=None;reopened=False;ever_delivered=False;linked={};delivery_links=None
     for event in events:
         if event.action=='created' and original is None:original=iso_date(event.after_json.get('planned_end_date'))
+        deadline=iso_date(event.after_json.get('planned_end_date'))
+        if event.action=='edited' and deadline and last_deadline and deadline!=last_deadline:deadline_revisions+=1
+        if deadline:last_deadline=deadline
         if event.action=='evidence_linked':
             evidence=event.after_json.get('evidence',{})
             if evidence.get('id'):linked[evidence['id']]=True
@@ -74,7 +78,7 @@ def delivery_row(db,row,events=None,repository=...):
     if row.status=='delivered' and actual and original:timing='on_time' if actual<=original else 'late'
     repo=db.get(Repo,row.project_id) if repository is ... else repository
     if not repo or not repo.publicly_accessible:delivery_links=None
-    return dict(milestone_id=row.id,project_id=row.project_id,title=row.title,status=row.status,original_deadline=original,
+    return dict(revision_count=sum(e.action!='created' for e in events),deadline_revision_count=deadline_revisions,milestone_id=row.id,project_id=row.project_id,title=row.title,status=row.status,original_deadline=original,
         current_deadline=row.planned_end_date,actual_completion_date=actual,timing=timing,ever_asserted_delivered=ever_delivered,reopened_after_delivery=reopened,
         evidence_links_at_delivery=delivery_links if row.status=='delivered' else None,updated_at=row.updated_at,
         project_href=f'#/projects/{row.project_id}',history_path=f'/api/roadmap/{row.id}/history')
@@ -102,15 +106,15 @@ def indicator(key,label,numerator,denominator,sample,now,updated,formula,limitat
         calculated_at=now,last_updated_at=updated,limitations=limitations,source_links=links)
 
 
-def profile(db,uid,now):
+def profile(db,uid,now,*,public_context=None,milestone_rows=None,delivery_history=None,include_github=True):
     user=identity(db,uid)
     participation={r:0 for r in ['owner','maintainer','collaborator']}
     visible=db.scalars(projects_query(uid).order_by(Project.id)).all()
     membership_roles=roles(db,visible,uid)
     for p in visible:participation[membership_roles[p.id]]+=1
     owned=[p for p in visible if p.owner_id==uid];ids=[p.id for p in owned]
-    rows=db.scalars(select(Milestone).where(Milestone.project_id.in_(ids)).order_by(Milestone.id)).all() if ids else []
-    history=delivery_rows(db,rows)
+    rows=milestone_rows if milestone_rows is not None else (db.scalars(select(Milestone).where(Milestone.project_id.in_(ids)).order_by(Milestone.id)).all() if ids else [])
+    history=delivery_history if delivery_history is not None else delivery_rows(db,rows)
     updated=max((r.updated_at for r in rows),default=None)
     links=[f'/api/projects/{p.id}/roadmap' for p in owned]
     count=len(rows);delivered=sum(r['status']=='delivered' for r in history)
@@ -131,16 +135,19 @@ def profile(db,uid,now):
     delivery=[indicator(key,label,n,d,s,now,max((p.updated_at for p in owned),default=None) if key=='public_projects_owned' else None if key=='independently_reviewed' else updated,formula,[DELIVERY_LIMIT,SCOPE],links) for key,label,n,d,s,formula in values]
     rewards=reward_statistics(db,owned,now,uid)
     financial=[];github=[]
+    context=public_context if public_context is not None else accountability.public_sources(db,owned)
+    approvals=dict(db.execute(select(Expense.project_id,func.max(ExpenseDocument.approved_at)).join(Expense).where(
+        Expense.project_id.in_(ids),Expense.publication_status=='published',ExpenseDocument.publication_status=='published',
+        ExpenseDocument.redacted_from_id.is_not(None),ExpenseDocument.approved_by.is_not(None)).group_by(Expense.project_id)).all())
     for p in owned:
-        summary=transparency.overview(db,p);s=summary['financial_summary']
-        expenses=db.scalars(select(Expense).where(Expense.project_id==p.id,Expense.publication_status=='published')).all()
-        last=db.scalar(select(func.max(Expense.updated_at)).where(Expense.project_id==p.id,Expense.publication_status=='published'))
-        approval=db.scalar(select(func.max(ExpenseDocument.approved_at)).join(Expense).where(Expense.project_id==p.id,Expense.publication_status=='published',ExpenseDocument.publication_status=='published',ExpenseDocument.redacted_from_id.is_not(None),ExpenseDocument.approved_by.is_not(None)))
-        last=max([t for t in [last,approval] if t],default=None)
+        summary=transparency.overview(db,p,public_context=context);s=summary['financial_summary']
+        expenses=context['expenses'][p.id]
+        last=max([e.updated_at for e in expenses]+([approvals[p.id]] if approvals.get(p.id) else []),default=None)
         financial.append(dict(project_id=p.id,reporting_available=bool(expenses),currency=p.currency,published_reported_spending_cents=s['published_reported_spending_cents'],document_supported_expense_cents=s['expenses_with_documents_cents'],last_reporting_activity=last,
             metrics=[indicator('reporting_available','Published reporting available',int(bool(expenses)),1,len(expenses),now,last,'At least one published expense report exists for this project.', ['An empty reporting scope is insufficient history, not misconduct.'],[f'/api/projects/{p.id}/ledger']),
                 indicator('document_coverage','Expenses with approved public evidence',s['expenses_with_documents_count'],s['published_expense_count'],s['published_expense_count'],now,last,'Published expenses with >=1 approved public redaction / published expense IDs, each counted once.', ['Private originals excluded. Supporting receipts do not prove vendor payment.'],[f'/api/projects/{p.id}/ledger']),
                 indicator('public_findings','Unresolved public findings',summary['public_unresolved_discrepancy_count'],None,len(s['budget_variance']),now,last,'Count category overruns derived only from published financial records.', ['Private OCR/reviewer findings and their counts are withheld. An unresolved discrepancy is not proof of fraud.'],[f'/api/projects/{p.id}/transparency'])],notes=s['notes']))
+        if not include_github:continue
         repo=db.get(Repo,p.id);available=bool(repo and repo.publicly_accessible and repo.github_repo_id==p.github_repo_id)
         status=github_progress.status(db,p.id);timestamp=status['last_successful_sync_at'] if available else None
         nissues=db.scalar(select(func.count()).select_from(Issue).where(Issue.project_id==p.id)) if available else 0
@@ -168,6 +175,10 @@ def reward_statistics(db,owned,now,uid=None):
     reward_notes=['Sandbox entitlements only. Refunded/reversed/non-completed contributions and revoked/invalid entitlements are excluded from the fulfillment ratio. No backer identities or fulfillment notes are disclosed.', 'Fulfillment is a maintainer mark, not independent proof. Individual reward records and notes remain private; only aggregates are disclosed. No fulfillment deadline or status-change timestamp is stored; last_updated_at is unknown.']
     for key,label,n,d,s,formula in [
         ('issued','Entitlements issued',issued,None,issued,'Count distinct persisted entitlement IDs, including subsequently revoked records.'),
+        ('eligible','Eligible entitlements',len(eligible),None,len(eligible),'Count completed captured, matching-currency granted or fulfilled entitlements.'),
+        ('revoked','Revoked entitlements (excluded subset)',sum(e.status=='revoked' for e,c in pairs),issued,issued,'Count revoked records; may overlap refunded or reversed subsets, never add these subsets together.'),
+        ('refunded','Refund-affected entitlements (excluded subset)',sum(c.status=='refunded' for e,c in pairs),issued,issued,'Count entitlements on refunded captures; may overlap revoked subset.'),
+        ('reversed','Reversal-affected entitlements (excluded subset)',sum(c.status=='reversed' for e,c in pairs),issued,issued,'Count entitlements on reversed captures; may overlap revoked subset.'),
         ('fulfilled','Rewards marked fulfilled',fulfilled,len(eligible),len(eligible),'Eligible fulfilled entitlement IDs / all eligible granted-or-fulfilled IDs with completed captures.'),
         ('pending','Rewards pending fulfillment',len(eligible)-fulfilled,len(eligible),len(eligible),'Eligible granted entitlement IDs / all eligible IDs.'),
         ('excluded','Excluded/revoked entitlements',issued-len(eligible),issued,issued,'Issued minus currently eligible, including refunded/reversed or revoked records.'),

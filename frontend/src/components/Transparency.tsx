@@ -102,3 +102,8 @@ export default function Transparency({ projectId }: { projectId: number }) {
     </>}
   </section>;
 }
+
+// A shareable route reuses the existing authorized public ledger detail component.
+export function PublicExpensePage({projectId,expenseId}:{projectId:number;expenseId:number}) {
+  return <section><h2>Public expense</h2><a href={`#/projects/${projectId}`}>Return to project</a><ExpenseDetail key={`${projectId}-${expenseId}`} projectId={projectId} expenseId={expenseId}/></section>;
+}

@@ -1,5 +1,13 @@
 # Phase 6 Step 1: public analytics foundation
 
+Phase 6 Step 3 adds [development and maintainer analytics](phase6-development-analytics.md),
+independent history paging and request-local public query batching. See that report
+for current development contracts and updated performance measurements.
+
+Phase 6 Step 2 extends these contracts and replaces the initial edit workspace with
+a preconfigured view-mode financial dashboard. See [financial analytics](phase6-financial-analytics.md)
+for current filters, grouped datasets, renderer behavior and verification.
+
 **Deployment remains NO-GO.** This step adds read-only dataset contracts and an
 embedded analytics shell, not detailed financial/development dashboards, historical
 funding trends, a new agent or a private analytics product. No financial service,

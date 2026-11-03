@@ -38,6 +38,11 @@ export default function ProjectProgress({ projectId, canManage }: { projectId: n
   const [data, setData] = useState<ProgressSummary>(); const [error, setError] = useState(''); const [version, setVersion] = useState(0);
   const [ledger, setLedger] = useState(false); const [controls, setControls] = useState(false);
   useEffect(() => { let live = true; api<ProgressSummary>(`/api/projects/${projectId}/progress-summary`).then(v => { if (live) { setData(v); setError(''); } }).catch(e => { if (live) setError(message(e)); }); return () => { live = false; }; }, [projectId, version]);
+  useEffect(() => {
+    const navigateToRoadmap = () => {if(window.location.hash===`#/projects/${projectId}/roadmap`){const target=document.getElementById(`progress-${projectId}-roadmap`);target?.scrollIntoView();target?.focus();}};
+    navigateToRoadmap();window.addEventListener('hashchange',navigateToRoadmap);
+    return()=>window.removeEventListener('hashchange',navigateToRoadmap);
+  },[projectId]);
   const section = (name: string) => `progress-${projectId}-${name}`;
   function navigate(name: string) { const element = document.getElementById(section(name)); element?.scrollIntoView(); element?.focus(); }
   return <section aria-label="Public project progress"><h3>Project Progress</h3><p>Public evidence and maintainer assertions, with separate financial and development records. No inferred completion percentage or independent delivery certification.</p>

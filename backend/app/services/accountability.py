@@ -102,12 +102,36 @@ def verification(db,expense,user):
                 findings=findings,reviews_available=private)
 
 
-def snapshot(db,project,user):
+def public_sources(db, projects):
+    """Request-local batching only; caller holds the same read-only snapshot."""
+    if any(p.status != 'active' for p in projects):
+        raise ValueError('Only active public projects can be prefetched')
+    ids = [p.id for p in projects]
+    def grouped(model, conditions=()):
+        result = {pid: [] for pid in ids}
+        for row in db.scalars(select(model).where(model.project_id.in_(ids), *conditions)):
+            result[row.project_id].append(row)
+        return result
+    support = {pid: set() for pid in ids}
+    for pid, eid in db.execute(select(Expense.project_id, ExpenseDocument.expense_id).join(Expense).where(
+        Expense.project_id.in_(ids), Expense.publication_status == 'published',
+        ExpenseDocument.publication_status == 'published', ExpenseDocument.redacted_from_id.is_not(None),
+        ExpenseDocument.approved_by.is_not(None), ExpenseDocument.approved_at.is_not(None))):
+        support[pid].add(eid)
+    return dict(contributions=grouped(Contribution, (Contribution.capture_id.is_not(None),)),
+        expenses=grouped(Expense, (Expense.publication_status == 'published',)),
+        allocations=grouped(BudgetAllocation), support=support,
+        calculated_at=db.scalar(select(func.transaction_timestamp())))
+
+
+def snapshot(db,project,user,public_context=None):
     private=can_manage(db,project,user)
+    cached=public_context if not private and project.status=='active' else None
     gross=refunds=reversals=0
     # Contributions are never joined to receipts, reviews, attempts or webhook rows.
     seen=set()
-    for contribution in db.scalars(select(Contribution).where(Contribution.project_id==project.id,Contribution.currency==project.currency,Contribution.capture_id.is_not(None))):
+    for contribution in (cached['contributions'][project.id] if cached else db.scalars(select(Contribution).where(Contribution.project_id==project.id,Contribution.currency==project.currency,Contribution.capture_id.is_not(None)))):
+        if contribution.currency != project.currency:continue
         if contribution.capture_id in seen:continue
         seen.add(contribution.capture_id)
         if contribution.status in ('completed','refunded','reversed'):
@@ -115,14 +139,16 @@ def snapshot(db,project,user):
             if contribution.status=='refunded':refunds+=contribution.amount_cents
             if contribution.status=='reversed':reversals+=contribution.amount_cents
     net=gross-refunds-reversals
-    published=db.scalars(select(Expense).where(Expense.project_id==project.id,Expense.publication_status=='published',Expense.currency==project.currency)).all()
+    published=([e for e in cached['expenses'][project.id] if e.currency==project.currency] if cached else db.scalars(select(Expense).where(Expense.project_id==project.id,Expense.publication_status=='published',Expense.currency==project.currency)).all())
     coverage={};with_count=with_amount=unresolved_expenses=unresolved_count=0
     categories={}
-    for allocation in db.scalars(select(BudgetAllocation).where(BudgetAllocation.project_id==project.id)):
+    for allocation in (cached['allocations'][project.id] if cached else db.scalars(select(BudgetAllocation).where(BudgetAllocation.project_id==project.id))):
         key=allocation.category.strip().casefold()
         categories.setdefault(key,dict(category=key,allocated_cents=0,reported_spending_cents=0))['allocated_cents']+=allocation.allocated_cents
     public_support=set()
-    if not private and project.status in ('active','paused','completed'):
+    if cached:
+        public_support=cached['support'][project.id]
+    elif not private and project.status in ('active','paused','completed'):
         public_support=set(db.scalars(select(ExpenseDocument.expense_id).join(Expense).where(
             Expense.project_id==project.id,Expense.publication_status=='published',ExpenseDocument.publication_status=='published',
             ExpenseDocument.redacted_from_id.is_not(None),ExpenseDocument.approved_by.is_not(None),ExpenseDocument.approved_at.is_not(None))))
@@ -146,7 +172,7 @@ def snapshot(db,project,user):
                 expenses_without_documents_count=len(published)-with_count,expenses_without_documents_cents=spent-with_amount,
                 unresolved_expenses_count=unresolved_expenses if private else None,unresolved_discrepancy_count=unresolved_count if private else None,
                 evidence_coverage=[coverage[key] for key in sorted(coverage)],budget_variance=[categories[key] for key in sorted(categories)],
-                calculated_at=db.scalar(select(func.transaction_timestamp())),notes=[
+                calculated_at=cached['calculated_at'] if cached else db.scalar(select(func.transaction_timestamp())),notes=[
                     'Sandbox capture records are not a verified bank balance. Funding minus reported expenses is only a calculated difference.',
                     'Refund/reversal exclusions use original contribution amounts. Partial refund amounts are not stored; exact refund totals are unavailable.',
                     'Document/OCR support and human review do not certify vendor payment. Independently payment-matched evidence is not assigned.',
