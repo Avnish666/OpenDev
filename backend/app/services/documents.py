@@ -2,6 +2,9 @@ import json
 import logging
 import subprocess
 import sys
+import os
+import signal
+import tempfile
 from datetime import datetime, timezone
 from pathlib import Path
 from urllib.parse import unquote
@@ -18,6 +21,7 @@ from app.models.user import User
 from app.services import expenses
 from app.services.project_management import can_manage
 from app.services.storage import storage, UploadFailure
+from app.services.decoder_limits import decoder_slot
 
 MAX_BYTES = 5 * 1024 * 1024
 logger = logging.getLogger(__name__)
@@ -30,11 +34,32 @@ def authorize_upload(db, expense_id, user):
         raise HTTPException(403, 'Project owner or maintainer required')
 
 
+_validation_slot=decoder_slot
+
 def validate(path):
+    if not _validation_slot.acquire(blocking=False):
+        raise HTTPException(429,'Document validator busy; retry later',headers={'Retry-After':'5'})
+    try:return _validate(path)
+    finally:_validation_slot.release()
+
+
+def _validate(path):
     worker = Path(__file__).with_name('document_validation_worker.py')
     try:
-        result = subprocess.run([sys.executable, '-I', str(worker), str(path)], env={}, stdout=subprocess.PIPE, stderr=subprocess.DEVNULL, timeout=8, check=True)
-        mime = json.loads(result.stdout)['mime']
+        with tempfile.TemporaryFile() as output:
+            process = subprocess.Popen([sys.executable, '-I', str(worker), str(path)],
+                env={}, stdout=output, stderr=subprocess.DEVNULL, start_new_session=True)
+            try:
+                process.communicate(timeout=8)
+            except subprocess.TimeoutExpired:
+                try:os.killpg(process.pid,signal.SIGKILL)
+                except ProcessLookupError:pass
+                process.communicate()
+                raise ValueError() from None
+            if process.returncode or os.fstat(output.fileno()).st_size>4096:
+                raise ValueError()
+            output.seek(0)
+            mime = json.loads(output.read(4097))['mime']
         if mime not in ('application/pdf', 'image/png', 'image/jpeg'):
             raise ValueError()
         return mime

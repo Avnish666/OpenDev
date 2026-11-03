@@ -94,3 +94,8 @@ from app.routers.agent import router as agent_router
 app.include_router(agent_router)
 from app.routers.analytics import router as analytics_router
 app.include_router(analytics_router)
+
+# Optional deployment artifact; tests/development keep the existing API-only default.
+import os
+from app.core.frontend import mount_frontend
+mount_frontend(app,os.getenv('FRONTEND_DIST'))

@@ -8,10 +8,10 @@ COPY requirements-app.txt requirements-payments.txt ./
 RUN --mount=type=secret,id=proxy_ca \
     if [ -f /run/secrets/proxy_ca ]; then export PIP_CERT=/run/secrets/proxy_ca; fi; \
     pip install -r requirements-app.txt && pip check
-COPY --chown=10001:10001 app ./app
-COPY --chown=10001:10001 alembic.ini ./
-COPY --chown=10001:10001 migrations ./migrations
-RUN useradd --uid 10001 --create-home appuser
+COPY --chown=0:0 app ./app
+COPY --chown=0:0 alembic.ini ./
+COPY --chown=0:0 migrations ./migrations
+RUN useradd --uid 10001 --create-home appuser && chmod -R u=rwX,go=rX /app/app /app/migrations /app/alembic.ini
 USER appuser
 EXPOSE 10000
 HEALTHCHECK --interval=30s --timeout=3s --start-period=30s \

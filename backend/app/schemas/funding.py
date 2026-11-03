@@ -30,6 +30,7 @@ class ContributionResponse(BaseModel):
     project_id: int
     tier_id: int
     amount_cents: int
+    refund_total_cents: int | None = None
     currency: Literal['USD']
     status: Literal['creating','created','cancelled','pending','denied','completed','refunded','reversed']
     order_id: str | None

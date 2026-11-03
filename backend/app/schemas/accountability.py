@@ -87,7 +87,7 @@ class AccountabilitySnapshot(BaseModel):
     gross_completed_funding_cents: int
     refund_excluded_cents: int
     reversal_excluded_cents: int
-    exact_refund_total_cents: None = None
+    exact_refund_total_cents: int | None = None
     net_recorded_funding_cents: int
     published_reported_spending_cents: int
     funding_minus_reported_expenditure_cents: int

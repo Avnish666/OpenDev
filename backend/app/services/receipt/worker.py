@@ -8,12 +8,12 @@ import resource
 import subprocess
 import sys
 import tempfile
+from contextlib import closing
 
 def set_limits():
     sys.dont_write_bytecode = True
-    resource.setrlimit(resource.RLIMIT_AS, (320 * 1024 * 1024, 320 * 1024 * 1024))
-    resource.setrlimit(resource.RLIMIT_CPU, (50, 50))
-    resource.setrlimit(resource.RLIMIT_FSIZE, (8 * 1024 * 1024, 8 * 1024 * 1024))
+    from app.services.decoder_limits import worker_limits
+    worker_limits(320,50,8*1024*1024)
 
 
 sys.path.insert(0, str(Path(__file__).resolve().parents[3]))
@@ -53,29 +53,28 @@ def ocr(image, page, folder):
 
 
 def extract(path, mime):
-    import pymupdf
+    if not 0 < Path(path).stat().st_size <= 5*1024*1024:raise ProcessingError('DOCUMENT_TOO_LARGE')
     from PIL import Image, ImageOps
+    import warnings
     Image.MAX_IMAGE_PIXELS = 20_000_000
+    warnings.simplefilter('error', Image.DecompressionBombWarning)
     lines=[];methods=set();pages=1
     with tempfile.TemporaryDirectory(prefix='ocr-', dir=str(Path(path).parent)) as folder:
         if mime == 'application/pdf':
-            with pymupdf.open(path) as pdf:
-                if pdf.is_encrypted: raise ProcessingError('ENCRYPTED_PDF')
+            import pypdfium2 as pdfium
+            from app.services.receipt.pdf_backend import digital_lines, raster
+            with pdfium.PdfDocument(str(path)) as pdf:
+                if pdfium.raw.FPDF_GetSecurityHandlerRevision(pdf) >= 0: raise ProcessingError('ENCRYPTED_PDF')
                 pages=len(pdf)
                 if not 1 <= pages <= 5: raise ProcessingError('PAGE_LIMIT')
-                for number,page in enumerate(pdf,1):
-                    grouped={}
-                    for x0,y0,x1,y1,word,block,line,_ in page.get_text('words'):
-                        entry=grouped.setdefault((block,line),{'words':[],'bbox':[x0,y0,x1,y1]})
-                        entry['words'].append(word);box=entry['bbox'];box[:]=[min(box[0],x0),min(box[1],y0),max(box[2],x1),max(box[3],y1)]
-                    digital=[{'text':' '.join(v['words']),'bbox':v['bbox'],'coordinates':'pdf_points','page':number,'quality':100} for v in grouped.values()]
-                    if sum(len(v['text']) for v in digital) >= 30:
-                        methods.add('pdf_text');lines.extend(digital)
-                    else:
-                        zoom=min(2,2000/max(page.rect.width,page.rect.height))
-                        pix=page.get_pixmap(matrix=pymupdf.Matrix(zoom,zoom),alpha=False)
-                        image=Image.frombytes('RGB',(pix.width,pix.height),pix.samples)
-                        lines.extend(ocr(image,number,folder));methods.add('tesseract')
+                for number in range(1,pages+1):
+                    with closing(pdf[number-1]) as page:
+                        digital=digital_lines(page,number)
+                        if sum(len(v['text']) for v in digital) >= 30:
+                            methods.add('pdf_text');lines.extend(digital)
+                        else:
+                            lines.extend(ocr(raster(page),number,folder));methods.add('tesseract')
+                    if len(lines)>3000 or sum(len(line['text']) for line in lines)>100000: raise ProcessingError('TEXT_LIMIT')
         else:
             with Image.open(path) as original:
                 if original.width*original.height > 20_000_000: raise ProcessingError('IMAGE_LIMIT')

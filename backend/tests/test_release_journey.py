@@ -5,7 +5,7 @@ import json
 from pathlib import Path
 from uuid import uuid4
 import httpx
-import pymupdf
+from pdf_fixtures import text_pdf
 from sqlalchemy import select, func
 from app.main import app
 from app.core.auth import get_current_user, get_optional_user
@@ -108,9 +108,7 @@ def test_full_cookie_authenticated_release_journey(ac, monkeypatch):
         Path(target).write_bytes(objects[key]); return len(objects[key])
     monkeypatch.setattr(documents.storage,'upload',upload)
     monkeypatch.setattr(pipeline,'download_private',download)
-    with pymupdf.open() as pdf:
-        page = pdf.new_page(); page.insert_text((60,60),'Vendor: Acme Hosting\nDate: 2026-10-31\nCurrency: USD\nGrand Total: USD 12.34')
-        content = pdf.tobytes()
+    content = text_pdf('Vendor: Acme Hosting\nDate: 2026-10-31\nCurrency: USD\nGrand Total: USD 12.34')
     doc = ok(client.post(f'/api/expenses/{eid}/documents',content=content,
         headers={'X-Filename':'private.pdf','Content-Type':'application/pdf'}),201)
     extraction = ok(client.post(f"/api/documents/{doc['id']}/extract",json={}))
@@ -122,9 +120,7 @@ def test_full_cookie_authenticated_release_journey(ac, monkeypatch):
     assert ok(client.get(f'/api/expenses/{eid}/review-history'))[0]['outcome'] == 'unresolved'
     ok(client.post(f'/api/expenses/{eid}/publish'))
     # Distinct, valid redacted PDF; publication never exposes the original.
-    with pymupdf.open() as pdf:
-        pdf.new_page().insert_text((60,60),'Approved redacted supporting evidence')
-        redaction = pdf.tobytes()
+    redaction = text_pdf('Approved redacted supporting evidence')
     redacted = ok(client.post(f"/api/expenses/{eid}/documents?redacted_from_id={doc['id']}",content=redaction,
         headers={'X-Filename':'redacted.pdf','Content-Type':'application/pdf'}),201)
     ok(client.post(f"/api/documents/{redacted['id']}/publish",json={'redaction_reviewed':True}))
@@ -168,11 +164,25 @@ def test_phase1_records_survive_forward_migration_chain(ac):
             conn.execute(text("INSERT INTO users (id,github_id,username,created_at) VALUES (900,9900,'existing',now())"))
             conn.execute(text("INSERT INTO projects (id,owner_id,github_repo_id,github_repo_url,title,description,funding_goal_cents,currency,status) VALUES (900,900,9900,'https://github.com/existing/repo','Existing','Pre-upgrade project',10000,'USD','draft')"))
             conn.execute(text("INSERT INTO budget_allocations (project_id,category,allocated_cents) VALUES (900,'Development',10000)"))
+        # Rehearse the payment-era upgrade too: existing captured/refunded rows,
+        # entitlements and event IDs must survive without guessed refund amounts.
+        upgrade('6527bb06f9b7')
+        with engine.begin() as conn:
+            conn.execute(text("INSERT INTO reward_tiers (id,project_id,name,description,price_cents,currency,benefits,active) VALUES (900,900,'Legacy','Preserve',500,'USD','[]',true)"))
+            for key,status,amount in [('legacy-refund','refunded',500),('legacy-completed','completed',1000)]:
+                conn.execute(text("INSERT INTO contributions (id,user_id,project_id,tier_id,checkout_key,amount_cents,currency,reward_snapshot,status,order_id,capture_id,capture_key) VALUES (:key,900,900,900,:key,:amount,'USD','{}',:status,:key,:key,:key)"),dict(key=key,status=status,amount=amount))
+            conn.execute(text("INSERT INTO reward_entitlements (id,contribution_id,status,fulfillment_note) VALUES ('legacy-entitlement','legacy-refund','revoked','Retain audit note')"))
+            conn.execute(text("INSERT INTO paypal_events (id,event_type) VALUES ('legacy-event','PAYMENT.CAPTURE.REFUNDED')"))
         upgrade('head')
         with engine.connect() as conn:
             assert conn.scalar(text('SELECT funding_goal_cents FROM projects WHERE id=900')) == 10000
             assert conn.scalar(text('SELECT sum(allocated_cents) FROM budget_allocations WHERE project_id=900')) == 10000
             assert conn.scalar(text('SELECT username FROM users WHERE id=900')) == 'existing'
+            assert conn.scalar(text('SELECT sum(amount_cents) FROM contributions')) == 1500
+            assert conn.scalar(text('SELECT count(*) FROM contributions WHERE refund_total_cents IS NULL')) == 2
+            assert conn.scalar(text('SELECT count(*) FROM paypal_refunds')) == 0
+            assert conn.scalar(text("SELECT fulfillment_note FROM reward_entitlements WHERE id='legacy-entitlement'")) == 'Retain audit note'
+            assert conn.scalar(text("SELECT event_type FROM paypal_events WHERE id='legacy-event'")) == 'PAYMENT.CAPTURE.REFUNDED'
             from alembic.config import Config
             from alembic.script import ScriptDirectory
             assert conn.scalar(text('SELECT version_num FROM alembic_version')) == ScriptDirectory.from_config(Config('alembic.ini')).get_current_head()

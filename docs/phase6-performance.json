@@ -1,0 +1,344 @@
+{
+  "environment": {
+    "os": "Linux-6.18.57-x86_64-with-glibc2.41",
+    "source": "Synthetic disposable local PostgreSQL; HTTP TestClient. Ten samples for new audit scenarios; prior owner-scaling helper has three.",
+    "timing": "Analytics/CSV row-count cases include tracemalloc overhead. Large development case does not. Empirical p95 for n=10 is nearest-rank maximum; no production-percentile claim.",
+    "privacy": "No real backer, document or credential data recorded."
+  },
+  "workloads": {
+    "analytics-1": [
+      {
+        "kind": "analytics",
+        "rows": 1,
+        "samples_ms": [
+          50.114,
+          51.165,
+          47.008,
+          51.696,
+          50.021,
+          45.788,
+          52.307,
+          55.231,
+          48.93,
+          49.588
+        ],
+        "median_ms": 50.067499999999995,
+        "empirical_p95_ms": 55.231,
+        "sql": [
+          29,
+          29,
+          29,
+          29,
+          29,
+          29,
+          29,
+          29,
+          29,
+          29
+        ],
+        "bytes": 32351,
+        "peak_traced_python_bytes": 1025534
+      },
+      {
+        "kind": "export",
+        "rows": 1,
+        "samples_ms": [
+          53.851,
+          53.04,
+          53.713,
+          55.327,
+          53.361,
+          50.484,
+          52.622,
+          56.291,
+          57.495,
+          53.561
+        ],
+        "median_ms": 53.637,
+        "empirical_p95_ms": 57.495,
+        "sql": [
+          30,
+          30,
+          30,
+          30,
+          30,
+          30,
+          30,
+          30,
+          30,
+          30
+        ],
+        "bytes": 3243,
+        "peak_traced_python_bytes": 611035
+      }
+    ],
+    "analytics-100": [
+      {
+        "kind": "analytics",
+        "rows": 100,
+        "samples_ms": [
+          67.035,
+          68.986,
+          68.791,
+          63.779,
+          69.289,
+          60.976,
+          60.359,
+          58.913,
+          59.282,
+          60.325
+        ],
+        "median_ms": 62.3775,
+        "empirical_p95_ms": 69.289,
+        "sql": [
+          29,
+          29,
+          29,
+          29,
+          29,
+          29,
+          29,
+          29,
+          29,
+          29
+        ],
+        "bytes": 40471,
+        "peak_traced_python_bytes": 1103424
+      },
+      {
+        "kind": "export",
+        "rows": 100,
+        "samples_ms": [
+          85.813,
+          84.292,
+          86.898,
+          86.049,
+          86.78,
+          87.175,
+          84.734,
+          81.621,
+          81.71,
+          80.367
+        ],
+        "median_ms": 85.2735,
+        "empirical_p95_ms": 87.175,
+        "sql": [
+          30,
+          30,
+          30,
+          30,
+          30,
+          30,
+          30,
+          30,
+          30,
+          30
+        ],
+        "bytes": 16504,
+        "peak_traced_python_bytes": 1005542
+      }
+    ],
+    "analytics-1000": [
+      {
+        "kind": "analytics",
+        "rows": 1000,
+        "samples_ms": [
+          124.775,
+          122.224,
+          119.244,
+          118.036,
+          116.016,
+          118.227,
+          113.448,
+          113.933,
+          114.051,
+          114.748
+        ],
+        "median_ms": 117.02600000000001,
+        "empirical_p95_ms": 124.775,
+        "sql": [
+          29,
+          29,
+          29,
+          29,
+          29,
+          29,
+          29,
+          29,
+          29,
+          29
+        ],
+        "bytes": 40549,
+        "peak_traced_python_bytes": 2718883
+      },
+      {
+        "kind": "export",
+        "rows": 1000,
+        "samples_ms": [
+          326.427,
+          787.596,
+          357.401,
+          358.587,
+          356.088,
+          356.807,
+          368.347,
+          364.441,
+          363.541,
+          477.346
+        ],
+        "median_ms": 361.06399999999996,
+        "empirical_p95_ms": 787.596,
+        "sql": [
+          30,
+          30,
+          30,
+          30,
+          30,
+          30,
+          30,
+          30,
+          30,
+          30
+        ],
+        "bytes": 139005,
+        "peak_traced_python_bytes": 6339782
+      }
+    ],
+    "analytics-200": [
+      {
+        "kind": "analytics",
+        "rows": 200,
+        "samples_ms": [
+          69.856,
+          63.117,
+          60.347,
+          59.412,
+          61.936,
+          58.623,
+          58.802,
+          64.003,
+          67.065,
+          60.994
+        ],
+        "median_ms": 61.465,
+        "empirical_p95_ms": 69.856,
+        "sql": [
+          29,
+          29,
+          29,
+          29,
+          29,
+          29,
+          29,
+          29,
+          29,
+          29
+        ],
+        "bytes": 40528,
+        "peak_traced_python_bytes": 1291193
+      },
+      {
+        "kind": "export",
+        "rows": 200,
+        "samples_ms": [
+          100.127,
+          102.013,
+          103.058,
+          105.492,
+          104.099,
+          103.841,
+          107.085,
+          110.331,
+          109.592,
+          105.416
+        ],
+        "median_ms": 104.7575,
+        "empirical_p95_ms": 110.331,
+        "sql": [
+          30,
+          30,
+          30,
+          30,
+          30,
+          30,
+          30,
+          30,
+          30,
+          30
+        ],
+        "bytes": 30004,
+        "peak_traced_python_bytes": 1581183
+      }
+    ],
+    "large-development": {
+      "milestones": 500,
+      "issues": 2001,
+      "pulls": 1001,
+      "samples_ms": [
+        108.49,
+        84.333,
+        71.392,
+        70.811,
+        70.974,
+        80.024,
+        71.75,
+        94.851,
+        69.053,
+        65.738
+      ],
+      "median_ms": 71.571,
+      "empirical_p95_ms": 108.49,
+      "sql": [
+        45,
+        45,
+        45,
+        45,
+        45,
+        45,
+        45,
+        45,
+        45,
+        45
+      ],
+      "bytes": 66579
+    },
+    "owner-scaling": {
+      "baseline": {
+        "query_count": 45,
+        "median_ms": 34.77,
+        "samples_ms": [
+          48.1,
+          34.77,
+          32.68
+        ],
+        "response_bytes": 34307
+      },
+      "representative": {
+        "query_count": 45,
+        "median_ms": 38.15,
+        "samples_ms": [
+          38.15,
+          37.59,
+          38.79
+        ],
+        "response_bytes": 66248
+      },
+      "six_owned_projects": {
+        "query_count": 45,
+        "median_ms": 40.97,
+        "samples_ms": [
+          41.66,
+          40.97,
+          39.89
+        ],
+        "response_bytes": 78113
+      },
+      "source": {
+        "milestones": 100,
+        "issue_snapshots": 201,
+        "pr_snapshots": 101,
+        "commit_sample": 1
+      }
+    }
+  }
+}

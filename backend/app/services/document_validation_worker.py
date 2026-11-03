@@ -3,15 +3,17 @@ import json
 import resource
 import sys
 import warnings
+from pathlib import Path
 
 sys.dont_write_bytecode = True
 
-resource.setrlimit(resource.RLIMIT_AS, (256 * 1024 * 1024, 256 * 1024 * 1024))
-resource.setrlimit(resource.RLIMIT_CPU, (5, 5))
-resource.setrlimit(resource.RLIMIT_FSIZE, (0, 0))
+sys.path.insert(0,str(Path(__file__).resolve().parents[2]))
+from app.services.decoder_limits import worker_limits
+worker_limits(256,5,4096)
 
 
 def validate(path):
+    if not 0 < Path(path).stat().st_size <= 5*1024*1024:raise ValueError()
     with open(path, 'rb') as source:
         header = source.read(12)
     if header.startswith(b'\x89PNG\r\n\x1a\n') or header.startswith(b'\xff\xd8\xff'):

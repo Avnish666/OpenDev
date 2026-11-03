@@ -76,7 +76,7 @@ def process(db,doc,user,retry=False):
                     result=providers.provider.extract(path,doc.detected_mime_type)
                     result=ExtractedReceipt.model_validate(result)
             except providers.ExtractionError as exc:error=exc.code
-            except HTTPException as exc:error='DOCUMENT_TOO_LARGE' if exc.status_code==413 else 'INVALID_DOCUMENT' if exc.status_code==415 else 'STORAGE_DOWNLOAD_FAILED'
+            except HTTPException as exc:error='VALIDATION_BUSY' if exc.status_code==429 else 'DOCUMENT_TOO_LARGE' if exc.status_code==413 else 'INVALID_DOCUMENT' if exc.status_code==415 else 'STORAGE_DOWNLOAD_FAILED'
             except Exception:error='PROCESSING_FAILED'
             # Receipt fields never modify Expense or Contribution. Findings are a separate snapshot.
             expense=db.get(Expense,doc.expense_id,populate_existing=True)

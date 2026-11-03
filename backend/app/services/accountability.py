@@ -127,7 +127,9 @@ def public_sources(db, projects):
 def snapshot(db,project,user,public_context=None):
     private=can_manage(db,project,user)
     cached=public_context if not private and project.status=='active' else None
-    gross=refunds=reversals=0
+    gross=refunds=reversals=exact_refunds=0
+    unknown_refunds=False
+    observed_refunds=False
     # Contributions are never joined to receipts, reviews, attempts or webhook rows.
     seen=set()
     for contribution in (cached['contributions'][project.id] if cached else db.scalars(select(Contribution).where(Contribution.project_id==project.id,Contribution.currency==project.currency,Contribution.capture_id.is_not(None)))):
@@ -136,8 +138,13 @@ def snapshot(db,project,user,public_context=None):
         seen.add(contribution.capture_id)
         if contribution.status in ('completed','refunded','reversed'):
             gross+=contribution.amount_cents
-            if contribution.status=='refunded':refunds+=contribution.amount_cents
+            if contribution.status=='refunded':refunds+=contribution.refund_total_cents if contribution.refund_total_cents is not None else contribution.amount_cents
             if contribution.status=='reversed':reversals+=contribution.amount_cents
+            if contribution.status in ('refunded','reversed'):
+                if contribution.refund_total_cents is None:unknown_refunds=True
+                else:
+                    observed_refunds=True
+                    exact_refunds+=contribution.refund_total_cents
     net=gross-refunds-reversals
     published=([e for e in cached['expenses'][project.id] if e.currency==project.currency] if cached else db.scalars(select(Expense).where(Expense.project_id==project.id,Expense.publication_status=='published',Expense.currency==project.currency)).all())
     coverage={};with_count=with_amount=unresolved_expenses=unresolved_count=0
@@ -167,6 +174,7 @@ def snapshot(db,project,user,public_context=None):
     spent=sum(e.amount_cents for e in published)
     return dict(project_id=project.id,currency=project.currency,audience='manager_private' if private else 'public_evidence_only',
                 gross_completed_funding_cents=gross,refund_excluded_cents=refunds,reversal_excluded_cents=reversals,
+                exact_refund_total_cents=None if unknown_refunds or not observed_refunds else exact_refunds,
                 net_recorded_funding_cents=net,published_reported_spending_cents=spent,funding_minus_reported_expenditure_cents=net-spent,
                 published_expense_count=len(published),expenses_with_documents_count=with_count,expenses_with_documents_cents=with_amount,
                 expenses_without_documents_count=len(published)-with_count,expenses_without_documents_cents=spent-with_amount,
@@ -174,7 +182,7 @@ def snapshot(db,project,user,public_context=None):
                 evidence_coverage=[coverage[key] for key in sorted(coverage)],budget_variance=[categories[key] for key in sorted(categories)],
                 calculated_at=cached['calculated_at'] if cached else db.scalar(select(func.transaction_timestamp())),notes=[
                     'Sandbox capture records are not a verified bank balance. Funding minus reported expenses is only a calculated difference.',
-                    'Refund/reversal exclusions use original contribution amounts. Partial refund amounts are not stored; exact refund totals are unavailable.',
+                    'Partial refund exclusions use authoritative cumulative PayPal observations where recorded; otherwise the original capture is excluded in full and exact refund totals are unavailable. Reversals exclude the whole capture without double-counting refunds. Observations are not live bank balances.',
                     'Document/OCR support and human review do not certify vendor payment. Independently payment-matched evidence is not assigned.',
                     'Public evidence coverage includes only approved published redactions; private findings and reviewer notes are withheld.'])
 

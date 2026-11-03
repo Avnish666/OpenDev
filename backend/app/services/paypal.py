@@ -52,6 +52,9 @@ class PayPal:
     async def capture_details(self, capture_id):
         return await self.request('GET', f'/v2/payments/captures/{self.identifier(capture_id)}')
 
+    async def refund_details(self, refund_id):
+        return await self.request('GET', f'/v2/payments/refunds/{self.identifier(refund_id)}')
+
     async def verify(self, event, headers):
         names = {'auth_algo':'paypal-auth-algo','cert_url':'paypal-cert-url','transmission_id':'paypal-transmission-id','transmission_sig':'paypal-transmission-sig','transmission_time':'paypal-transmission-time'}
         if any(not headers.get(n) for n in names.values()): raise HTTPException(400,'Missing PayPal signature headers')

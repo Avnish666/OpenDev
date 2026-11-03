@@ -17,7 +17,7 @@ router = APIRouter(prefix='/api', tags=['Sandbox funding'])
 
 def view(db, c):
     e = db.scalar(select(Entitlement).where(Entitlement.contribution_id == c.id))
-    return {'id':c.id,'project_id':c.project_id,'tier_id':c.tier_id,'amount_cents':c.amount_cents,'currency':c.currency,'status':c.status,'order_id':c.order_id,'capture_id':c.capture_id,'approval_url':c.approval_url if c.status=='created' else None,'reward':c.reward_snapshot,'created_at':c.created_at,'entitlement':{'id':e.id,'status':e.status,'fulfillment_note':e.fulfillment_note} if e else None}
+    return {'id':c.id,'project_id':c.project_id,'tier_id':c.tier_id,'amount_cents':c.amount_cents,'refund_total_cents':c.refund_total_cents,'currency':c.currency,'status':c.status,'order_id':c.order_id,'capture_id':c.capture_id,'approval_url':c.approval_url if c.status=='created' else None,'reward':c.reward_snapshot,'created_at':c.created_at,'entitlement':{'id':e.id,'status':e.status,'fulfillment_note':e.fulfillment_note} if e else None}
 
 @router.post('/funding/orders',response_model=ContributionResponse,dependencies=[Depends(require_trusted_origin)])
 def checkout(data: Checkout,db: Session=Depends(get_db),user: User=Depends(get_current_user)):

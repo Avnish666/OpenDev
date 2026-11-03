@@ -80,9 +80,9 @@ def render_financial(plan, evidence, max_chars=6000):
                 'A negative difference indicates a recorded funding gap, not its cause. The records do not establish why funds were spent or why funding is insufficient.',
             ]
         elif claim.kind == 'refunds':
-            parts = [f"Original capture amounts excluded for refund-affected contributions: {money(s['refund_excluded_cents'])}.",
+            parts = [f"Recorded refund exclusions (full capture where exact totals are unknown): {money(s['refund_excluded_cents'])}.",
                      f"Original capture amounts excluded for reversal-affected contributions: {money(s['reversal_excluded_cents'])}.",
-                     'The exact amount refunded is unavailable. A partial refund conservatively excludes the entire affected capture; exclusions are not exact cash refund totals.']
+                     ('The exact amount refunded is unavailable. A partial refund conservatively excludes the entire affected capture where its cumulative total is unknown; exclusions are not exact cash refund totals.' if s.get('exact_refund_total_cents') is None else f"Authoritative recorded cumulative refund total: {money(s['exact_refund_total_cents'])}. This observation is not a live bank balance.")]
         elif claim.kind == 'budget_variance':
             rows = s['budget_variance']
             if claim.category is not None:
@@ -125,7 +125,7 @@ def render_financial(plan, evidence, max_chars=6000):
                      'These are comparisons of published category totals, not receipt-level allegations. '
                      'Private receipt findings and human-review notes are not published; this is not a count of all discrepancies and does not establish fraud.']
         elif claim.kind == 'missing_information':
-            parts = ['Exact partial-refund amounts and independently verified cash balances are unavailable. '
+            parts = ['Exact partial-refund amounts require authoritative cumulative observations; unknown historical amounts remain unavailable. Independently verified cash balances are unavailable. '
                      'Private receipt extractions, consistency determinations and reviewer notes are outside public scope. '
                      'No independent vendor-payment verification is available. '
                      'Published records do not establish completeness of all spending or external funding.',

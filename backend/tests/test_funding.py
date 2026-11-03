@@ -39,6 +39,10 @@ def payments(ctx,monkeypatch):
         if r.url.path=='/v2/checkout/orders/ORDER1' and state.get('order_expired'): return httpx.Response(404,json={})
         if r.url.path=='/v2/checkout/orders/ORDER1':return httpx.Response(200,json=order)
         if r.url.path=='/v2/payments/captures/CAP1':return httpx.Response(200,json={'id':'CAP1','status':state['status'],**({} if state.get('omit_final') else {'final_capture':True}),'amount':{'currency_code':'USD','value':state['amount']}})
+        if r.url.path.startswith('/v2/payments/refunds/'):
+            return httpx.Response(200,json=state.get('refund_override',{'id':r.url.path.rsplit('/',1)[1],'status':'COMPLETED',
+                'amount':{'currency_code':'USD','value':'5.00'},'seller_payable_breakdown':{'total_refunded_amount':{'currency_code':'USD','value':'5.00'}},
+                'links':[{'rel':'up','href':'https://api-m.sandbox.paypal.com/v2/payments/captures/CAP1'}]}))
         raise AssertionError(r.url)
     monkeypatch.setattr(funding,'paypal',PayPal(httpx.MockTransport(handler)))
     return *ctx,tier,state
@@ -141,7 +145,7 @@ def test_refund_resource_and_reversal_do_not_regrant(payments):
     state['status']='REFUNDED'
     refund={'id':'REFUND-EVENT','event_type':'PAYMENT.CAPTURE.REFUNDED','resource':{'id':'REFUND1','links':[{'rel':'up','href':'https://api-m.sandbox.paypal.com/v2/payments/captures/CAP1'}]}}
     assert client.post('/api/paypal/webhook',json=refund,headers=headers).status_code==200
-    assert db.scalar(select(Contribution)).status=='refunded'
+    assert db.scalar(select(Contribution)).status=='reversed'
 
 
 def test_missing_signature_and_no_secrets_in_responses(payments):

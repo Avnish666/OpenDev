@@ -1,6 +1,6 @@
 """Expense writes and deterministic financial reporting, without PayPal side effects."""
 from fastapi import HTTPException
-from sqlalchemy import literal, select, func, union_all
+from sqlalchemy import literal, select, func, union_all, case
 from sqlalchemy.exc import IntegrityError
 from sqlalchemy.orm import Session
 
@@ -87,9 +87,9 @@ def publish(db: Session, expense_id: int, user: User) -> Expense:
 def summary(db: Session, project: Project) -> dict:
     # One SQL statement gives one PostgreSQL snapshot for budgets, spending and funding.
     # Do not join these one-to-many tables: that would multiply the monetary totals.
-    budgets = select(literal('budget').label('kind'), BudgetAllocation.category.label('category'), literal(project.currency).label('currency'), BudgetAllocation.allocated_cents.label('amount'), literal(0).label('count')).where(BudgetAllocation.project_id == project.id)
-    spending = select(literal('spending'), Expense.category, Expense.currency, func.sum(Expense.amount_cents), func.count()).where(Expense.project_id == project.id, Expense.publication_status == 'published').group_by(Expense.category, Expense.currency)
-    funding = select(literal('funding'), Contribution.status, Contribution.currency, func.sum(Contribution.amount_cents), func.count()).where(Contribution.project_id == project.id, Contribution.capture_id.is_not(None)).group_by(Contribution.status, Contribution.currency)
+    budgets = select(literal('budget').label('kind'), BudgetAllocation.category.label('category'), literal(project.currency).label('currency'), BudgetAllocation.allocated_cents.label('amount'), literal(0).label('count'),literal(0).label('retained')).where(BudgetAllocation.project_id == project.id)
+    spending = select(literal('spending'), Expense.category, Expense.currency, func.sum(Expense.amount_cents), func.count(),literal(0)).where(Expense.project_id == project.id, Expense.publication_status == 'published').group_by(Expense.category, Expense.currency)
+    funding = select(literal('funding'), Contribution.status, Contribution.currency, func.sum(Contribution.amount_cents), func.count(),func.sum(case(((Contribution.status=='refunded') & Contribution.refund_total_cents.is_not(None),Contribution.amount_cents-Contribution.refund_total_cents),else_=0))).where(Contribution.project_id == project.id, Contribution.capture_id.is_not(None)).group_by(Contribution.status, Contribution.currency)
     categories: dict[str, dict] = {}
     completed = excluded_refunded = excluded_other = mismatches = expense_count = 0
     for row in db.execute(union_all(budgets, spending, funding)):
@@ -101,7 +101,8 @@ def summary(db: Session, project: Project) -> dict:
             if row.category == 'completed':
                 completed += amount
             elif row.category in ('refunded', 'reversed'):
-                excluded_refunded += amount
+                excluded_refunded += amount-int(row.retained)
+                completed += int(row.retained)
             else:
                 excluded_other += amount
             continue

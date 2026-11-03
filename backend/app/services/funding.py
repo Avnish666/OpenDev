@@ -88,10 +88,18 @@ async def reconcile(db, c, capture_id, terminal=None):
         if len(captures) != 1 or captures[0].get('id') != capture_id:
             raise HTTPException(502,'PayPal capture does not match order')
     status = cap.get('status')
+    if terminal=='refunded' and status not in ('COMPLETED','REFUNDED','PARTIALLY_REFUNDED'):
+        raise HTTPException(503,'Refund capture completion not confirmed; retry event')
     entitlement = db.scalar(select(Entitlement).where(Entitlement.contribution_id == c.id))
     c.capture_id = capture_id
+    if status=='REFUNDED':
+        # PayPal distinguishes REFUNDED from PARTIALLY_REFUNDED: a verified full
+        # refund establishes the original gross amount without guessing partials.
+        # Individual historical refund IDs remain absent until observed separately.
+        c.refund_total_cents=c.amount_cents
     if terminal or status in ('REFUNDED','PARTIALLY_REFUNDED'):
-        c.status = terminal or 'refunded'
+        # A late refund/completion cannot undo an already observed reversal.
+        c.status = 'reversed' if c.status=='reversed' else terminal or 'refunded'
         if entitlement: entitlement.status = 'revoked'
     elif c.status not in ('completed','refunded','reversed'):
         if status == 'COMPLETED':
@@ -148,17 +156,23 @@ async def process_webhook(db, event, headers):
         cap_id = related.get('capture_id') if kind == 'PAYMENT.CAPTURE.REFUNDED' else resource.get('id')
         if kind == 'PAYMENT.CAPTURE.REFUNDED' and not cap_id:
             from urllib.parse import urlparse
-            for link in resource.get('links',[]):
+            links=resource.get('links',[])
+            if not isinstance(links,list):raise HTTPException(400,'Malformed refund references')
+            for link in links:
+                if not isinstance(link,dict) or not isinstance(link.get('href',''),str):raise HTTPException(400,'Malformed refund references')
                 if link.get('rel') == 'up':
                     url = urlparse(link.get('href',''))
                     prefix = '/v2/payments/captures/'
                     if url.scheme == 'https' and url.hostname == 'api-m.sandbox.paypal.com' and url.path.startswith(prefix):
                         cap_id = paypal.identifier(url.path[len(prefix):])
-        c = db.scalar(select(Contribution).where(Contribution.order_id == oid).with_for_update()) if oid else None
+        c = db.scalar(select(Contribution).where(Contribution.order_id == oid).with_for_update().execution_options(populate_existing=True)) if oid else None
         if c is None and cap_id:
-            c = db.scalar(select(Contribution).where(Contribution.capture_id == cap_id).with_for_update())
+            c = db.scalar(select(Contribution).where(Contribution.capture_id == cap_id).with_for_update().execution_options(populate_existing=True))
         if c is None: raise HTTPException(503,'Contribution not yet available; retry event')
         terminal = {'PAYMENT.CAPTURE.REFUNDED':'refunded','PAYMENT.CAPTURE.REVERSED':'reversed'}.get(kind)
         await reconcile(db,c,paypal.identifier(cap_id),terminal=terminal)
+        if kind=='PAYMENT.CAPTURE.REFUNDED':
+            from app.services.refunds import record
+            await record(db,c,resource.get('id'),event_id,paypal)
     db.commit()
     return {'status':'processed'}

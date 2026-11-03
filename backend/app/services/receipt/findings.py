@@ -41,7 +41,8 @@ def detect(db, doc, expense, receipt):
     if duplicates:
         add('DUPLICATE_FILE',None,duplicates,'Identical file content exists elsewhere in this project; duplication does not establish duplicate payment.',{'kind':'project_file_hash'})
     if receipt.invoice_number.value and receipt.vendor_name.value:
-        others=db.execute(select(ReceiptExtraction,ExpenseDocument.expense_id).join(ExpenseDocument).join(Expense).where(Expense.project_id==expense.project_id,ReceiptExtraction.extraction_status=='completed',ReceiptExtraction.extraction_version=='local-rules-v1',ExpenseDocument.expense_id!=expense.id)).all()
+        from app.services.receipt.provider import EXTRACTION_VERSION
+        others=db.execute(select(ReceiptExtraction,ExpenseDocument.expense_id).join(ExpenseDocument).join(Expense).where(Expense.project_id==expense.project_id,ReceiptExtraction.extraction_status=='completed',ReceiptExtraction.extraction_version.in_(['local-rules-v1',EXTRACTION_VERSION]),ExpenseDocument.expense_id!=expense.id)).all()
         for other,other_expense in others:
             value=other.extracted_json or {}
             if normalize(str(value.get('invoice_number',{}).get('value','')))==normalize(receipt.invoice_number.value) and normalize(str(value.get('vendor_name',{}).get('value','')))==normalize(receipt.vendor_name.value):

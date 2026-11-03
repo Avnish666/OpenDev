@@ -2,12 +2,19 @@
 import json
 import subprocess
 import time
+import argparse
+
+parser=argparse.ArgumentParser()
+parser.add_argument('--image',default='opendev-release-test')
+args=parser.parse_args()
 
 base = ['docker','--host=unix:///var/run/docker.sock']
 started = time.monotonic()
-cid = subprocess.check_output(base + ['run','-d','--memory=512m','--cpus=1','-e','APP_ENV=production',
+cid = subprocess.check_output(base + ['run','-d','--memory=512m','--cpus=1','--pids-limit=32',
+    '--read-only','--tmpfs','/tmp:rw,noexec,nosuid,nodev,size=64m','--cap-drop=ALL',
+    '--security-opt','no-new-privileges','--network=none','-e','APP_ENV=production',
     '-e','DATABASE_URL=postgresql+psycopg://test:test@localhost/opendev_test_smoke',
-    '-e','FRONTEND_URL=https://frontend.invalid','-e','PORT=10031','opendev-release-test'],text=True).strip()
+    '-e','FRONTEND_URL=https://frontend.invalid','-e','PORT=10031',args.image],text=True).strip()
 try:
     for attempt in range(40):
         result = subprocess.run(base + ['exec',cid,'python','-c',
@@ -21,21 +28,32 @@ try:
     assert json.loads(result.stdout) == {'status':'ok'}
     print(json.dumps({'health':json.loads(result.stdout),'startup_seconds':round(time.monotonic()-started,2)}), flush=True)
     code = '''import json, os, tempfile, pathlib, resource, time
-import pymupdf
+from pypdf import PdfWriter
+from pypdf.generic import DictionaryObject, NameObject, DecodedStreamObject
 from PIL import Image, ImageDraw
 from app.services.receipt.provider import LocalProvider
 started=time.monotonic()
 with tempfile.TemporaryDirectory() as folder:
  p=pathlib.Path(folder)/'receipt.pdf'
- with pymupdf.open() as pdf:
-  pdf.new_page().insert_text((60,60),'Vendor: Synthetic Hosting\\nCurrency: USD\\nGrand Total: USD 12.34')
-  pdf.save(p)
+ writer=PdfWriter();page=writer.add_blank_page(width=595,height=842)
+ font=DictionaryObject({NameObject('/Type'):NameObject('/Font'),NameObject('/Subtype'):NameObject('/Type1'),NameObject('/BaseFont'):NameObject('/Helvetica')})
+ page[NameObject('/Resources')]=DictionaryObject({NameObject('/Font'):DictionaryObject({NameObject('/F1'):writer._add_object(font)})})
+ stream=DecodedStreamObject();stream.set_data(b'BT /F1 14 Tf 40 780 Td (Vendor: Synthetic Hosting) Tj 0 -20 Td (Currency: USD) Tj 0 -20 Td (Grand Total: USD 12.34) Tj ET')
+ page[NameObject('/Contents')]=writer._add_object(stream);writer.write(str(p))
  pdf_result=LocalProvider().extract(p,'application/pdf')
  image=Image.new('RGB',(1200,400),'white');ImageDraw.Draw(image).text((30,30),'Vendor: Synthetic Hosting\\nGrand Total: USD 12.34',fill='black',font_size=40)
  p=pathlib.Path(folder)/'receipt.png';image.save(p)
  image_result=LocalProvider().extract(p,'image/png')
  assert os.getuid()==10001 and pdf_result.total_cents.value==1234
  assert image_result.extraction_method=='tesseract'
+ assert image_result.total_cents.value==1234
+ p=pathlib.Path(folder)/'scan.pdf';image.save(p,format='PDF')
+ scan_result=LocalProvider().extract(p,'application/pdf')
+ assert scan_result.total_cents.value==1234 and scan_result.extraction_method=='tesseract'
+ from importlib.metadata import distribution,PackageNotFoundError
+ try:distribution('PyMuPDF');raise AssertionError('Replaced engine remains installed')
+ except PackageNotFoundError:pass
+ assert pathlib.Path('/app/app/main.py').stat().st_uid==0
  print(json.dumps({'uid':os.getuid(),'pdf_total_cents':pdf_result.total_cents.value,'ocr_method':image_result.extraction_method,'processing_seconds':round(time.monotonic()-started,2),'child_peak_rss_kib':resource.getrusage(resource.RUSAGE_CHILDREN).ru_maxrss}))
 '''
     subprocess.run(base + ['exec',cid,'python','-c',code],check=True)

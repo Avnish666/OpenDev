@@ -15,8 +15,8 @@ __all__ = [
 
 from app.models.reward_tier import RewardTier
 __all__.append('RewardTier')
-from app.models.funding import Contribution, Entitlement, WebhookEvent
-__all__.extend(['Contribution', 'Entitlement', 'WebhookEvent'])
+from app.models.funding import Contribution, Entitlement, WebhookEvent, RefundRecord
+__all__.extend(['Contribution', 'Entitlement', 'WebhookEvent', 'RefundRecord'])
 from app.models.expense import Expense
 __all__.append('Expense')
 from app.models.expense_document import ExpenseDocument

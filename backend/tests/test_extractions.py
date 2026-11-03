@@ -5,7 +5,8 @@ from uuid import uuid4
 
 import httpx
 import pytest
-import pymupdf
+from pypdf import PdfReader, PdfWriter
+from pdf_fixtures import text_pdf
 from PIL import Image, ImageDraw, ImageFont
 from sqlalchemy import select,func
 from app.core.auth import get_current_user
@@ -32,14 +33,13 @@ def image_receipt(fmt='PNG'):
 
 
 def digital_pdf(text=TEXT,pages=1):
-    doc=pymupdf.open()
-    for _ in range(pages):doc.new_page().insert_text((40,60),text,fontsize=14)
-    return doc.tobytes()
+    return text_pdf(text,pages)
 
 
 def scanned_pdf():
-    doc=pymupdf.open();page=doc.new_page(width=700,height=475)
-    page.insert_image(page.rect,stream=image_receipt());return doc.tobytes()
+    output=io.BytesIO()
+    with Image.open(io.BytesIO(image_receipt())) as image:image.save(output,format='PDF',resolution=144)
+    return output.getvalue()
 
 
 @pytest.fixture
@@ -205,8 +205,9 @@ def test_invalid_private_objects(extraction_ctx,kind):
     client,db,p,users,identity,expense,state=extraction_ctx;did=submit(extraction_ctx)
     if kind=='corrupt':body=b'%PDF-1.7 broken\n%%EOF'
     elif kind=='encrypted':
-        pdf=pymupdf.open(stream=digital_pdf(),filetype='pdf')
-        body=pdf.tobytes(encryption=pymupdf.PDF_ENCRYPT_AES_256,user_pw='synthetic',owner_pw='synthetic-owner')
+        pdf=PdfWriter(clone_from=PdfReader(io.BytesIO(digital_pdf())))
+        pdf.encrypt('synthetic','synthetic-owner')
+        result=io.BytesIO();pdf.write(result);body=result.getvalue()
     elif kind=='unsupported':body=b'<html>Not a receipt</html>'
     else:body=b'x'*(documents.MAX_BYTES+1)
     doc=db.get(ExpenseDocument,did)
