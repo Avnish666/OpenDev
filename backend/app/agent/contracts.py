@@ -1,5 +1,5 @@
 from datetime import datetime
-from typing import Literal, Protocol
+from typing import Literal
 from pydantic import BaseModel, ConfigDict, Field, JsonValue
 
 
@@ -7,6 +7,7 @@ class AgentQuestion(BaseModel):
     model_config=ConfigDict(extra='forbid',str_strip_whitespace=True)
     project_id: int = Field(gt=0,le=9223372036854775807,strict=True)
     question: str = Field(min_length=3,max_length=1000)
+    mode: Literal['deterministic','llm','auto'] | None = None
 
 
 class Citation(BaseModel):
@@ -39,12 +40,10 @@ class AgentAnswer(BaseModel):
     evidence_used: list[AgentEvidence]=Field(default_factory=list)
     limitations: list[str]
     confidence: Literal['deterministic_records','limited_evidence','not_applicable']
-    answer_status: Literal['answered','insufficient_evidence','unsupported_question','unavailable_source']
-
-
-class ModelProvider(Protocol):
-    # Future adapter receives public evidence only, never a Session or arbitrary URL.
-    def explain(self, question: AgentQuestion, evidence: tuple[AgentEvidence,...]) -> AgentAnswer: ...
+    answer_status: Literal['answered','insufficient_evidence','unsupported_question','unavailable_source','provider_unavailable']
+    execution_mode: Literal['deterministic','llm'] = 'deterministic'
+    source_freshness: dict[str,str] = Field(default_factory=dict)
+    diagnostics: dict = Field(default_factory=dict)
 
 
 class ToolCall(BaseModel):

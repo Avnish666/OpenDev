@@ -1,10 +1,11 @@
 """Explicit baseline intents; no semantic guessing, model execution or source instructions."""
 from fastapi import HTTPException
 from app.agent.contracts import AgentAnswer
+from app.agent.financial_reasoning import FINANCIAL_INTENTS, deterministic_financial
 
 INTENTS={
  'funding':('How much funding has the project received?',),
- 'spending':('How much has been reported as spent?',),
+ 'spending':('How much has been reported as spent?', 'How much has the maintainer reported spending?'),
  'categories':('What is the reported spending by category?',),
  'overdue':('Which milestones are overdue?',),
  'delivered':('What has been asserted delivered?',),
@@ -12,6 +13,7 @@ INTENTS={
  'maintainer_history':("What is the maintainer's recorded delivery history?",),
  'reward_fulfillment':('What is the reward fulfillment history?',),
 }
+INTENTS.update(FINANCIAL_INTENTS)
 
 
 def intent_for(question):
@@ -26,6 +28,8 @@ def answer(tools,question):
     intent=intent_for(question.question)
     if not intent:return AgentAnswer(answer='Unsupported question. Use one of: '+', '.join(INTENTS),limitations=['Only explicit baseline intents are supported; no LLM reasoning.'],confidence='not_applicable',answer_status='unsupported_question')
     try:
+        if intent in FINANCIAL_INTENTS:
+            return deterministic_financial(tools, question, intent)
         if intent in ('funding','spending','categories'):
             e=tools.get_project_finances(p.id);s=e.value['financial_summary']
             if intent=='funding':text=f"Net recorded Sandbox funding: {s['net_recorded_funding_cents']} {s['currency']} minor units. This is not an available bank balance."
@@ -51,6 +55,8 @@ def answer(tools,question):
     except HTTPException as exc:
         if exc.status_code not in (404,413):raise
         return AgentAnswer(answer='Public source unavailable.',limitations=['Source missing, not publicly accessible, or above bounded retrieval capacity; no inference of misconduct.'],confidence='limited_evidence',answer_status='unavailable_source')
+    except ValueError:
+        return AgentAnswer(answer='Insufficient validated financial evidence.', limitations=['Financial explanation exceeds its bounded capacity or public records cannot support the requested comparison.'], confidence='limited_evidence', answer_status='insufficient_evidence')
 
 
 def result(e,text,status='answered'):
