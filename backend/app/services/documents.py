@@ -84,6 +84,8 @@ def cleanup(key, document_id):
 
 
 def upload(db, expense_id, user, path, original_filename, size, digest, source_id=None):
+    from app.core.features import require_receipts
+    require_receipts()
     mime = validate(path)
     expense = expenses.get(db, expense_id, user, write=True)
     if size <= 0 or size > MAX_BYTES:

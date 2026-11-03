@@ -11,6 +11,7 @@ from starlette.concurrency import run_in_threadpool
 
 from app.core.auth import get_current_user, get_optional_user
 from app.core.database import get_db
+from app.core.features import require_receipts
 from app.models.expense_document import ExpenseDocument
 from app.models.project import Project
 from app.models.user import User
@@ -29,7 +30,7 @@ def no_cache(response):
 
 
 @router.post('/expenses/{expense_id}/documents', response_model=DocumentResponse, status_code=201,
-             dependencies=[Depends(require_trusted_origin)],
+             dependencies=[Depends(require_trusted_origin),Depends(require_receipts)],
              openapi_extra={'requestBody': {'required': True, 'content': {mime: {'schema': {'type': 'string', 'format': 'binary'}} for mime in ['application/pdf', 'image/png', 'image/jpeg']}}})
 async def upload_document(expense_id: RecordID, request: Request, response: Response,
                           x_filename: str = Header(max_length=2048), redacted_from_id: UUID | None = None,

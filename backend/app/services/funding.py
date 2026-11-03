@@ -18,6 +18,8 @@ def own(db, cid, user):
 
 
 def start(db, user, tier_id, key):
+    from app.core.features import require_checkout
+    require_checkout()
     # Lock the tier before the capacity count and persist the claim before provider I/O.
     tier = db.scalar(select(RewardTier).where(RewardTier.id == tier_id).with_for_update())
     old = db.scalar(select(Contribution).where(Contribution.user_id == user.id, Contribution.checkout_key == key))
@@ -112,6 +114,8 @@ async def reconcile(db, c, capture_id, terminal=None):
 
 
 async def capture(db, c):
+    from app.core.features import require_checkout
+    require_checkout()
     if not c.order_id: raise HTTPException(409,'Create order first')
     if c.status in ('completed','refunded','reversed'): return c
     order = await paypal.order(c.order_id)

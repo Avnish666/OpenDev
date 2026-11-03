@@ -23,6 +23,11 @@ class Settings:
         self.GITHUB_CLIENT_SECRET = os.getenv("GITHUB_CLIENT_SECRET")
         self.GITHUB_CALLBACK_URL = os.getenv("GITHUB_CALLBACK_URL")
         self.DATABASE_URL = os.getenv("DATABASE_URL")
+        from app.core.deployment import feature
+        production=self.APP_ENV=='production'
+        self.RECEIPT_PROCESSING_ENABLED=feature('RECEIPT_PROCESSING_ENABLED',production)
+        self.CHECKOUT_ENABLED=feature('CHECKOUT_ENABLED',production)
+        self.LLM_ENABLED=feature('LLM_ENABLED',production)
 
         if not self.DATABASE_URL:
             raise RuntimeError(
@@ -35,6 +40,11 @@ class Settings:
                 "postgresql+psycopg://",
                 1
             )
+
+
+        if production:
+            from app.core.deployment import validate_database
+            validate_database(self.DATABASE_URL)
 
 
 settings = Settings()

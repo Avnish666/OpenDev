@@ -22,6 +22,8 @@ app.include_router(auth_router)
 
 
 from app.core.config import settings
+from app.core.deployment import validate
+validate(settings)
 
 app.add_middleware(
     CORSMiddleware,

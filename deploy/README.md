@@ -1,6 +1,13 @@
 # Review-only same-origin deployment artifact
 
 This configuration is prepared for review. It does not authorize deployment.
+Step 3 adds required production startup checks and backend release controls. See
+[the current preflight](../docs/phase7-deployment-preflight.md) and
+[environment manifest](environment-manifest.json). Production defaults disable new
+checkout/capture, receipt upload/extraction and LLM access; webhook reconciliation,
+authorized reads and deterministic evidence remain. Provider credentials are still
+required for existing integration paths. Do not enable controls as a substitute for
+owner acceptance, credential rotation or deployment approval.
 The release recommendation is **NO-GO**; see
 [`docs/phase7-deployment-preparation.md`](../docs/phase7-deployment-preparation.md)
 for the current refund migration, backup/recovery and acceptance runbook, and the

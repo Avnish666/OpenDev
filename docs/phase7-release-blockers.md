@@ -1,5 +1,13 @@
 # Phase 7 Step 1: release freeze and blocker register
 
+Step 3 preflight (2026-11-04, Asia/Calcutta): production startup validation and
+backend restricted-launch controls are locally verified (see current preflight for final regression
+totals). See [the current preflight report](phase7-deployment-preflight.md) for the
+manifest, measurements and manual checks. Credential rotation, hosted CI, true
+decoder containment and actual free-host/provider acceptance remain unverified;
+**NO-GO remains**. Disabled intake reduces exposed operations and does not close
+these public release gates.
+
 Assessment: 2026-11-03 UTC. **NO-GO for public deployment.** This is the
 authoritative consolidated register for Phase 3–6 findings; those reports remain
 historical evidence. Local tests and a local image do not authorize deployment.

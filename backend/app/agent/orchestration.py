@@ -216,7 +216,8 @@ async def orchestrate(tools, question, provider: ModelProvider | None = None, co
     start = monotonic()
     deadline = start + config.timeout_seconds
     p = tools.project(question.project_id)  # Authorize before availability checks or model messages.
-    mode = question.mode or config.mode
+    from app.core.config import settings
+    mode = (question.mode or config.mode) if settings.LLM_ENABLED else 'deterministic'
     if mode == 'deterministic':
         result = fallback(tools, question, None, config)
         result.diagnostics = {'tool_names': [], 'turn_count': 0, 'latency_ms': int((monotonic()-start)*1000)}

@@ -14,7 +14,12 @@ cid = subprocess.check_output(base + ['run','-d','--memory=512m','--cpus=1','--p
     '--read-only','--tmpfs','/tmp:rw,noexec,nosuid,nodev,size=64m','--cap-drop=ALL',
     '--security-opt','no-new-privileges','--network=none','-e','APP_ENV=production',
     '-e','DATABASE_URL=postgresql+psycopg://test:test@localhost/opendev_test_smoke',
-    '-e','FRONTEND_URL=https://frontend.invalid','-e','PORT=10031',args.image],text=True).strip()
+    '-e','FRONTEND_URL=https://frontend.invalid','-e','PORT=10031',
+    '-e','GITHUB_CLIENT_ID=synthetic','-e','GITHUB_CLIENT_SECRET=synthetic',
+    '-e','PAYPAL_CLIENT_ID=synthetic','-e','PAYPAL_CLIENT_SECRET=synthetic',
+    '-e','PAYPAL_WEBHOOK_ID=synthetic','-e','PAYPAL_MERCHANT_ID=synthetic',
+    '-e','SUPABASE_URL=https://synthetic.supabase.co','-e','SUPABASE_STORAGE_BUCKET=private',
+    '-e','SUPABASE_SERVICE_ROLE_KEY=synthetic',args.image],text=True).strip()
 try:
     for attempt in range(40):
         result = subprocess.run(base + ['exec',cid,'python','-c',
@@ -27,6 +32,20 @@ try:
         raise RuntimeError('Container health check failed')
     assert json.loads(result.stdout) == {'status':'ok'}
     print(json.dumps({'health':json.loads(result.stdout),'startup_seconds':round(time.monotonic()-started,2)}), flush=True)
+    checks = '''import urllib.request, urllib.error, os, re
+base='http://127.0.0.1:10031'
+if os.getenv('FRONTEND_DIST'):
+ html=urllib.request.urlopen(base+'/').read().decode()
+ asset=re.search(r'src="(/assets/[^" ]+)"',html)[1]
+ assert urllib.request.urlopen(base+asset).status==200
+request=urllib.request.Request(base+'/api/expenses/1/documents',data=b'synthetic',headers={'Origin':'https://frontend.invalid','X-Filename':'synthetic.pdf','Content-Type':'application/pdf'})
+try:
+ urllib.request.urlopen(request)
+ raise AssertionError('Restricted upload must fail')
+except urllib.error.HTTPError as error:assert error.code==503
+print('PASS: restricted production upload and static assets where configured')
+'''
+    subprocess.run(base + ['exec',cid,'python','-c',checks],check=True)
     code = '''import json, os, tempfile, pathlib, resource, time
 from pypdf import PdfWriter
 from pypdf.generic import DictionaryObject, NameObject, DecodedStreamObject
@@ -54,7 +73,10 @@ with tempfile.TemporaryDirectory() as folder:
  try:distribution('PyMuPDF');raise AssertionError('Replaced engine remains installed')
  except PackageNotFoundError:pass
  assert pathlib.Path('/app/app/main.py').stat().st_uid==0
- print(json.dumps({'uid':os.getuid(),'pdf_total_cents':pdf_result.total_cents.value,'ocr_method':image_result.extraction_method,'processing_seconds':round(time.monotonic()-started,2),'child_peak_rss_kib':resource.getrusage(resource.RUSAGE_CHILDREN).ru_maxrss}))
+ usage=resource.getrusage(resource.RUSAGE_CHILDREN)
+ group=pathlib.Path('/sys/fs/cgroup')
+ peak=int((group/'memory.peak').read_text()) if (group/'memory.peak').exists() and (group/'memory.max').read_text().strip()==str(512*1024*1024) else None
+ print(json.dumps({'uid':os.getuid(),'pdf_total_cents':pdf_result.total_cents.value,'ocr_method':image_result.extraction_method,'processing_seconds':round(time.monotonic()-started,2),'child_peak_rss_kib':usage.ru_maxrss,'child_cpu_seconds':round(usage.ru_utime+usage.ru_stime,2),'container_peak_bytes':peak}))
 '''
     subprocess.run(base + ['exec',cid,'python','-c',code],check=True)
     print(subprocess.check_output(base + ['stats','--no-stream','--format','{{.MemUsage}}',cid],text=True).strip())

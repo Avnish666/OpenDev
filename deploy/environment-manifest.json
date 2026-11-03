@@ -1,0 +1,392 @@
+[
+  {
+    "name": "APP_ENV",
+    "purpose": "Select secure production behavior",
+    "secret": false,
+    "required": "Required",
+    "example": "production",
+    "provider": "operator",
+    "validation": "Known environment; production enables startup checks",
+    "verification": "Verify Secure cookies and restricted defaults"
+  },
+  {
+    "name": "DATABASE_URL",
+    "purpose": "PostgreSQL connection",
+    "secret": true,
+    "required": "Required",
+    "example": "postgresql+psycopg://<role>:<password>@<host>/<db>?sslmode=verify-full",
+    "provider": "Neon",
+    "validation": "PostgreSQL scheme/host/database; external hosts require TLS mode",
+    "verification": "Approved target, CA/hostname verification, db-health and revision"
+  },
+  {
+    "name": "FRONTEND_URL",
+    "purpose": "Exact public origin",
+    "secret": false,
+    "required": "Required",
+    "example": "https://<service>.onrender.com",
+    "provider": "Render",
+    "validation": "HTTPS; no credentials/path/query/fragment/trailing slash",
+    "verification": "Login redirect, CORS and Origin tests"
+  },
+  {
+    "name": "GITHUB_CALLBACK_URL",
+    "purpose": "OAuth return URL",
+    "secret": false,
+    "required": "Optional; derived",
+    "example": "https://<service>.onrender.com/api/auth/github/callback",
+    "provider": "GitHub/operator",
+    "validation": "Must match derived same-origin path exactly",
+    "verification": "Match registered callback, complete two-account HTTPS login"
+  },
+  {
+    "name": "GITHUB_CLIENT_ID",
+    "purpose": "OAuth application ID",
+    "secret": false,
+    "required": "Required in production even with intake disabled",
+    "example": "<owner-provided value>",
+    "provider": "GitHub",
+    "validation": "Nonempty/non-placeholder; storage URL/bucket use existing strict format validation",
+    "verification": "Provider test-account checklist; never infer validity from syntax"
+  },
+  {
+    "name": "GITHUB_CLIENT_SECRET",
+    "purpose": "OAuth code exchange",
+    "secret": true,
+    "required": "Required in production even with intake disabled",
+    "example": "<owner-provided value>",
+    "provider": "GitHub",
+    "validation": "Nonempty/non-placeholder; storage URL/bucket use existing strict format validation",
+    "verification": "Provider test-account checklist; never infer validity from syntax"
+  },
+  {
+    "name": "PAYPAL_CLIENT_ID",
+    "purpose": "Sandbox app ID",
+    "secret": false,
+    "required": "Required in production even with intake disabled",
+    "example": "<owner-provided value>",
+    "provider": "PayPal Sandbox",
+    "validation": "Nonempty/non-placeholder; storage URL/bucket use existing strict format validation",
+    "verification": "Provider test-account checklist; never infer validity from syntax"
+  },
+  {
+    "name": "PAYPAL_CLIENT_SECRET",
+    "purpose": "Sandbox API authentication",
+    "secret": true,
+    "required": "Required in production even with intake disabled",
+    "example": "<owner-provided value>",
+    "provider": "PayPal Sandbox",
+    "validation": "Nonempty/non-placeholder; storage URL/bucket use existing strict format validation",
+    "verification": "Provider test-account checklist; never infer validity from syntax"
+  },
+  {
+    "name": "PAYPAL_WEBHOOK_ID",
+    "purpose": "Expected webhook registration",
+    "secret": false,
+    "required": "Required in production even with intake disabled",
+    "example": "<owner-provided value>",
+    "provider": "PayPal Sandbox",
+    "validation": "Nonempty/non-placeholder; storage URL/bucket use existing strict format validation",
+    "verification": "Provider test-account checklist; never infer validity from syntax"
+  },
+  {
+    "name": "PAYPAL_MERCHANT_ID",
+    "purpose": "Expected capture receiver",
+    "secret": false,
+    "required": "Required in production even with intake disabled",
+    "example": "<owner-provided value>",
+    "provider": "PayPal Sandbox",
+    "validation": "Nonempty/non-placeholder; storage URL/bucket use existing strict format validation",
+    "verification": "Provider test-account checklist; never infer validity from syntax"
+  },
+  {
+    "name": "SUPABASE_URL",
+    "purpose": "Storage project endpoint",
+    "secret": false,
+    "required": "Required in production even with intake disabled",
+    "example": "https://<project>.supabase.co",
+    "provider": "Supabase",
+    "validation": "Nonempty/non-placeholder; storage URL/bucket use existing strict format validation",
+    "verification": "Provider test-account checklist; never infer validity from syntax"
+  },
+  {
+    "name": "SUPABASE_STORAGE_BUCKET",
+    "purpose": "Private receipts bucket",
+    "secret": false,
+    "required": "Required in production even with intake disabled",
+    "example": "<owner-provided value>",
+    "provider": "Supabase",
+    "validation": "Nonempty/non-placeholder; storage URL/bucket use existing strict format validation",
+    "verification": "Provider test-account checklist; never infer validity from syntax"
+  },
+  {
+    "name": "SUPABASE_SERVICE_ROLE_KEY",
+    "purpose": "Backend-only storage access",
+    "secret": true,
+    "required": "Required in production even with intake disabled",
+    "example": "<owner-provided value>",
+    "provider": "Supabase",
+    "validation": "Nonempty/non-placeholder; storage URL/bucket use existing strict format validation",
+    "verification": "Provider test-account checklist; never infer validity from syntax"
+  },
+  {
+    "name": "RECEIPT_PROCESSING_ENABLED",
+    "purpose": "Allow upload and extraction",
+    "secret": false,
+    "required": "Optional",
+    "example": "false",
+    "provider": "operator",
+    "validation": "Exact true/false; false by default in production, true in development/testing",
+    "verification": "503 at guarded write paths; deterministic answer when model disabled"
+  },
+  {
+    "name": "CHECKOUT_ENABLED",
+    "purpose": "Allow new checkout and capture",
+    "secret": false,
+    "required": "Optional",
+    "example": "false",
+    "provider": "operator",
+    "validation": "Exact true/false; false by default in production, true in development/testing",
+    "verification": "503 at guarded write paths; deterministic answer when model disabled"
+  },
+  {
+    "name": "LLM_ENABLED",
+    "purpose": "Allow model modes",
+    "secret": false,
+    "required": "Optional",
+    "example": "false",
+    "provider": "operator",
+    "validation": "Exact true/false; false by default in production, true in development/testing",
+    "verification": "503 at guarded write paths; deterministic answer when model disabled"
+  },
+  {
+    "name": "OLLAMA_BASE_URL",
+    "purpose": "Model connection/identity",
+    "secret": false,
+    "required": "Required when LLM_ENABLED=true",
+    "example": "http://<private-model-host>:11434",
+    "provider": "owner-controlled inference",
+    "validation": "Provider URL/model validated without connecting at startup",
+    "verification": "Actual tools, model rights, privacy/injection and latency acceptance"
+  },
+  {
+    "name": "OLLAMA_MODEL",
+    "purpose": "Model connection/identity",
+    "secret": false,
+    "required": "Required when LLM_ENABLED=true",
+    "example": "<reviewed tool-capable model>",
+    "provider": "owner-controlled inference",
+    "validation": "Provider URL/model validated without connecting at startup",
+    "verification": "Actual tools, model rights, privacy/injection and latency acceptance"
+  },
+  {
+    "name": "PORT",
+    "purpose": "Listen port",
+    "secret": false,
+    "required": "Optional; platform supplied",
+    "example": "10000",
+    "provider": "Render",
+    "validation": "Integer 1..65535",
+    "verification": "HTTP health and graceful shutdown"
+  },
+  {
+    "name": "FRONTEND_DIST",
+    "purpose": "Built static directory",
+    "secret": false,
+    "required": "Image-supplied",
+    "example": "/app/frontend-dist",
+    "provider": "Docker image",
+    "validation": "index.html must exist when configured",
+    "verification": "Root, hashed asset and API route checks"
+  },
+  {
+    "name": "FORWARDED_ALLOW_IPS",
+    "purpose": "Trusted proxy senders",
+    "secret": false,
+    "required": "Optional",
+    "example": "<verified proxy IPs/CIDRs>",
+    "provider": "Render/operator",
+    "validation": "Wildcard rejected in production; Uvicorn parses trusted peers",
+    "verification": "Verify spoof rejection and real peer quotas through edge; default loopback only"
+  },
+  {
+    "name": "AGENT_MODE",
+    "purpose": "Bound agent mode",
+    "secret": false,
+    "required": "Optional",
+    "example": "deterministic",
+    "provider": "operator",
+    "validation": "deterministic, llm or auto; checked at production startup",
+    "verification": "Exercise bounded tool/timeout/refusal paths; LLM flag overrides requested mode"
+  },
+  {
+    "name": "AGENT_MAX_TOOL_CALLS",
+    "purpose": "Bound agent max_tool_calls",
+    "secret": false,
+    "required": "Optional",
+    "example": "6",
+    "provider": "operator",
+    "validation": "Integer 1..6; checked at production startup",
+    "verification": "Exercise bounded tool/timeout/refusal paths; LLM flag overrides requested mode"
+  },
+  {
+    "name": "AGENT_MAX_TURNS",
+    "purpose": "Bound agent max_turns",
+    "secret": false,
+    "required": "Optional",
+    "example": "3",
+    "provider": "operator",
+    "validation": "Integer 1..6; checked at production startup",
+    "verification": "Exercise bounded tool/timeout/refusal paths; LLM flag overrides requested mode"
+  },
+  {
+    "name": "AGENT_TIMEOUT_SECONDS",
+    "purpose": "Bound agent timeout_seconds",
+    "secret": false,
+    "required": "Optional",
+    "example": "30",
+    "provider": "operator",
+    "validation": "Number >0..120; checked at production startup",
+    "verification": "Exercise bounded tool/timeout/refusal paths; LLM flag overrides requested mode"
+  },
+  {
+    "name": "AGENT_MODEL_TIMEOUT",
+    "purpose": "Bound agent model_timeout",
+    "secret": false,
+    "required": "Optional",
+    "example": "15",
+    "provider": "operator",
+    "validation": "Number >0..60; checked at production startup",
+    "verification": "Exercise bounded tool/timeout/refusal paths; LLM flag overrides requested mode"
+  },
+  {
+    "name": "AGENT_TOOL_TIMEOUT",
+    "purpose": "Bound agent tool_timeout",
+    "secret": false,
+    "required": "Optional",
+    "example": "5",
+    "provider": "operator",
+    "validation": "Number >0..15; checked at production startup",
+    "verification": "Exercise bounded tool/timeout/refusal paths; LLM flag overrides requested mode"
+  },
+  {
+    "name": "AGENT_MAX_CONTEXT_BYTES",
+    "purpose": "Bound agent max_context_bytes",
+    "secret": false,
+    "required": "Optional",
+    "example": "24000",
+    "provider": "operator",
+    "validation": "Integer 4096..32000; checked at production startup",
+    "verification": "Exercise bounded tool/timeout/refusal paths; LLM flag overrides requested mode"
+  },
+  {
+    "name": "AGENT_MAX_TOOL_BYTES",
+    "purpose": "Bound agent max_tool_bytes",
+    "secret": false,
+    "required": "Optional",
+    "example": "12000",
+    "provider": "operator",
+    "validation": "Integer 1024..24000; checked at production startup",
+    "verification": "Exercise bounded tool/timeout/refusal paths; LLM flag overrides requested mode"
+  },
+  {
+    "name": "AGENT_MAX_RESPONSE_CHARS",
+    "purpose": "Bound agent max_response_chars",
+    "secret": false,
+    "required": "Optional",
+    "example": "6000",
+    "provider": "operator",
+    "validation": "Integer 500..8000; checked at production startup",
+    "verification": "Exercise bounded tool/timeout/refusal paths; LLM flag overrides requested mode"
+  },
+  {
+    "name": "VITE_API_URL",
+    "purpose": "Browser API base",
+    "secret": false,
+    "required": "Build setting",
+    "example": "",
+    "provider": "Docker build",
+    "validation": "Public candidate fixes same-origin Community build; Studio directory excluded",
+    "verification": "Inspect bundle and relative API requests"
+  },
+  {
+    "name": "VITE_ANALYTICS_RENDERER",
+    "purpose": "Default public renderer",
+    "secret": false,
+    "required": "Build setting",
+    "example": "community",
+    "provider": "Docker build",
+    "validation": "Public candidate fixes same-origin Community build; Studio directory excluded",
+    "verification": "Inspect bundle and relative API requests"
+  },
+  {
+    "name": "PYTHONDONTWRITEBYTECODE",
+    "purpose": "Image/runtime housekeeping",
+    "secret": false,
+    "required": "Image-supplied",
+    "example": "1",
+    "provider": "Dockerfile",
+    "validation": "Fixed image defaults; OCR independently forces one OpenMP thread",
+    "verification": "Smoke build/start/OCR; not a secret or security sandbox"
+  },
+  {
+    "name": "PYTHONUNBUFFERED",
+    "purpose": "Image/runtime housekeeping",
+    "secret": false,
+    "required": "Image-supplied",
+    "example": "1",
+    "provider": "Dockerfile",
+    "validation": "Fixed image defaults; OCR independently forces one OpenMP thread",
+    "verification": "Smoke build/start/OCR; not a secret or security sandbox"
+  },
+  {
+    "name": "PIP_NO_CACHE_DIR",
+    "purpose": "Image/runtime housekeeping",
+    "secret": false,
+    "required": "Image-supplied",
+    "example": "1",
+    "provider": "Dockerfile",
+    "validation": "Fixed image defaults; OCR independently forces one OpenMP thread",
+    "verification": "Smoke build/start/OCR; not a secret or security sandbox"
+  },
+  {
+    "name": "OMP_THREAD_LIMIT",
+    "purpose": "Image/runtime housekeeping",
+    "secret": false,
+    "required": "Image-supplied",
+    "example": "1",
+    "provider": "Dockerfile",
+    "validation": "Fixed image defaults; OCR independently forces one OpenMP thread",
+    "verification": "Smoke build/start/OCR; not a secret or security sandbox"
+  },
+  {
+    "name": "ANALYTICS_STUDIO_EVALUATION",
+    "purpose": "Optional isolated Studio build only",
+    "secret": false,
+    "required": "Never in public candidate",
+    "example": "unset",
+    "provider": "local evaluator/vendor",
+    "validation": "Default build excludes optional installation; flags do not establish legal rights",
+    "verification": "Local evaluation only; no Studio SDK in Community lock/bundle"
+  },
+  {
+    "name": "ANALYTICS_STUDIO_LICENSED",
+    "purpose": "Optional isolated Studio build only",
+    "secret": false,
+    "required": "Never in public candidate",
+    "example": "unset",
+    "provider": "local evaluator/vendor",
+    "validation": "Default build excludes optional installation; flags do not establish legal rights",
+    "verification": "Local evaluation only; no Studio SDK in Community lock/bundle"
+  },
+  {
+    "name": "VITE_AG_STUDIO_LICENSE_KEY",
+    "purpose": "Public-in-bundle vendor token, isolated licensed/evaluation build only",
+    "secret": false,
+    "required": "Never in public candidate",
+    "example": "unset",
+    "provider": "local evaluator/vendor",
+    "validation": "Default build excludes optional installation; flags do not establish legal rights",
+    "verification": "Local evaluation only; no Studio SDK in Community lock/bundle"
+  }
+]

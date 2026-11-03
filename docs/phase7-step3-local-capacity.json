@@ -1,0 +1,119 @@
+{
+  "scope": "Local testing-mode DB/static concurrency sample; not hosted production/HTTPS or worst-case OCR capacity",
+  "startup_seconds": 5.05,
+  "static_root": [
+    200,
+    63.0,
+    458
+  ],
+  "concurrency": 8,
+  "requests": 20,
+  "statuses": [
+    200,
+    200,
+    200,
+    200,
+    200,
+    200,
+    200,
+    200,
+    200,
+    200,
+    200,
+    200,
+    200,
+    200,
+    200,
+    200,
+    200,
+    200,
+    200,
+    200
+  ],
+  "median_ms": 29.93,
+  "max_ms": 91.12,
+  "retained_db_connections": 3,
+  "docker_cpu_sample": "0.20%",
+  "docker_memory_sample": "69.8MiB / 512MiB",
+  "shutdown_seconds": 0.56,
+  "exit_code": 0,
+  "community_js": [
+    {
+      "asset": "ProjectAnalyticsCommunity-Cn-gizuj.js",
+      "bytes": 2568480,
+      "gzip_bytes": 732073
+    },
+    {
+      "asset": "RoadmapTimeline-CjAAWoip.js",
+      "bytes": 1946819,
+      "gzip_bytes": 597125
+    },
+    {
+      "asset": "index-C0BzERkO.js",
+      "bytes": 303270,
+      "gzip_bytes": 87751
+    },
+    {
+      "asset": "ProjectAnalytics-BBdUSaJK.js",
+      "bytes": 15084,
+      "gzip_bytes": 5183
+    },
+    {
+      "asset": "ProjectAIChat-BIVJeKhL.js",
+      "bytes": 15049,
+      "gzip_bytes": 5530
+    },
+    {
+      "asset": "StudioUnavailable-Cuj-0DYA.js",
+      "bytes": 111,
+      "gzip_bytes": 119
+    }
+  ],
+  "local_studio_js": [
+    {
+      "asset": "ProjectAnalyticsStudioRenderer-Ddn4h8gk.js",
+      "bytes": 5278018,
+      "gzip_bytes": 1450170
+    },
+    {
+      "asset": "ProjectAnalyticsCommunity-33bR8spF.js",
+      "bytes": 2554376,
+      "gzip_bytes": 728556
+    },
+    {
+      "asset": "RoadmapTimeline-hMrZH0e-.js",
+      "bytes": 1946819,
+      "gzip_bytes": 597124
+    },
+    {
+      "asset": "index-Cr0zHQxJ.js",
+      "bytes": 303270,
+      "gzip_bytes": 87751
+    },
+    {
+      "asset": "ProjectAnalytics-cSfwxILc.js",
+      "bytes": 19659,
+      "gzip_bytes": 6195
+    },
+    {
+      "asset": "ProjectAIChat-DqmKxP75.js",
+      "bytes": 15049,
+      "gzip_bytes": 5530
+    },
+    {
+      "asset": "FinancialFacts-DqjHb8de.js",
+      "bytes": 14249,
+      "gzip_bytes": 4170
+    }
+  ],
+  "production_ocr_sample": {
+    "uid": 10001,
+    "pdf_total_cents": 1234,
+    "ocr_method": "tesseract",
+    "processing_seconds": 2.5,
+    "child_peak_rss_kib": 63116,
+    "child_cpu_seconds": 2.02,
+    "container_peak_bytes": 176676864
+  },
+  "production_startup_seconds": 9.16
+}

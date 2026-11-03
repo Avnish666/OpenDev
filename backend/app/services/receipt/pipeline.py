@@ -43,6 +43,8 @@ def view(db,record,expense):
 
 
 def process(db,doc,user,retry=False):
+    from app.core.features import require_receipts
+    require_receipts()
     # Persist a unique pending record before expensive work. Duplicate POSTs reuse it.
     db.execute(insert(ReceiptExtraction).values(id=str(uuid4()),expense_document_id=doc.id,extraction_version=VERSION,extraction_status='pending').on_conflict_do_nothing(index_elements=['expense_document_id','extraction_version']))
     db.commit()
