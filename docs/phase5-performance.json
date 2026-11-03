@@ -1,0 +1,135 @@
+{
+  "environment": {
+    "python": "3.12.14",
+    "platform": "Linux",
+    "cpu_count": 5,
+    "peak_process_rss_kib": 204596
+  },
+  "runs": [
+    {
+      "requested_mode": "deterministic",
+      "question": "funding",
+      "samples": [
+        {
+          "latency_ms": 19.853,
+          "sql_statements": 9,
+          "response_bytes": 4537,
+          "model_tool_calls": 0,
+          "evidence_count": 1,
+          "fallback": false
+        },
+        {
+          "latency_ms": 14.298,
+          "sql_statements": 9,
+          "response_bytes": 4536,
+          "model_tool_calls": 0,
+          "evidence_count": 1,
+          "fallback": false
+        },
+        {
+          "latency_ms": 13.603,
+          "sql_statements": 9,
+          "response_bytes": 4536,
+          "model_tool_calls": 0,
+          "evidence_count": 1,
+          "fallback": false
+        }
+      ],
+      "median_latency_ms": 14.298
+    },
+    {
+      "requested_mode": "deterministic",
+      "question": "What progress has this project made?",
+      "samples": [
+        {
+          "latency_ms": 29.471,
+          "sql_statements": 12,
+          "response_bytes": 6178,
+          "model_tool_calls": 0,
+          "evidence_count": 1,
+          "fallback": false
+        },
+        {
+          "latency_ms": 17.509,
+          "sql_statements": 12,
+          "response_bytes": 6178,
+          "model_tool_calls": 0,
+          "evidence_count": 1,
+          "fallback": false
+        },
+        {
+          "latency_ms": 16.489,
+          "sql_statements": 12,
+          "response_bytes": 6177,
+          "model_tool_calls": 0,
+          "evidence_count": 1,
+          "fallback": false
+        }
+      ],
+      "median_latency_ms": 17.509
+    },
+    {
+      "requested_mode": "deterministic",
+      "question": "How much funding has this project received, and which commitments are overdue?",
+      "samples": [
+        {
+          "latency_ms": 20.64,
+          "sql_statements": 17,
+          "response_bytes": 10779,
+          "model_tool_calls": 0,
+          "evidence_count": 2,
+          "fallback": false
+        },
+        {
+          "latency_ms": 18.41,
+          "sql_statements": 17,
+          "response_bytes": 10779,
+          "model_tool_calls": 0,
+          "evidence_count": 2,
+          "fallback": false
+        },
+        {
+          "latency_ms": 25.32,
+          "sql_statements": 17,
+          "response_bytes": 10779,
+          "model_tool_calls": 0,
+          "evidence_count": 2,
+          "fallback": false
+        }
+      ],
+      "median_latency_ms": 20.64
+    },
+    {
+      "requested_mode": "auto",
+      "question": "funding",
+      "samples": [
+        {
+          "latency_ms": 10.522,
+          "sql_statements": 9,
+          "response_bytes": 4574,
+          "model_tool_calls": 0,
+          "evidence_count": 1,
+          "fallback": true
+        },
+        {
+          "latency_ms": 11.182,
+          "sql_statements": 9,
+          "response_bytes": 4574,
+          "model_tool_calls": 0,
+          "evidence_count": 1,
+          "fallback": true
+        },
+        {
+          "latency_ms": 10.411,
+          "sql_statements": 9,
+          "response_bytes": 4574,
+          "model_tool_calls": 0,
+          "evidence_count": 1,
+          "fallback": true
+        }
+      ],
+      "median_latency_ms": 10.522
+    }
+  ],
+  "limits": "Three local sequential samples per workload; no real model or hosted performance. RSS is cumulative pytest process peak. SQL count excludes driver control statements."
+}

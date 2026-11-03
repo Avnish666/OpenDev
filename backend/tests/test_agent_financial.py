@@ -44,7 +44,7 @@ def sources(ac, ledger=False):
 
 
 @pytest.mark.parametrize('case', CASES, ids=lambda c:c['id'])
-def test_evaluation_dataset(ac, case):
+def test_evaluation_dataset(ac, case, request):
     seed = case['seed']
     if seed in ('full', 'partial'):
         contribution(ac, amount=10000 if seed == 'full' else 2000)
@@ -66,6 +66,7 @@ def test_evaluation_dataset(ac, case):
     r = ask(ac, case['question'])
     assert r.status_code == 200, r.text
     result = r.json()
+    request.node.user_properties.append(('phase5_result', {'provider':'deterministic','expected':case,'actual_status':result['answer_status'],'actual_mode':result['execution_mode'],'answer':result['answer'],'citations':[c['reference'] for c in result['citations']],'source_facts':[{e['claim']:e['value']['financial_summary']} for e in result['evidence_used'] if e['claim']=='finances']}))
     assert result['answer_status'] == case['status']
     assert result['execution_mode'] == 'deterministic'
     for phrase in case['contains']:

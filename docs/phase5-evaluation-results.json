@@ -1,0 +1,2741 @@
+{
+  "pytest_exit_status": 0,
+  "cases": [
+    {
+      "case": "tests/test_agent_development.py::test_development_evaluation[on-time]",
+      "outcome": "passed",
+      "reason": "All expected facts, citations, forbidden claims and status assertions passed.",
+      "actual_result": {
+        "provider": "deterministic",
+        "expected": {
+          "id": "on-time",
+          "kind": "deadlines",
+          "seed": "on_time",
+          "expected_facts": {
+            "counts/on_time": 1
+          },
+          "contains": [
+            "\"timing\": \"on_time\""
+          ],
+          "required_citations": [
+            "roadmap:offset:0"
+          ],
+          "forbidden_claims": [
+            "committed fraud",
+            "maintainer is dishonest",
+            "abandoned repository",
+            "100% complete",
+            "trust score:",
+            "caused the delay"
+          ],
+          "expected_limitations": [
+            "maintainer assertion"
+          ],
+          "status": "answered"
+        },
+        "actual_status": "answered",
+        "actual_mode": "deterministic",
+        "answer": "Roadmap page scope: offset 0, 1 of 1 commitments; evaluated at 2026-11-03T00:00:00+00:00. Current-state counts in this page: {\"cancelled\": 0, \"delivered\": 1, \"in_progress\": 0, \"late\": 0, \"on_time\": 1, \"overdue_unfinished\": 0, \"planned\": 0, \"reopened\": 0, \"submitted_for_review\": 0, \"total\": 1, \"unknown_delivery_timing\": 0}. Commitment facts: [{\"asserted_delivery_date\": \"2026-10-31\", \"current_deadline\": \"2026-10-31\", \"days_late\": 0, \"days_overdue_current\": 0, \"days_overdue_original\": null, \"deadline_revisions\": 0, \"evaluated_at\": \"2026-11-03T00:00:00+00:00\", \"id\": 1, \"original_deadline\": \"2026-10-31\", \"original_deadline_available\": true, \"reopened\": false, \"status\": \"delivered\", \"timing\": \"on_time\", \"title\": \"Synthetic promise\"}]. Counts and lists cover only this page. Current statuses are evaluated at a UTC date; a supplied earlier timestamp does not replay historical state. Deadline revisions never erase the original missed commitment. History previews are bounded to 50 events per milestone. [opendev:project:1:roadmap:offset:0@sha256:dadff74a228612a61784b11e61580627ee6e0bc4fa9633ef2f7f41117b4930a4]\nDelivery is a maintainer assertion, not independent verification. Closed issues and merged PRs do not certify delivery. These records do not establish causes of delay, dishonesty or misuse of funding. No completion percentage or trust score is inferred.",
+        "citations": [
+          "opendev:project:1:roadmap:offset:0@sha256:dadff74a228612a61784b11e61580627ee6e0bc4fa9633ef2f7f41117b4930a4"
+        ],
+        "source_facts": {
+          "counts/on_time": 1
+        }
+      }
+    },
+    {
+      "case": "tests/test_agent_development.py::test_development_evaluation[late]",
+      "outcome": "passed",
+      "reason": "All expected facts, citations, forbidden claims and status assertions passed.",
+      "actual_result": {
+        "provider": "deterministic",
+        "expected": {
+          "id": "late",
+          "kind": "deadlines",
+          "seed": "late",
+          "expected_facts": {
+            "counts/late": 1
+          },
+          "contains": [
+            "\"days_late\": 2"
+          ],
+          "required_citations": [
+            "roadmap:offset:0"
+          ],
+          "forbidden_claims": [
+            "committed fraud",
+            "maintainer is dishonest",
+            "abandoned repository",
+            "100% complete",
+            "trust score:",
+            "caused the delay"
+          ],
+          "expected_limitations": [
+            "maintainer assertion"
+          ],
+          "status": "answered"
+        },
+        "actual_status": "answered",
+        "actual_mode": "deterministic",
+        "answer": "Roadmap page scope: offset 0, 1 of 1 commitments; evaluated at 2026-11-03T00:00:00+00:00. Current-state counts in this page: {\"cancelled\": 0, \"delivered\": 1, \"in_progress\": 0, \"late\": 1, \"on_time\": 0, \"overdue_unfinished\": 0, \"planned\": 0, \"reopened\": 0, \"submitted_for_review\": 0, \"total\": 1, \"unknown_delivery_timing\": 0}. Commitment facts: [{\"asserted_delivery_date\": \"2026-11-02\", \"current_deadline\": \"2026-10-31\", \"days_late\": 2, \"days_overdue_current\": 0, \"days_overdue_original\": null, \"deadline_revisions\": 0, \"evaluated_at\": \"2026-11-03T00:00:00+00:00\", \"id\": 1, \"original_deadline\": \"2026-10-31\", \"original_deadline_available\": true, \"reopened\": false, \"status\": \"delivered\", \"timing\": \"late\", \"title\": \"Synthetic promise\"}]. Counts and lists cover only this page. Current statuses are evaluated at a UTC date; a supplied earlier timestamp does not replay historical state. Deadline revisions never erase the original missed commitment. History previews are bounded to 50 events per milestone. [opendev:project:1:roadmap:offset:0@sha256:d74bd89407784943937094c72e30207546f782796fb1c036e84c0167915ec7c3]\nDelivery is a maintainer assertion, not independent verification. Closed issues and merged PRs do not certify delivery. These records do not establish causes of delay, dishonesty or misuse of funding. No completion percentage or trust score is inferred.",
+        "citations": [
+          "opendev:project:1:roadmap:offset:0@sha256:d74bd89407784943937094c72e30207546f782796fb1c036e84c0167915ec7c3"
+        ],
+        "source_facts": {
+          "counts/late": 1
+        }
+      }
+    },
+    {
+      "case": "tests/test_agent_development.py::test_development_evaluation[overdue]",
+      "outcome": "passed",
+      "reason": "All expected facts, citations, forbidden claims and status assertions passed.",
+      "actual_result": {
+        "provider": "deterministic",
+        "expected": {
+          "id": "overdue",
+          "kind": "deadlines",
+          "seed": "planned",
+          "expected_facts": {
+            "counts/overdue_unfinished": 1
+          },
+          "contains": [
+            "\"days_overdue_current\": 3"
+          ],
+          "required_citations": [
+            "roadmap:offset:0"
+          ],
+          "forbidden_claims": [
+            "committed fraud",
+            "maintainer is dishonest",
+            "abandoned repository",
+            "100% complete",
+            "trust score:",
+            "caused the delay"
+          ],
+          "expected_limitations": [
+            "maintainer assertion"
+          ],
+          "status": "answered"
+        },
+        "actual_status": "answered",
+        "actual_mode": "deterministic",
+        "answer": "Roadmap page scope: offset 0, 1 of 1 commitments; evaluated at 2026-11-03T00:00:00+00:00. Current-state counts in this page: {\"cancelled\": 0, \"delivered\": 0, \"in_progress\": 0, \"late\": 0, \"on_time\": 0, \"overdue_unfinished\": 1, \"planned\": 1, \"reopened\": 0, \"submitted_for_review\": 0, \"total\": 1, \"unknown_delivery_timing\": 0}. Commitment facts: [{\"asserted_delivery_date\": null, \"current_deadline\": \"2026-10-31\", \"days_late\": null, \"days_overdue_current\": 3, \"days_overdue_original\": 3, \"deadline_revisions\": 0, \"evaluated_at\": \"2026-11-03T00:00:00+00:00\", \"id\": 1, \"original_deadline\": \"2026-10-31\", \"original_deadline_available\": true, \"reopened\": false, \"status\": \"planned\", \"timing\": \"not_currently_delivered\", \"title\": \"Synthetic promise\"}]. Counts and lists cover only this page. Current statuses are evaluated at a UTC date; a supplied earlier timestamp does not replay historical state. Deadline revisions never erase the original missed commitment. History previews are bounded to 50 events per milestone. [opendev:project:1:roadmap:offset:0@sha256:c4e5dc772112db186a02a496b8bcdfd7b2842b0d85816826d19d59f841bbd910]\nDelivery is a maintainer assertion, not independent verification. Closed issues and merged PRs do not certify delivery. These records do not establish causes of delay, dishonesty or misuse of funding. No completion percentage or trust score is inferred.",
+        "citations": [
+          "opendev:project:1:roadmap:offset:0@sha256:c4e5dc772112db186a02a496b8bcdfd7b2842b0d85816826d19d59f841bbd910"
+        ],
+        "source_facts": {
+          "counts/overdue_unfinished": 1
+        }
+      }
+    },
+    {
+      "case": "tests/test_agent_development.py::test_development_evaluation[revised]",
+      "outcome": "passed",
+      "reason": "All expected facts, citations, forbidden claims and status assertions passed.",
+      "actual_result": {
+        "provider": "deterministic",
+        "expected": {
+          "id": "revised",
+          "kind": "deadlines",
+          "seed": "revised",
+          "expected_facts": {
+            "counts/total": 1
+          },
+          "contains": [
+            "\"deadline_revisions\": 1"
+          ],
+          "required_citations": [
+            "roadmap:offset:0"
+          ],
+          "forbidden_claims": [
+            "committed fraud",
+            "maintainer is dishonest",
+            "abandoned repository",
+            "100% complete",
+            "trust score:",
+            "caused the delay"
+          ],
+          "expected_limitations": [
+            "maintainer assertion"
+          ],
+          "status": "answered"
+        },
+        "actual_status": "answered",
+        "actual_mode": "deterministic",
+        "answer": "Roadmap page scope: offset 0, 1 of 1 commitments; evaluated at 2026-11-03T00:00:00+00:00. Current-state counts in this page: {\"cancelled\": 0, \"delivered\": 0, \"in_progress\": 0, \"late\": 0, \"on_time\": 0, \"overdue_unfinished\": 0, \"planned\": 1, \"reopened\": 0, \"submitted_for_review\": 0, \"total\": 1, \"unknown_delivery_timing\": 0}. Commitment facts: [{\"asserted_delivery_date\": null, \"current_deadline\": \"2026-12-01\", \"days_late\": null, \"days_overdue_current\": 0, \"days_overdue_original\": 3, \"deadline_revisions\": 1, \"evaluated_at\": \"2026-11-03T00:00:00+00:00\", \"id\": 1, \"original_deadline\": \"2026-10-31\", \"original_deadline_available\": true, \"reopened\": false, \"status\": \"planned\", \"timing\": \"not_currently_delivered\", \"title\": \"Synthetic promise\"}]. Counts and lists cover only this page. Current statuses are evaluated at a UTC date; a supplied earlier timestamp does not replay historical state. Deadline revisions never erase the original missed commitment. History previews are bounded to 50 events per milestone. [opendev:project:1:roadmap:offset:0@sha256:4f89e489a5834f639617dfaaa837af5eba1eaf4e542c9b51ebeba4559ce79007]\nDelivery is a maintainer assertion, not independent verification. Closed issues and merged PRs do not certify delivery. These records do not establish causes of delay, dishonesty or misuse of funding. No completion percentage or trust score is inferred.",
+        "citations": [
+          "opendev:project:1:roadmap:offset:0@sha256:4f89e489a5834f639617dfaaa837af5eba1eaf4e542c9b51ebeba4559ce79007"
+        ],
+        "source_facts": {
+          "counts/total": 1
+        }
+      }
+    },
+    {
+      "case": "tests/test_agent_development.py::test_development_evaluation[multiple-revisions]",
+      "outcome": "passed",
+      "reason": "All expected facts, citations, forbidden claims and status assertions passed.",
+      "actual_result": {
+        "provider": "deterministic",
+        "expected": {
+          "id": "multiple-revisions",
+          "kind": "deadlines",
+          "seed": "multiple",
+          "expected_facts": {
+            "counts/total": 1
+          },
+          "contains": [
+            "\"deadline_revisions\": 2"
+          ],
+          "required_citations": [
+            "roadmap:offset:0"
+          ],
+          "forbidden_claims": [
+            "committed fraud",
+            "maintainer is dishonest",
+            "abandoned repository",
+            "100% complete",
+            "trust score:",
+            "caused the delay"
+          ],
+          "expected_limitations": [
+            "maintainer assertion"
+          ],
+          "status": "answered"
+        },
+        "actual_status": "answered",
+        "actual_mode": "deterministic",
+        "answer": "Roadmap page scope: offset 0, 1 of 1 commitments; evaluated at 2026-11-03T00:00:00+00:00. Current-state counts in this page: {\"cancelled\": 0, \"delivered\": 0, \"in_progress\": 0, \"late\": 0, \"on_time\": 0, \"overdue_unfinished\": 0, \"planned\": 1, \"reopened\": 0, \"submitted_for_review\": 0, \"total\": 1, \"unknown_delivery_timing\": 0}. Commitment facts: [{\"asserted_delivery_date\": null, \"current_deadline\": \"2027-01-01\", \"days_late\": null, \"days_overdue_current\": 0, \"days_overdue_original\": 3, \"deadline_revisions\": 2, \"evaluated_at\": \"2026-11-03T00:00:00+00:00\", \"id\": 1, \"original_deadline\": \"2026-10-31\", \"original_deadline_available\": true, \"reopened\": false, \"status\": \"planned\", \"timing\": \"not_currently_delivered\", \"title\": \"Synthetic promise\"}]. Counts and lists cover only this page. Current statuses are evaluated at a UTC date; a supplied earlier timestamp does not replay historical state. Deadline revisions never erase the original missed commitment. History previews are bounded to 50 events per milestone. [opendev:project:1:roadmap:offset:0@sha256:7c09a37cdb62da984a051b549189c3c529b5c2d4105bdd93576883018f8f9c5c]\nDelivery is a maintainer assertion, not independent verification. Closed issues and merged PRs do not certify delivery. These records do not establish causes of delay, dishonesty or misuse of funding. No completion percentage or trust score is inferred.",
+        "citations": [
+          "opendev:project:1:roadmap:offset:0@sha256:7c09a37cdb62da984a051b549189c3c529b5c2d4105bdd93576883018f8f9c5c"
+        ],
+        "source_facts": {
+          "counts/total": 1
+        }
+      }
+    },
+    {
+      "case": "tests/test_agent_development.py::test_development_evaluation[reopened]",
+      "outcome": "passed",
+      "reason": "All expected facts, citations, forbidden claims and status assertions passed.",
+      "actual_result": {
+        "provider": "deterministic",
+        "expected": {
+          "id": "reopened",
+          "kind": "deadlines",
+          "seed": "reopened",
+          "expected_facts": {
+            "counts/reopened": 1
+          },
+          "contains": [
+            "\"reopened\": true"
+          ],
+          "required_citations": [
+            "roadmap:offset:0"
+          ],
+          "forbidden_claims": [
+            "committed fraud",
+            "maintainer is dishonest",
+            "abandoned repository",
+            "100% complete",
+            "trust score:",
+            "caused the delay"
+          ],
+          "expected_limitations": [
+            "maintainer assertion"
+          ],
+          "status": "answered"
+        },
+        "actual_status": "answered",
+        "actual_mode": "deterministic",
+        "answer": "Roadmap page scope: offset 0, 1 of 1 commitments; evaluated at 2026-11-03T00:00:00+00:00. Current-state counts in this page: {\"cancelled\": 0, \"delivered\": 0, \"in_progress\": 1, \"late\": 0, \"on_time\": 0, \"overdue_unfinished\": 1, \"planned\": 0, \"reopened\": 1, \"submitted_for_review\": 0, \"total\": 1, \"unknown_delivery_timing\": 0}. Commitment facts: [{\"asserted_delivery_date\": null, \"current_deadline\": \"2026-10-31\", \"days_late\": null, \"days_overdue_current\": 3, \"days_overdue_original\": 3, \"deadline_revisions\": 0, \"evaluated_at\": \"2026-11-03T00:00:00+00:00\", \"id\": 1, \"original_deadline\": \"2026-10-31\", \"original_deadline_available\": true, \"reopened\": true, \"status\": \"in_progress\", \"timing\": \"not_currently_delivered\", \"title\": \"Synthetic promise\"}]. Counts and lists cover only this page. Current statuses are evaluated at a UTC date; a supplied earlier timestamp does not replay historical state. Deadline revisions never erase the original missed commitment. History previews are bounded to 50 events per milestone. [opendev:project:1:roadmap:offset:0@sha256:652a3eaa86026ddf5a03423cdfc318c2284bea4c8748122cc660e741bbfa6a63]\nDelivery is a maintainer assertion, not independent verification. Closed issues and merged PRs do not certify delivery. These records do not establish causes of delay, dishonesty or misuse of funding. No completion percentage or trust score is inferred.",
+        "citations": [
+          "opendev:project:1:roadmap:offset:0@sha256:652a3eaa86026ddf5a03423cdfc318c2284bea4c8748122cc660e741bbfa6a63"
+        ],
+        "source_facts": {
+          "counts/reopened": 1
+        }
+      }
+    },
+    {
+      "case": "tests/test_agent_development.py::test_development_evaluation[cancelled]",
+      "outcome": "passed",
+      "reason": "All expected facts, citations, forbidden claims and status assertions passed.",
+      "actual_result": {
+        "provider": "deterministic",
+        "expected": {
+          "id": "cancelled",
+          "kind": "deadlines",
+          "seed": "cancelled",
+          "expected_facts": {
+            "counts/cancelled": 1
+          },
+          "contains": [
+            "\"status\": \"cancelled\""
+          ],
+          "required_citations": [
+            "roadmap:offset:0"
+          ],
+          "forbidden_claims": [
+            "committed fraud",
+            "maintainer is dishonest",
+            "abandoned repository",
+            "100% complete",
+            "trust score:",
+            "caused the delay"
+          ],
+          "expected_limitations": [
+            "maintainer assertion"
+          ],
+          "status": "answered"
+        },
+        "actual_status": "answered",
+        "actual_mode": "deterministic",
+        "answer": "Roadmap page scope: offset 0, 1 of 1 commitments; evaluated at 2026-11-03T00:00:00+00:00. Current-state counts in this page: {\"cancelled\": 1, \"delivered\": 0, \"in_progress\": 0, \"late\": 0, \"on_time\": 0, \"overdue_unfinished\": 0, \"planned\": 0, \"reopened\": 0, \"submitted_for_review\": 0, \"total\": 1, \"unknown_delivery_timing\": 0}. Commitment facts: [{\"asserted_delivery_date\": null, \"current_deadline\": \"2026-10-31\", \"days_late\": null, \"days_overdue_current\": 0, \"days_overdue_original\": null, \"deadline_revisions\": 0, \"evaluated_at\": \"2026-11-03T00:00:00+00:00\", \"id\": 1, \"original_deadline\": \"2026-10-31\", \"original_deadline_available\": true, \"reopened\": false, \"status\": \"cancelled\", \"timing\": \"not_currently_delivered\", \"title\": \"Synthetic promise\"}]. Counts and lists cover only this page. Current statuses are evaluated at a UTC date; a supplied earlier timestamp does not replay historical state. Deadline revisions never erase the original missed commitment. History previews are bounded to 50 events per milestone. [opendev:project:1:roadmap:offset:0@sha256:acb3eeffbf29e0f353b25faa8af99b909ace8e240a0887367286d7b10c469724]\nDelivery is a maintainer assertion, not independent verification. Closed issues and merged PRs do not certify delivery. These records do not establish causes of delay, dishonesty or misuse of funding. No completion percentage or trust score is inferred.",
+        "citations": [
+          "opendev:project:1:roadmap:offset:0@sha256:acb3eeffbf29e0f353b25faa8af99b909ace8e240a0887367286d7b10c469724"
+        ],
+        "source_facts": {
+          "counts/cancelled": 1
+        }
+      }
+    },
+    {
+      "case": "tests/test_agent_development.py::test_development_evaluation[submitted]",
+      "outcome": "passed",
+      "reason": "All expected facts, citations, forbidden claims and status assertions passed.",
+      "actual_result": {
+        "provider": "deterministic",
+        "expected": {
+          "id": "submitted",
+          "kind": "deadlines",
+          "seed": "submitted",
+          "expected_facts": {
+            "counts/submitted_for_review": 1
+          },
+          "contains": [
+            "\"status\": \"submitted_for_review\""
+          ],
+          "required_citations": [
+            "roadmap:offset:0"
+          ],
+          "forbidden_claims": [
+            "committed fraud",
+            "maintainer is dishonest",
+            "abandoned repository",
+            "100% complete",
+            "trust score:",
+            "caused the delay"
+          ],
+          "expected_limitations": [
+            "maintainer assertion"
+          ],
+          "status": "answered"
+        },
+        "actual_status": "answered",
+        "actual_mode": "deterministic",
+        "answer": "Roadmap page scope: offset 0, 1 of 1 commitments; evaluated at 2026-11-03T00:00:00+00:00. Current-state counts in this page: {\"cancelled\": 0, \"delivered\": 0, \"in_progress\": 0, \"late\": 0, \"on_time\": 0, \"overdue_unfinished\": 1, \"planned\": 0, \"reopened\": 0, \"submitted_for_review\": 1, \"total\": 1, \"unknown_delivery_timing\": 0}. Commitment facts: [{\"asserted_delivery_date\": null, \"current_deadline\": \"2026-10-31\", \"days_late\": null, \"days_overdue_current\": 3, \"days_overdue_original\": 3, \"deadline_revisions\": 0, \"evaluated_at\": \"2026-11-03T00:00:00+00:00\", \"id\": 1, \"original_deadline\": \"2026-10-31\", \"original_deadline_available\": true, \"reopened\": false, \"status\": \"submitted_for_review\", \"timing\": \"not_currently_delivered\", \"title\": \"Synthetic promise\"}]. Counts and lists cover only this page. Current statuses are evaluated at a UTC date; a supplied earlier timestamp does not replay historical state. Deadline revisions never erase the original missed commitment. History previews are bounded to 50 events per milestone. [opendev:project:1:roadmap:offset:0@sha256:2b6e6c9381b7611b50f105b3898f16ba7ae66a640542d1cbf2b1da9727f0ed3d]\nDelivery is a maintainer assertion, not independent verification. Closed issues and merged PRs do not certify delivery. These records do not establish causes of delay, dishonesty or misuse of funding. No completion percentage or trust score is inferred.",
+        "citations": [
+          "opendev:project:1:roadmap:offset:0@sha256:2b6e6c9381b7611b50f105b3898f16ba7ae66a640542d1cbf2b1da9727f0ed3d"
+        ],
+        "source_facts": {
+          "counts/submitted_for_review": 1
+        }
+      }
+    },
+    {
+      "case": "tests/test_agent_development.py::test_development_evaluation[merged-pr]",
+      "outcome": "passed",
+      "reason": "All expected facts, citations, forbidden claims and status assertions passed.",
+      "actual_result": {
+        "provider": "deterministic",
+        "expected": {
+          "id": "merged-pr",
+          "kind": "github_activity",
+          "seed": "merged",
+          "expected_facts": {
+            "activity/counts/pull_requests_merged": 1
+          },
+          "contains": [
+            "\"pull_requests_merged\": 1"
+          ],
+          "required_citations": [
+            "activity:offset:0"
+          ],
+          "forbidden_claims": [
+            "committed fraud",
+            "maintainer is dishonest",
+            "abandoned repository",
+            "100% complete",
+            "trust score:",
+            "caused the delay"
+          ],
+          "expected_limitations": [
+            "sampled"
+          ],
+          "status": "answered"
+        },
+        "actual_status": "answered",
+        "actual_mode": "deterministic",
+        "answer": "Retained GitHub snapshot counts: {\"issues_closed\": 0, \"issues_open\": 1, \"pull_requests_closed\": 1, \"pull_requests_merged\": 1, \"pull_requests_open\": 0}. Available sampled commits: 1; GitHub milestones in this page: 1. Last successful synchronization: 2026-11-02T23:00:00+00:00; stale: False at evaluation 2026-11-03T00:00:00+00:00 (None means the available snapshot postdates evaluation). Closed PR counts include merged PRs; these are not disjoint quantities. Initial/incremental collections are bounded, commit history is sampled, deleted records can remain and unlinked activity need not represent funded commitments. [opendev:github_repository:1:activity:offset:0@sha256:43c4c96ef95363e30bd768b7fac60622e75c55f7ca704b50324322d3b25bb36c]\nDelivery is a maintainer assertion, not independent verification. Closed issues and merged PRs do not certify delivery. These records do not establish causes of delay, dishonesty or misuse of funding. No completion percentage or trust score is inferred.",
+        "citations": [
+          "opendev:github_repository:1:activity:offset:0@sha256:43c4c96ef95363e30bd768b7fac60622e75c55f7ca704b50324322d3b25bb36c"
+        ],
+        "source_facts": {
+          "activity/counts/pull_requests_merged": 1
+        }
+      }
+    },
+    {
+      "case": "tests/test_agent_development.py::test_development_evaluation[unmerged-pr]",
+      "outcome": "passed",
+      "reason": "All expected facts, citations, forbidden claims and status assertions passed.",
+      "actual_result": {
+        "provider": "deterministic",
+        "expected": {
+          "id": "unmerged-pr",
+          "kind": "github_activity",
+          "seed": "unmerged",
+          "expected_facts": {
+            "activity/counts/pull_requests_merged": 0
+          },
+          "contains": [
+            "\"pull_requests_merged\": 0"
+          ],
+          "required_citations": [
+            "activity:offset:0"
+          ],
+          "forbidden_claims": [
+            "committed fraud",
+            "maintainer is dishonest",
+            "abandoned repository",
+            "100% complete",
+            "trust score:",
+            "caused the delay"
+          ],
+          "expected_limitations": [
+            "sampled"
+          ],
+          "status": "answered"
+        },
+        "actual_status": "answered",
+        "actual_mode": "deterministic",
+        "answer": "Retained GitHub snapshot counts: {\"issues_closed\": 0, \"issues_open\": 1, \"pull_requests_closed\": 1, \"pull_requests_merged\": 0, \"pull_requests_open\": 0}. Available sampled commits: 1; GitHub milestones in this page: 1. Last successful synchronization: 2026-11-02T23:00:00+00:00; stale: False at evaluation 2026-11-03T00:00:00+00:00 (None means the available snapshot postdates evaluation). Closed PR counts include merged PRs; these are not disjoint quantities. Initial/incremental collections are bounded, commit history is sampled, deleted records can remain and unlinked activity need not represent funded commitments. [opendev:github_repository:1:activity:offset:0@sha256:e5352132921bb47199818b5705327a98a420f642ea7470e5b223e2492ef0aa32]\nDelivery is a maintainer assertion, not independent verification. Closed issues and merged PRs do not certify delivery. These records do not establish causes of delay, dishonesty or misuse of funding. No completion percentage or trust score is inferred.",
+        "citations": [
+          "opendev:github_repository:1:activity:offset:0@sha256:e5352132921bb47199818b5705327a98a420f642ea7470e5b223e2492ef0aa32"
+        ],
+        "source_facts": {
+          "activity/counts/pull_requests_merged": 0
+        }
+      }
+    },
+    {
+      "case": "tests/test_agent_development.py::test_development_evaluation[closed-issue]",
+      "outcome": "passed",
+      "reason": "All expected facts, citations, forbidden claims and status assertions passed.",
+      "actual_result": {
+        "provider": "deterministic",
+        "expected": {
+          "id": "closed-issue",
+          "kind": "github_activity",
+          "seed": "closed_issue",
+          "expected_facts": {
+            "activity/counts/issues_closed": 1
+          },
+          "contains": [
+            "\"issues_closed\": 1"
+          ],
+          "required_citations": [
+            "activity:offset:0"
+          ],
+          "forbidden_claims": [
+            "committed fraud",
+            "maintainer is dishonest",
+            "abandoned repository",
+            "100% complete",
+            "trust score:",
+            "caused the delay"
+          ],
+          "expected_limitations": [
+            "sampled"
+          ],
+          "status": "answered"
+        },
+        "actual_status": "answered",
+        "actual_mode": "deterministic",
+        "answer": "Retained GitHub snapshot counts: {\"issues_closed\": 1, \"issues_open\": 0, \"pull_requests_closed\": 1, \"pull_requests_merged\": 1, \"pull_requests_open\": 0}. Available sampled commits: 1; GitHub milestones in this page: 1. Last successful synchronization: 2026-11-02T23:00:00+00:00; stale: False at evaluation 2026-11-03T00:00:00+00:00 (None means the available snapshot postdates evaluation). Closed PR counts include merged PRs; these are not disjoint quantities. Initial/incremental collections are bounded, commit history is sampled, deleted records can remain and unlinked activity need not represent funded commitments. [opendev:github_repository:1:activity:offset:0@sha256:f18f61d303a844846f65c0658598cd0bef1f5826779ffa55aab993a9879b46b5]\nDelivery is a maintainer assertion, not independent verification. Closed issues and merged PRs do not certify delivery. These records do not establish causes of delay, dishonesty or misuse of funding. No completion percentage or trust score is inferred.",
+        "citations": [
+          "opendev:github_repository:1:activity:offset:0@sha256:f18f61d303a844846f65c0658598cd0bef1f5826779ffa55aab993a9879b46b5"
+        ],
+        "source_facts": {
+          "activity/counts/issues_closed": 1
+        }
+      }
+    },
+    {
+      "case": "tests/test_agent_development.py::test_development_evaluation[sampled-commits]",
+      "outcome": "passed",
+      "reason": "All expected facts, citations, forbidden claims and status assertions passed.",
+      "actual_result": {
+        "provider": "deterministic",
+        "expected": {
+          "id": "sampled-commits",
+          "kind": "github_activity",
+          "seed": "merged",
+          "expected_facts": {
+            "activity/counts/issues_open": 1
+          },
+          "contains": [
+            "sampled commits: 1"
+          ],
+          "required_citations": [
+            "activity:offset:0"
+          ],
+          "forbidden_claims": [
+            "committed fraud",
+            "maintainer is dishonest",
+            "abandoned repository",
+            "100% complete",
+            "trust score:",
+            "caused the delay"
+          ],
+          "expected_limitations": [
+            "sampled"
+          ],
+          "status": "answered"
+        },
+        "actual_status": "answered",
+        "actual_mode": "deterministic",
+        "answer": "Retained GitHub snapshot counts: {\"issues_closed\": 0, \"issues_open\": 1, \"pull_requests_closed\": 1, \"pull_requests_merged\": 1, \"pull_requests_open\": 0}. Available sampled commits: 1; GitHub milestones in this page: 1. Last successful synchronization: 2026-11-02T23:00:00+00:00; stale: False at evaluation 2026-11-03T00:00:00+00:00 (None means the available snapshot postdates evaluation). Closed PR counts include merged PRs; these are not disjoint quantities. Initial/incremental collections are bounded, commit history is sampled, deleted records can remain and unlinked activity need not represent funded commitments. [opendev:github_repository:1:activity:offset:0@sha256:65b9af181dd8d3051ee40964c9a9bd37a74bc0ed10dba41fc507d44814b82f85]\nDelivery is a maintainer assertion, not independent verification. Closed issues and merged PRs do not certify delivery. These records do not establish causes of delay, dishonesty or misuse of funding. No completion percentage or trust score is inferred.",
+        "citations": [
+          "opendev:github_repository:1:activity:offset:0@sha256:65b9af181dd8d3051ee40964c9a9bd37a74bc0ed10dba41fc507d44814b82f85"
+        ],
+        "source_facts": {
+          "activity/counts/issues_open": 1
+        }
+      }
+    },
+    {
+      "case": "tests/test_agent_development.py::test_development_evaluation[stale-sync]",
+      "outcome": "passed",
+      "reason": "All expected facts, citations, forbidden claims and status assertions passed.",
+      "actual_result": {
+        "provider": "deterministic",
+        "expected": {
+          "id": "stale-sync",
+          "kind": "github_activity",
+          "seed": "stale",
+          "expected_facts": {
+            "activity/counts/issues_open": 1
+          },
+          "contains": [
+            "stale: True"
+          ],
+          "required_citations": [
+            "activity:offset:0"
+          ],
+          "forbidden_claims": [
+            "committed fraud",
+            "maintainer is dishonest",
+            "abandoned repository",
+            "100% complete",
+            "trust score:",
+            "caused the delay"
+          ],
+          "expected_limitations": [
+            "sampled"
+          ],
+          "status": "answered"
+        },
+        "actual_status": "answered",
+        "actual_mode": "deterministic",
+        "answer": "Retained GitHub snapshot counts: {\"issues_closed\": 0, \"issues_open\": 1, \"pull_requests_closed\": 1, \"pull_requests_merged\": 1, \"pull_requests_open\": 0}. Available sampled commits: 1; GitHub milestones in this page: 1. Last successful synchronization: 2026-10-25T00:00:00+00:00; stale: True at evaluation 2026-11-03T00:00:00+00:00 (None means the available snapshot postdates evaluation). Closed PR counts include merged PRs; these are not disjoint quantities. Initial/incremental collections are bounded, commit history is sampled, deleted records can remain and unlinked activity need not represent funded commitments. [opendev:github_repository:1:activity:offset:0@sha256:f842b94c8b6e0cd2d1ba8e46a5676d5386c6c70e8ebdb29264804c11da302386]\nDelivery is a maintainer assertion, not independent verification. Closed issues and merged PRs do not certify delivery. These records do not establish causes of delay, dishonesty or misuse of funding. No completion percentage or trust score is inferred.",
+        "citations": [
+          "opendev:github_repository:1:activity:offset:0@sha256:f842b94c8b6e0cd2d1ba8e46a5676d5386c6c70e8ebdb29264804c11da302386"
+        ],
+        "source_facts": {
+          "activity/counts/issues_open": 1
+        }
+      }
+    },
+    {
+      "case": "tests/test_agent_development.py::test_development_evaluation[sync-failure]",
+      "outcome": "passed",
+      "reason": "All expected facts, citations, forbidden claims and status assertions passed.",
+      "actual_result": {
+        "provider": "deterministic",
+        "expected": {
+          "id": "sync-failure",
+          "kind": "github_activity",
+          "seed": "failed",
+          "expected_facts": {
+            "activity/counts/issues_open": 1
+          },
+          "contains": [
+            "stale: True"
+          ],
+          "required_citations": [
+            "activity:offset:0"
+          ],
+          "forbidden_claims": [
+            "committed fraud",
+            "maintainer is dishonest",
+            "abandoned repository",
+            "100% complete",
+            "trust score:",
+            "caused the delay"
+          ],
+          "expected_limitations": [
+            "sampled"
+          ],
+          "status": "answered"
+        },
+        "actual_status": "answered",
+        "actual_mode": "deterministic",
+        "answer": "Retained GitHub snapshot counts: {\"issues_closed\": 0, \"issues_open\": 1, \"pull_requests_closed\": 1, \"pull_requests_merged\": 1, \"pull_requests_open\": 0}. Available sampled commits: 1; GitHub milestones in this page: 1. Last successful synchronization: 2026-11-02T23:00:00+00:00; stale: True at evaluation 2026-11-03T00:00:00+00:00 (None means the available snapshot postdates evaluation). Closed PR counts include merged PRs; these are not disjoint quantities. Initial/incremental collections are bounded, commit history is sampled, deleted records can remain and unlinked activity need not represent funded commitments. [opendev:github_repository:1:activity:offset:0@sha256:bfbb3d602843d8fc354ca17c03338703478733f5a2a06bf4d34ec1480c28646e]\nDelivery is a maintainer assertion, not independent verification. Closed issues and merged PRs do not certify delivery. These records do not establish causes of delay, dishonesty or misuse of funding. No completion percentage or trust score is inferred.",
+        "citations": [
+          "opendev:github_repository:1:activity:offset:0@sha256:bfbb3d602843d8fc354ca17c03338703478733f5a2a06bf4d34ec1480c28646e"
+        ],
+        "source_facts": {
+          "activity/counts/issues_open": 1
+        }
+      }
+    },
+    {
+      "case": "tests/test_agent_development.py::test_development_evaluation[missing-links]",
+      "outcome": "passed",
+      "reason": "All expected facts, citations, forbidden claims and status assertions passed.",
+      "actual_result": {
+        "provider": "deterministic",
+        "expected": {
+          "id": "missing-links",
+          "kind": "delivery_support",
+          "seed": "planned",
+          "expected_facts": {
+            "counts/total": 1
+          },
+          "contains": [
+            "do not establish fulfillment"
+          ],
+          "required_citations": [
+            "roadmap:offset:0"
+          ],
+          "forbidden_claims": [
+            "committed fraud",
+            "maintainer is dishonest",
+            "abandoned repository",
+            "100% complete",
+            "trust score:",
+            "caused the delay"
+          ],
+          "expected_limitations": [
+            "maintainer assertion"
+          ],
+          "status": "insufficient_evidence"
+        },
+        "actual_status": "insufficient_evidence",
+        "actual_mode": "deterministic",
+        "answer": "Roadmap page scope: offset 0, 1 of 1 commitments; evaluated at 2026-11-03T00:00:00+00:00. Current-state counts in this page: {\"cancelled\": 0, \"delivered\": 0, \"in_progress\": 0, \"late\": 0, \"on_time\": 0, \"overdue_unfinished\": 1, \"planned\": 1, \"reopened\": 0, \"submitted_for_review\": 0, \"total\": 1, \"unknown_delivery_timing\": 0}. Current public linked evidence: [{\"links\": [], \"milestone_id\": 1, \"status\": \"planned\"}]. Links may support investigation; they do not establish fulfillment of the deliverable or independent review. Stale, missing and unavailable links remain uncertain. Counts and lists cover only this page. Current statuses are evaluated at a UTC date; a supplied earlier timestamp does not replay historical state. Deadline revisions never erase the original missed commitment. History previews are bounded to 50 events per milestone. [opendev:project:1:roadmap:offset:0@sha256:0bac398af961b8411155c22cf38f8cf627a1b9c700d4f5942e15097490f6aee3]\nDelivery is a maintainer assertion, not independent verification. Closed issues and merged PRs do not certify delivery. These records do not establish causes of delay, dishonesty or misuse of funding. No completion percentage or trust score is inferred.",
+        "citations": [
+          "opendev:project:1:roadmap:offset:0@sha256:0bac398af961b8411155c22cf38f8cf627a1b9c700d4f5942e15097490f6aee3"
+        ],
+        "source_facts": {
+          "counts/total": 1
+        }
+      }
+    },
+    {
+      "case": "tests/test_agent_development.py::test_development_evaluation[missing-original]",
+      "outcome": "passed",
+      "reason": "All expected facts, citations, forbidden claims and status assertions passed.",
+      "actual_result": {
+        "provider": "deterministic",
+        "expected": {
+          "id": "missing-original",
+          "kind": "deadlines",
+          "seed": "missing_original",
+          "expected_facts": {
+            "counts/total": 1
+          },
+          "contains": [
+            "original_deadline_available\": false"
+          ],
+          "required_citations": [
+            "roadmap:offset:0"
+          ],
+          "forbidden_claims": [
+            "committed fraud",
+            "maintainer is dishonest",
+            "abandoned repository",
+            "100% complete",
+            "trust score:",
+            "caused the delay"
+          ],
+          "expected_limitations": [
+            "maintainer assertion"
+          ],
+          "status": "insufficient_evidence"
+        },
+        "actual_status": "insufficient_evidence",
+        "actual_mode": "deterministic",
+        "answer": "Roadmap page scope: offset 0, 1 of 1 commitments; evaluated at 2026-11-03T00:00:00+00:00. Current-state counts in this page: {\"cancelled\": 0, \"delivered\": 0, \"in_progress\": 0, \"late\": 0, \"on_time\": 0, \"overdue_unfinished\": 1, \"planned\": 1, \"reopened\": 0, \"submitted_for_review\": 0, \"total\": 1, \"unknown_delivery_timing\": 0}. Commitment facts: [{\"asserted_delivery_date\": null, \"current_deadline\": \"2026-10-31\", \"days_late\": null, \"days_overdue_current\": 3, \"days_overdue_original\": null, \"deadline_revisions\": 0, \"evaluated_at\": \"2026-11-03T00:00:00+00:00\", \"id\": 1, \"original_deadline\": null, \"original_deadline_available\": false, \"reopened\": false, \"status\": \"planned\", \"timing\": \"not_currently_delivered\", \"title\": \"Missing original\"}]. Insufficient evidence: no matching commitments or an original immutable deadline is unavailable; original-deadline timing cannot be inferred. Counts and lists cover only this page. Current statuses are evaluated at a UTC date; a supplied earlier timestamp does not replay historical state. Deadline revisions never erase the original missed commitment. History previews are bounded to 50 events per milestone. [opendev:project:1:roadmap:offset:0@sha256:da8a59be85bc1587a855695d73f7ce7a224f5fed3e8e03257211b0b5c53dd9aa]\nDelivery is a maintainer assertion, not independent verification. Closed issues and merged PRs do not certify delivery. These records do not establish causes of delay, dishonesty or misuse of funding. No completion percentage or trust score is inferred.",
+        "citations": [
+          "opendev:project:1:roadmap:offset:0@sha256:da8a59be85bc1587a855695d73f7ce7a224f5fed3e8e03257211b0b5c53dd9aa"
+        ],
+        "source_facts": {
+          "counts/total": 1
+        }
+      }
+    },
+    {
+      "case": "tests/test_agent_development.py::test_development_evaluation[new-owner]",
+      "outcome": "passed",
+      "reason": "All expected facts, citations, forbidden claims and status assertions passed.",
+      "actual_result": {
+        "provider": "deterministic",
+        "expected": {
+          "id": "new-owner",
+          "kind": "maintainer_history",
+          "seed": "none",
+          "expected_facts": {
+            "participation/owner": 1
+          },
+          "contains": [
+            "Insufficient history"
+          ],
+          "required_citations": [
+            "history"
+          ],
+          "forbidden_claims": [
+            "committed fraud",
+            "maintainer is dishonest",
+            "abandoned repository",
+            "100% complete",
+            "trust score:",
+            "caused the delay"
+          ],
+          "expected_limitations": [
+            "maintainer assertion"
+          ],
+          "status": "insufficient_evidence"
+        },
+        "actual_status": "insufficient_evidence",
+        "actual_mode": "deterministic",
+        "answer": "Owner outcomes cover only currently owned active public projects, not a lifetime or previous-project cohort. Team participation is separate: {\"collaborator\": 0, \"maintainer\": 0, \"owner\": 1}. delivery: [{\"denominator\": null, \"key\": \"public_projects_owned\", \"numerator\": 1, \"sample_size\": 1, \"state\": \"recorded\"}, {\"denominator\": null, \"key\": \"published_milestones\", \"numerator\": 0, \"sample_size\": 0, \"state\": \"insufficient_history\"}, {\"denominator\": 0, \"key\": \"asserted_delivered\", \"numerator\": 0, \"sample_size\": 0, \"state\": \"insufficient_history\"}, {\"denominator\": 0, \"key\": \"ever_asserted_delivered\", \"numerator\": 0, \"sample_size\": 0, \"state\": \"insufficient_history\"}, {\"denominator\": 0, \"key\": \"overdue_planned\", \"numerator\": 0, \"sample_size\": 0, \"state\": \"insufficient_history\"}, {\"denominator\": 0, \"key\": \"delivered_on_time\", \"numerator\": 0, \"sample_size\": 0, \"state\": \"insufficient_history\"}, {\"denominator\": 0, \"key\": \"delivered_late\", \"numerator\": 0, \"sample_size\": 0, \"state\": \"insufficient_history\"}, {\"denominator\": 0, \"key\": \"unknown_delivery_timing\", \"numerator\": 0, \"sample_size\": 0, \"state\": \"insufficient_history\"}, {\"denominator\": 0, \"key\": \"cancelled\", \"numerator\": 0, \"sample_size\": 0, \"state\": \"insufficient_history\"}, {\"denominator\": 0, \"key\": \"reopened\", \"numerator\": 0, \"sample_size\": 0, \"state\": \"insufficient_history\"}, {\"denominator\": 0, \"key\": \"delivery_evidence\", \"numerator\": 0, \"sample_size\": 0, \"state\": \"insufficient_history\"}, {\"denominator\": null, \"key\": \"independently_reviewed\", \"numerator\": null, \"sample_size\": 0, \"state\": \"unavailable\"}]. rewards: [{\"denominator\": null, \"key\": \"issued\", \"numerator\": 0, \"sample_size\": 0, \"state\": \"insufficient_history\"}, {\"denominator\": 0, \"key\": \"fulfilled\", \"numerator\": 0, \"sample_size\": 0, \"state\": \"insufficient_history\"}, {\"denominator\": 0, \"key\": \"pending\", \"numerator\": 0, \"sample_size\": 0, \"state\": \"insufficient_history\"}, {\"denominator\": 0, \"key\": \"excluded\", \"numerator\": 0, \"sample_size\": 0, \"state\": \"insufficient_history\"}, {\"denominator\": null, \"key\": \"overdue\", \"numerator\": null, \"sample_size\": 0, \"state\": \"unavailable\"}]. Financial reporting indicators and GitHub repository signals are separate from owner delivery and team participation. No financial amounts are summed across currencies; repository activity is not personal authorship. Reward fulfillment fractions use eligible completed captures only; refunded/reversed/revoked entitlements are excluded. Fulfillment is a maintainer mark; no reward deadline exists. Insufficient history for a meaningful delivery assessment, not zero trust. [opendev:maintainer:1:history@sha256:7642771d2e4eb748a59d179551cf12b7c481d14323321b866d8ef39dfd3ec0eb]\nDelivery is a maintainer assertion, not independent verification. Closed issues and merged PRs do not certify delivery. These records do not establish causes of delay, dishonesty or misuse of funding. No completion percentage or trust score is inferred.",
+        "citations": [
+          "opendev:maintainer:1:history@sha256:7642771d2e4eb748a59d179551cf12b7c481d14323321b866d8ef39dfd3ec0eb"
+        ],
+        "source_facts": {
+          "participation/owner": 1
+        }
+      }
+    },
+    {
+      "case": "tests/test_agent_development.py::test_development_evaluation[team-attribution]",
+      "outcome": "passed",
+      "reason": "All expected facts, citations, forbidden claims and status assertions passed.",
+      "actual_result": {
+        "provider": "deterministic",
+        "expected": {
+          "id": "team-attribution",
+          "kind": "maintainer_history",
+          "seed": "collaborator",
+          "expected_facts": {
+            "participation/owner": 1
+          },
+          "contains": [
+            "\"collaborator\": 1"
+          ],
+          "required_citations": [
+            "history"
+          ],
+          "forbidden_claims": [
+            "committed fraud",
+            "maintainer is dishonest",
+            "abandoned repository",
+            "100% complete",
+            "trust score:",
+            "caused the delay"
+          ],
+          "expected_limitations": [
+            "Team participation is separate"
+          ],
+          "status": "answered"
+        },
+        "actual_status": "answered",
+        "actual_mode": "deterministic",
+        "answer": "Owner outcomes cover only currently owned active public projects, not a lifetime or previous-project cohort. Team participation is separate: {\"collaborator\": 1, \"maintainer\": 0, \"owner\": 1}. delivery: [{\"denominator\": null, \"key\": \"public_projects_owned\", \"numerator\": 1, \"sample_size\": 1, \"state\": \"recorded\"}, {\"denominator\": null, \"key\": \"published_milestones\", \"numerator\": 1, \"sample_size\": 1, \"state\": \"recorded\"}, {\"denominator\": 1, \"key\": \"asserted_delivered\", \"numerator\": 0, \"sample_size\": 1, \"state\": \"recorded\"}, {\"denominator\": 1, \"key\": \"ever_asserted_delivered\", \"numerator\": 0, \"sample_size\": 1, \"state\": \"recorded\"}, {\"denominator\": 1, \"key\": \"overdue_planned\", \"numerator\": 1, \"sample_size\": 1, \"state\": \"recorded\"}, {\"denominator\": 0, \"key\": \"delivered_on_time\", \"numerator\": 0, \"sample_size\": 0, \"state\": \"insufficient_history\"}, {\"denominator\": 0, \"key\": \"delivered_late\", \"numerator\": 0, \"sample_size\": 0, \"state\": \"insufficient_history\"}, {\"denominator\": 0, \"key\": \"unknown_delivery_timing\", \"numerator\": 0, \"sample_size\": 0, \"state\": \"insufficient_history\"}, {\"denominator\": 1, \"key\": \"cancelled\", \"numerator\": 0, \"sample_size\": 1, \"state\": \"recorded\"}, {\"denominator\": 1, \"key\": \"reopened\", \"numerator\": 0, \"sample_size\": 1, \"state\": \"recorded\"}, {\"denominator\": 0, \"key\": \"delivery_evidence\", \"numerator\": 0, \"sample_size\": 0, \"state\": \"insufficient_history\"}, {\"denominator\": null, \"key\": \"independently_reviewed\", \"numerator\": null, \"sample_size\": 0, \"state\": \"unavailable\"}]. rewards: [{\"denominator\": null, \"key\": \"issued\", \"numerator\": 0, \"sample_size\": 0, \"state\": \"insufficient_history\"}, {\"denominator\": 0, \"key\": \"fulfilled\", \"numerator\": 0, \"sample_size\": 0, \"state\": \"insufficient_history\"}, {\"denominator\": 0, \"key\": \"pending\", \"numerator\": 0, \"sample_size\": 0, \"state\": \"insufficient_history\"}, {\"denominator\": 0, \"key\": \"excluded\", \"numerator\": 0, \"sample_size\": 0, \"state\": \"insufficient_history\"}, {\"denominator\": null, \"key\": \"overdue\", \"numerator\": null, \"sample_size\": 0, \"state\": \"unavailable\"}]. Financial reporting indicators and GitHub repository signals are separate from owner delivery and team participation. No financial amounts are summed across currencies; repository activity is not personal authorship. Reward fulfillment fractions use eligible completed captures only; refunded/reversed/revoked entitlements are excluded. Fulfillment is a maintainer mark; no reward deadline exists. [opendev:maintainer:1:history@sha256:df9135686eb80c25ac6e376566dcab4082549ceca34cc2a3fc713128e6a64a8e]\nDelivery is a maintainer assertion, not independent verification. Closed issues and merged PRs do not certify delivery. These records do not establish causes of delay, dishonesty or misuse of funding. No completion percentage or trust score is inferred.",
+        "citations": [
+          "opendev:maintainer:1:history@sha256:df9135686eb80c25ac6e376566dcab4082549ceca34cc2a3fc713128e6a64a8e"
+        ],
+        "source_facts": {
+          "participation/owner": 1
+        }
+      }
+    },
+    {
+      "case": "tests/test_agent_development.py::test_development_evaluation[reward-fulfillment]",
+      "outcome": "passed",
+      "reason": "All expected facts, citations, forbidden claims and status assertions passed.",
+      "actual_result": {
+        "provider": "deterministic",
+        "expected": {
+          "id": "reward-fulfillment",
+          "kind": "reward_history",
+          "seed": "rewards",
+          "expected_facts": {
+            "participation/owner": 1
+          },
+          "contains": [
+            "\"numerator\": 1"
+          ],
+          "required_citations": [
+            "history"
+          ],
+          "forbidden_claims": [
+            "committed fraud",
+            "maintainer is dishonest",
+            "abandoned repository",
+            "100% complete",
+            "trust score:",
+            "caused the delay"
+          ],
+          "expected_limitations": [
+            "eligible"
+          ],
+          "status": "answered"
+        },
+        "actual_status": "answered",
+        "actual_mode": "deterministic",
+        "answer": "Owner outcomes cover only currently owned active public projects, not a lifetime or previous-project cohort. Team participation is separate: {\"collaborator\": 0, \"maintainer\": 0, \"owner\": 1}. rewards: [{\"denominator\": null, \"key\": \"issued\", \"numerator\": 1, \"sample_size\": 1, \"state\": \"recorded\"}, {\"denominator\": 1, \"key\": \"fulfilled\", \"numerator\": 1, \"sample_size\": 1, \"state\": \"recorded\"}, {\"denominator\": 1, \"key\": \"pending\", \"numerator\": 0, \"sample_size\": 1, \"state\": \"recorded\"}, {\"denominator\": 1, \"key\": \"excluded\", \"numerator\": 0, \"sample_size\": 1, \"state\": \"recorded\"}, {\"denominator\": null, \"key\": \"overdue\", \"numerator\": null, \"sample_size\": 0, \"state\": \"unavailable\"}]. Financial reporting indicators and GitHub repository signals are separate from owner delivery and team participation. No financial amounts are summed across currencies; repository activity is not personal authorship. Reward fulfillment fractions use eligible completed captures only; refunded/reversed/revoked entitlements are excluded. Fulfillment is a maintainer mark; no reward deadline exists. [opendev:maintainer:1:history@sha256:8e6b3343bf64bfadfefa6e8bca365880d446ad8f143832b380caf7ce3d672105]\nDelivery is a maintainer assertion, not independent verification. Closed issues and merged PRs do not certify delivery. These records do not establish causes of delay, dishonesty or misuse of funding. No completion percentage or trust score is inferred.",
+        "citations": [
+          "opendev:maintainer:1:history@sha256:8e6b3343bf64bfadfefa6e8bca365880d446ad8f143832b380caf7ce3d672105"
+        ],
+        "source_facts": {
+          "participation/owner": 1
+        }
+      }
+    },
+    {
+      "case": "tests/test_agent_development.py::test_development_evaluation[revoked-reward]",
+      "outcome": "passed",
+      "reason": "All expected facts, citations, forbidden claims and status assertions passed.",
+      "actual_result": {
+        "provider": "deterministic",
+        "expected": {
+          "id": "revoked-reward",
+          "kind": "reward_history",
+          "seed": "revoked",
+          "expected_facts": {
+            "participation/owner": 1
+          },
+          "contains": [
+            "\"numerator\": 1"
+          ],
+          "required_citations": [
+            "history"
+          ],
+          "forbidden_claims": [
+            "committed fraud",
+            "maintainer is dishonest",
+            "abandoned repository",
+            "100% complete",
+            "trust score:",
+            "caused the delay"
+          ],
+          "expected_limitations": [
+            "refunded/reversed/revoked"
+          ],
+          "status": "answered"
+        },
+        "actual_status": "answered",
+        "actual_mode": "deterministic",
+        "answer": "Owner outcomes cover only currently owned active public projects, not a lifetime or previous-project cohort. Team participation is separate: {\"collaborator\": 0, \"maintainer\": 0, \"owner\": 1}. rewards: [{\"denominator\": null, \"key\": \"issued\", \"numerator\": 2, \"sample_size\": 2, \"state\": \"recorded\"}, {\"denominator\": 1, \"key\": \"fulfilled\", \"numerator\": 1, \"sample_size\": 1, \"state\": \"recorded\"}, {\"denominator\": 1, \"key\": \"pending\", \"numerator\": 0, \"sample_size\": 1, \"state\": \"recorded\"}, {\"denominator\": 2, \"key\": \"excluded\", \"numerator\": 1, \"sample_size\": 2, \"state\": \"recorded\"}, {\"denominator\": null, \"key\": \"overdue\", \"numerator\": null, \"sample_size\": 0, \"state\": \"unavailable\"}]. Financial reporting indicators and GitHub repository signals are separate from owner delivery and team participation. No financial amounts are summed across currencies; repository activity is not personal authorship. Reward fulfillment fractions use eligible completed captures only; refunded/reversed/revoked entitlements are excluded. Fulfillment is a maintainer mark; no reward deadline exists. [opendev:maintainer:1:history@sha256:4af988135b5ad10027a69c85e00c038591bf6f08883868fa0ccb6b005434310c]\nDelivery is a maintainer assertion, not independent verification. Closed issues and merged PRs do not certify delivery. These records do not establish causes of delay, dishonesty or misuse of funding. No completion percentage or trust score is inferred.",
+        "citations": [
+          "opendev:maintainer:1:history@sha256:4af988135b5ad10027a69c85e00c038591bf6f08883868fa0ccb6b005434310c"
+        ],
+        "source_facts": {
+          "participation/owner": 1
+        }
+      }
+    },
+    {
+      "case": "tests/test_agent_development.py::test_development_evaluation[multiple-projects]",
+      "outcome": "passed",
+      "reason": "All expected facts, citations, forbidden claims and status assertions passed.",
+      "actual_result": {
+        "provider": "deterministic",
+        "expected": {
+          "id": "multiple-projects",
+          "kind": "maintainer_history",
+          "seed": "multi_project",
+          "expected_facts": {
+            "participation/owner": 2
+          },
+          "contains": [
+            "\"owner\": 2"
+          ],
+          "required_citations": [
+            "history"
+          ],
+          "forbidden_claims": [
+            "committed fraud",
+            "maintainer is dishonest",
+            "abandoned repository",
+            "100% complete",
+            "trust score:",
+            "caused the delay"
+          ],
+          "expected_limitations": [
+            "maintainer assertion"
+          ],
+          "status": "answered"
+        },
+        "actual_status": "answered",
+        "actual_mode": "deterministic",
+        "answer": "Owner outcomes cover only currently owned active public projects, not a lifetime or previous-project cohort. Team participation is separate: {\"collaborator\": 0, \"maintainer\": 0, \"owner\": 2}. delivery: [{\"denominator\": null, \"key\": \"public_projects_owned\", \"numerator\": 2, \"sample_size\": 2, \"state\": \"recorded\"}, {\"denominator\": null, \"key\": \"published_milestones\", \"numerator\": 1, \"sample_size\": 1, \"state\": \"recorded\"}, {\"denominator\": 1, \"key\": \"asserted_delivered\", \"numerator\": 0, \"sample_size\": 1, \"state\": \"recorded\"}, {\"denominator\": 1, \"key\": \"ever_asserted_delivered\", \"numerator\": 0, \"sample_size\": 1, \"state\": \"recorded\"}, {\"denominator\": 1, \"key\": \"overdue_planned\", \"numerator\": 1, \"sample_size\": 1, \"state\": \"recorded\"}, {\"denominator\": 0, \"key\": \"delivered_on_time\", \"numerator\": 0, \"sample_size\": 0, \"state\": \"insufficient_history\"}, {\"denominator\": 0, \"key\": \"delivered_late\", \"numerator\": 0, \"sample_size\": 0, \"state\": \"insufficient_history\"}, {\"denominator\": 0, \"key\": \"unknown_delivery_timing\", \"numerator\": 0, \"sample_size\": 0, \"state\": \"insufficient_history\"}, {\"denominator\": 1, \"key\": \"cancelled\", \"numerator\": 0, \"sample_size\": 1, \"state\": \"recorded\"}, {\"denominator\": 1, \"key\": \"reopened\", \"numerator\": 0, \"sample_size\": 1, \"state\": \"recorded\"}, {\"denominator\": 0, \"key\": \"delivery_evidence\", \"numerator\": 0, \"sample_size\": 0, \"state\": \"insufficient_history\"}, {\"denominator\": null, \"key\": \"independently_reviewed\", \"numerator\": null, \"sample_size\": 0, \"state\": \"unavailable\"}]. rewards: [{\"denominator\": null, \"key\": \"issued\", \"numerator\": 0, \"sample_size\": 0, \"state\": \"insufficient_history\"}, {\"denominator\": 0, \"key\": \"fulfilled\", \"numerator\": 0, \"sample_size\": 0, \"state\": \"insufficient_history\"}, {\"denominator\": 0, \"key\": \"pending\", \"numerator\": 0, \"sample_size\": 0, \"state\": \"insufficient_history\"}, {\"denominator\": 0, \"key\": \"excluded\", \"numerator\": 0, \"sample_size\": 0, \"state\": \"insufficient_history\"}, {\"denominator\": null, \"key\": \"overdue\", \"numerator\": null, \"sample_size\": 0, \"state\": \"unavailable\"}]. Financial reporting indicators and GitHub repository signals are separate from owner delivery and team participation. No financial amounts are summed across currencies; repository activity is not personal authorship. Reward fulfillment fractions use eligible completed captures only; refunded/reversed/revoked entitlements are excluded. Fulfillment is a maintainer mark; no reward deadline exists. [opendev:maintainer:1:history@sha256:56067477386c5f504f7ea94f4d55d0a92068001eca38547bba13743ef53bca05]\nDelivery is a maintainer assertion, not independent verification. Closed issues and merged PRs do not certify delivery. These records do not establish causes of delay, dishonesty or misuse of funding. No completion percentage or trust score is inferred.",
+        "citations": [
+          "opendev:maintainer:1:history@sha256:56067477386c5f504f7ea94f4d55d0a92068001eca38547bba13743ef53bca05"
+        ],
+        "source_facts": {
+          "participation/owner": 2
+        }
+      }
+    },
+    {
+      "case": "tests/test_agent_development.py::test_development_evaluation[funding-and-schedule]",
+      "outcome": "passed",
+      "reason": "All expected facts, citations, forbidden claims and status assertions passed.",
+      "actual_result": {
+        "provider": "deterministic",
+        "expected": {
+          "id": "funding-and-schedule",
+          "kind": "funding_schedule",
+          "seed": "funded",
+          "expected_facts": {
+            "counts/total": 1
+          },
+          "contains": [
+            "2000 USD minor units",
+            "Overdue commitment IDs"
+          ],
+          "required_citations": [
+            "roadmap:offset:0",
+            "finances"
+          ],
+          "forbidden_claims": [
+            "committed fraud",
+            "maintainer is dishonest",
+            "abandoned repository",
+            "100% complete",
+            "trust score:",
+            "caused the delay"
+          ],
+          "expected_limitations": [
+            "maintainer assertion"
+          ],
+          "status": "answered"
+        },
+        "actual_status": "answered",
+        "actual_mode": "deterministic",
+        "answer": "Roadmap page scope: offset 0, 1 of 1 commitments; evaluated at 2026-11-03T00:00:00+00:00. Current-state counts in this page: {\"cancelled\": 0, \"delivered\": 0, \"in_progress\": 0, \"late\": 0, \"on_time\": 0, \"overdue_unfinished\": 1, \"planned\": 1, \"reopened\": 0, \"submitted_for_review\": 0, \"total\": 1, \"unknown_delivery_timing\": 0}. Gross recorded captured funding, including refund/reversal-affected captures: 2000 USD minor units. Net eligible completed captured funding after conservative exclusions: 2000 USD minor units. Published reported spending: 1000 USD minor units. Funding minus reported expenditure: 1000 USD minor units. This calculated difference is not an independently verified cash or bank balance. A negative difference indicates a recorded funding gap, not its cause. The records do not establish why funds were spent or why funding is insufficient. [opendev:project:1:finances@sha256:f42fc51cead15de4e0500bd1220358d79d2bb49a8e561b87026f4dbb24eceb0a] Overdue commitment IDs in this page: [1]. Financial comparisons and development assertions are separate; correlation does not establish causation. Counts and lists cover only this page. Current statuses are evaluated at a UTC date; a supplied earlier timestamp does not replay historical state. Deadline revisions never erase the original missed commitment. History previews are bounded to 50 events per milestone. [opendev:project:1:roadmap:offset:0@sha256:32983aabc316a0b416836ef1d15c9073cc7b7ea26d5b119344c7fb5d8a5cb838] [opendev:project:1:finances@sha256:f42fc51cead15de4e0500bd1220358d79d2bb49a8e561b87026f4dbb24eceb0a]\nDelivery is a maintainer assertion, not independent verification. Closed issues and merged PRs do not certify delivery. These records do not establish causes of delay, dishonesty or misuse of funding. No completion percentage or trust score is inferred.",
+        "citations": [
+          "opendev:project:1:roadmap:offset:0@sha256:32983aabc316a0b416836ef1d15c9073cc7b7ea26d5b119344c7fb5d8a5cb838",
+          "opendev:project:1:finances@sha256:f42fc51cead15de4e0500bd1220358d79d2bb49a8e561b87026f4dbb24eceb0a"
+        ],
+        "source_facts": {
+          "counts/total": 1
+        }
+      }
+    },
+    {
+      "case": "tests/test_agent_development.py::test_development_evaluation[unsupported-cause]",
+      "outcome": "passed",
+      "reason": "All expected facts, citations, forbidden claims and status assertions passed.",
+      "actual_result": {
+        "provider": "deterministic",
+        "expected": {
+          "id": "unsupported-cause",
+          "kind": "schedule_explanation",
+          "seed": "planned",
+          "expected_facts": {
+            "counts/total": 1
+          },
+          "contains": [
+            "do not establish causes"
+          ],
+          "required_citations": [
+            "roadmap:offset:0"
+          ],
+          "forbidden_claims": [
+            "committed fraud",
+            "maintainer is dishonest",
+            "abandoned repository",
+            "100% complete",
+            "trust score:",
+            "caused the delay"
+          ],
+          "expected_limitations": [
+            "maintainer assertion"
+          ],
+          "status": "answered"
+        },
+        "actual_status": "answered",
+        "actual_mode": "deterministic",
+        "answer": "Roadmap page scope: offset 0, 1 of 1 commitments; evaluated at 2026-11-03T00:00:00+00:00. Current-state counts in this page: {\"cancelled\": 0, \"delivered\": 0, \"in_progress\": 0, \"late\": 0, \"on_time\": 0, \"overdue_unfinished\": 1, \"planned\": 1, \"reopened\": 0, \"submitted_for_review\": 0, \"total\": 1, \"unknown_delivery_timing\": 0}. Commitment facts: [{\"asserted_delivery_date\": null, \"current_deadline\": \"2026-10-31\", \"days_late\": null, \"days_overdue_current\": 3, \"days_overdue_original\": 3, \"deadline_revisions\": 0, \"evaluated_at\": \"2026-11-03T00:00:00+00:00\", \"id\": 1, \"original_deadline\": \"2026-10-31\", \"original_deadline_available\": true, \"reopened\": false, \"status\": \"planned\", \"timing\": \"not_currently_delivered\", \"title\": \"Synthetic promise\"}]. Counts and lists cover only this page. Current statuses are evaluated at a UTC date; a supplied earlier timestamp does not replay historical state. Deadline revisions never erase the original missed commitment. History previews are bounded to 50 events per milestone. [opendev:project:1:roadmap:offset:0@sha256:8bf92224e8b51938fe22a967c0f3eb37dcc655e0b67e8cfca198c8b6ddd8886d]\nDelivery is a maintainer assertion, not independent verification. Closed issues and merged PRs do not certify delivery. These records do not establish causes of delay, dishonesty or misuse of funding. No completion percentage or trust score is inferred.",
+        "citations": [
+          "opendev:project:1:roadmap:offset:0@sha256:8bf92224e8b51938fe22a967c0f3eb37dcc655e0b67e8cfca198c8b6ddd8886d"
+        ],
+        "source_facts": {
+          "counts/total": 1
+        }
+      }
+    },
+    {
+      "case": "tests/test_agent_development.py::test_development_evaluation[unsupported-allegation]",
+      "outcome": "passed",
+      "reason": "All expected facts, citations, forbidden claims and status assertions passed.",
+      "actual_result": {
+        "provider": "deterministic",
+        "expected": {
+          "id": "unsupported-allegation",
+          "kind": "missing_delivery_evidence",
+          "seed": "planned",
+          "expected_facts": {
+            "counts/total": 1
+          },
+          "contains": [
+            "do not establish causes"
+          ],
+          "required_citations": [
+            "roadmap:offset:0"
+          ],
+          "forbidden_claims": [
+            "committed fraud",
+            "maintainer is dishonest",
+            "abandoned repository",
+            "100% complete",
+            "trust score:",
+            "caused the delay"
+          ],
+          "expected_limitations": [
+            "maintainer assertion"
+          ],
+          "status": "insufficient_evidence"
+        },
+        "actual_status": "insufficient_evidence",
+        "actual_mode": "deterministic",
+        "answer": "Roadmap page scope: offset 0, 1 of 1 commitments; evaluated at 2026-11-03T00:00:00+00:00. Current-state counts in this page: {\"cancelled\": 0, \"delivered\": 0, \"in_progress\": 0, \"late\": 0, \"on_time\": 0, \"overdue_unfinished\": 1, \"planned\": 1, \"reopened\": 0, \"submitted_for_review\": 0, \"total\": 1, \"unknown_delivery_timing\": 0}. Commitment facts: [{\"asserted_delivery_date\": null, \"current_deadline\": \"2026-10-31\", \"days_late\": null, \"days_overdue_current\": 3, \"days_overdue_original\": 3, \"deadline_revisions\": 0, \"evaluated_at\": \"2026-11-03T00:00:00+00:00\", \"id\": 1, \"original_deadline\": \"2026-10-31\", \"original_deadline_available\": true, \"reopened\": false, \"status\": \"planned\", \"timing\": \"not_currently_delivered\", \"title\": \"Synthetic promise\"}]. Current public linked evidence: [{\"links\": [], \"milestone_id\": 1, \"status\": \"planned\"}]. Links may support investigation; they do not establish fulfillment of the deliverable or independent review. Stale, missing and unavailable links remain uncertain. Counts and lists cover only this page. Current statuses are evaluated at a UTC date; a supplied earlier timestamp does not replay historical state. Deadline revisions never erase the original missed commitment. History previews are bounded to 50 events per milestone. [opendev:project:1:roadmap:offset:0@sha256:c2b783b42a638906bb188658121ec4c20c209222af195c304aaf687a104425e8]\nDelivery is a maintainer assertion, not independent verification. Closed issues and merged PRs do not certify delivery. These records do not establish causes of delay, dishonesty or misuse of funding. No completion percentage or trust score is inferred.",
+        "citations": [
+          "opendev:project:1:roadmap:offset:0@sha256:c2b783b42a638906bb188658121ec4c20c209222af195c304aaf687a104425e8"
+        ],
+        "source_facts": {
+          "counts/total": 1
+        }
+      }
+    },
+    {
+      "case": "tests/test_agent_development.py::test_development_evaluation[linked-merged]",
+      "outcome": "passed",
+      "reason": "All expected facts, citations, forbidden claims and status assertions passed.",
+      "actual_result": {
+        "provider": "deterministic",
+        "expected": {
+          "id": "linked-merged",
+          "kind": "linked_evidence",
+          "seed": "linked",
+          "expected_facts": {
+            "counts/total": 1
+          },
+          "contains": [
+            "\"merged\": true"
+          ],
+          "required_citations": [
+            "roadmap:offset:0"
+          ],
+          "forbidden_claims": [
+            "committed fraud",
+            "maintainer is dishonest",
+            "abandoned repository",
+            "100% complete",
+            "trust score:",
+            "caused the delay"
+          ],
+          "expected_limitations": [
+            "maintainer assertion"
+          ],
+          "status": "answered"
+        },
+        "actual_status": "answered",
+        "actual_mode": "deterministic",
+        "answer": "Roadmap page scope: offset 0, 1 of 1 commitments; evaluated at 2026-11-03T00:00:00+00:00. Current-state counts in this page: {\"cancelled\": 0, \"delivered\": 0, \"in_progress\": 0, \"late\": 0, \"on_time\": 0, \"overdue_unfinished\": 0, \"planned\": 1, \"reopened\": 0, \"submitted_for_review\": 0, \"total\": 1, \"unknown_delivery_timing\": 0}. Current public linked evidence: [{\"links\": [{\"canonical_id\": \"301\", \"evidence_type\": \"pull_request\", \"id\": \"3ab40c8b-df1e-43ba-9b11-19049e4c7c49\", \"last_observed_at\": \"2026-11-03T08:44:29.476184+00:00\", \"merged\": true, \"snapshot_available\": true, \"stale\": true, \"state\": \"closed\", \"url\": \"https://github.com/owner/repo/pull/3\"}], \"milestone_id\": 1, \"status\": \"planned\"}]. Links may support investigation; they do not establish fulfillment of the deliverable or independent review. Stale, missing and unavailable links remain uncertain. Counts and lists cover only this page. Current statuses are evaluated at a UTC date; a supplied earlier timestamp does not replay historical state. Deadline revisions never erase the original missed commitment. History previews are bounded to 50 events per milestone. [opendev:project:1:roadmap:offset:0@sha256:8863aaaeb8264a88cd4f4a59533cfb05ce8bc2b8e6a888da0628eef5521ce308]\nDelivery is a maintainer assertion, not independent verification. Closed issues and merged PRs do not certify delivery. These records do not establish causes of delay, dishonesty or misuse of funding. No completion percentage or trust score is inferred.",
+        "citations": [
+          "opendev:project:1:roadmap:offset:0@sha256:8863aaaeb8264a88cd4f4a59533cfb05ce8bc2b8e6a888da0628eef5521ce308"
+        ],
+        "source_facts": {
+          "counts/total": 1
+        }
+      }
+    },
+    {
+      "case": "tests/test_agent_development.py::test_development_evaluation[roadmap-change]",
+      "outcome": "passed",
+      "reason": "All expected facts, citations, forbidden claims and status assertions passed.",
+      "actual_result": {
+        "provider": "deterministic",
+        "expected": {
+          "id": "roadmap-change",
+          "kind": "roadmap_changes",
+          "seed": "revised",
+          "expected_facts": {
+            "counts/total": 1
+          },
+          "contains": [
+            "Public immutable history previews"
+          ],
+          "required_citations": [
+            "roadmap:offset:0"
+          ],
+          "forbidden_claims": [
+            "committed fraud",
+            "maintainer is dishonest",
+            "abandoned repository",
+            "100% complete",
+            "trust score:",
+            "caused the delay"
+          ],
+          "expected_limitations": [
+            "maintainer assertion"
+          ],
+          "status": "answered"
+        },
+        "actual_status": "answered",
+        "actual_mode": "deterministic",
+        "answer": "Roadmap page scope: offset 0, 1 of 1 commitments; evaluated at 2026-11-03T00:00:00+00:00. Current-state counts in this page: {\"cancelled\": 0, \"delivered\": 0, \"in_progress\": 0, \"late\": 0, \"on_time\": 0, \"overdue_unfinished\": 0, \"planned\": 1, \"reopened\": 0, \"submitted_for_review\": 0, \"total\": 1, \"unknown_delivery_timing\": 0}. Commitment facts: [{\"asserted_delivery_date\": null, \"current_deadline\": \"2026-12-01\", \"days_late\": null, \"days_overdue_current\": 0, \"days_overdue_original\": 3, \"deadline_revisions\": 1, \"evaluated_at\": \"2026-11-03T00:00:00+00:00\", \"id\": 1, \"original_deadline\": \"2026-10-31\", \"original_deadline_available\": true, \"reopened\": false, \"status\": \"planned\", \"timing\": \"not_currently_delivered\", \"title\": \"Synthetic promise\"}]. Public immutable history previews (not exhaustive): [{\"milestone_id\": 1, \"events\": [{\"id\": \"de29ba32-b16d-47c7-a8d3-ba9ed0c63e92\", \"version\": 2, \"action\": \"edited\", \"previous_status\": \"planned\", \"new_status\": \"planned\", \"created_at\": \"2026-11-03T08:44:30.429035+00:00\", \"before\": {\"status\": \"planned\"}, \"after\": {\"planned_end_date\": \"2026-12-01\", \"status\": \"planned\"}}, {\"id\": \"8f3572f0-7d87-453a-b240-9ad1227b5617\", \"version\": 1, \"action\": \"created\", \"previous_status\": null, \"new_status\": \"planned\", \"created_at\": \"2026-11-03T08:44:30.429035+00:00\", \"before\": {\"status\": null}, \"after\": {\"planned_end_date\": \"2026-10-31\", \"status\": \"planned\"}}]}]. Counts and lists cover only this page. Current statuses are evaluated at a UTC date; a supplied earlier timestamp does not replay historical state. Deadline revisions never erase the original missed commitment. History previews are bounded to 50 events per milestone. [opendev:project:1:roadmap:offset:0@sha256:4b05b8be005682d43ed58ab47e4951bfebaa75cafafe92649c3e887bb16ef95c]\nDelivery is a maintainer assertion, not independent verification. Closed issues and merged PRs do not certify delivery. These records do not establish causes of delay, dishonesty or misuse of funding. No completion percentage or trust score is inferred.",
+        "citations": [
+          "opendev:project:1:roadmap:offset:0@sha256:4b05b8be005682d43ed58ab47e4951bfebaa75cafafe92649c3e887bb16ef95c"
+        ],
+        "source_facts": {
+          "counts/total": 1
+        }
+      }
+    },
+    {
+      "case": "tests/test_agent_development.py::test_development_evaluation[trend-unavailable]",
+      "outcome": "passed",
+      "reason": "All expected facts, citations, forbidden claims and status assertions passed.",
+      "actual_result": {
+        "provider": "deterministic",
+        "expected": {
+          "id": "trend-unavailable",
+          "kind": "activity_trend",
+          "seed": "merged",
+          "expected_facts": {
+            "activity/counts/issues_open": 1
+          },
+          "contains": [
+            "Insufficient comparable complete time windows"
+          ],
+          "required_citations": [
+            "activity:offset:0"
+          ],
+          "forbidden_claims": [
+            "committed fraud",
+            "maintainer is dishonest",
+            "abandoned repository",
+            "100% complete",
+            "trust score:",
+            "caused the delay"
+          ],
+          "expected_limitations": [
+            "sampled"
+          ],
+          "status": "insufficient_evidence"
+        },
+        "actual_status": "insufficient_evidence",
+        "actual_mode": "deterministic",
+        "answer": "Retained GitHub snapshot counts: {\"issues_closed\": 0, \"issues_open\": 1, \"pull_requests_closed\": 1, \"pull_requests_merged\": 1, \"pull_requests_open\": 0}. Available sampled commits: 1; GitHub milestones in this page: 1. Last successful synchronization: 2026-11-02T23:00:00+00:00; stale: False at evaluation 2026-11-03T00:00:00+00:00 (None means the available snapshot postdates evaluation). Closed PR counts include merged PRs; these are not disjoint quantities. Initial/incremental collections are bounded, commit history is sampled, deleted records can remain and unlinked activity need not represent funded commitments. Insufficient comparable complete time windows to establish an increase or decrease in development activity. Missing recent observations do not establish abandonment. [opendev:github_repository:1:activity:offset:0@sha256:c7135632cdeb768f9a01fe0fe1d69b69d509ed9daf4ba3218479e5e55f0ea5c1]\nDelivery is a maintainer assertion, not independent verification. Closed issues and merged PRs do not certify delivery. These records do not establish causes of delay, dishonesty or misuse of funding. No completion percentage or trust score is inferred.",
+        "citations": [
+          "opendev:github_repository:1:activity:offset:0@sha256:c7135632cdeb768f9a01fe0fe1d69b69d509ed9daf4ba3218479e5e55f0ea5c1"
+        ],
+        "source_facts": {
+          "activity/counts/issues_open": 1
+        }
+      }
+    },
+    {
+      "case": "tests/test_agent_development.py::test_development_evaluation[after-funding-unknown]",
+      "outcome": "passed",
+      "reason": "All expected facts, citations, forbidden claims and status assertions passed.",
+      "actual_result": {
+        "provider": "deterministic",
+        "expected": {
+          "id": "after-funding-unknown",
+          "kind": "after_funding",
+          "seed": "funded",
+          "expected_facts": {
+            "counts/total": 1
+          },
+          "contains": [
+            "Insufficient evidence for an expenditure trend"
+          ],
+          "required_citations": [
+            "roadmap:offset:0",
+            "finances"
+          ],
+          "forbidden_claims": [
+            "committed fraud",
+            "maintainer is dishonest",
+            "abandoned repository",
+            "100% complete",
+            "trust score:",
+            "caused the delay"
+          ],
+          "expected_limitations": [
+            "maintainer assertion"
+          ],
+          "status": "insufficient_evidence"
+        },
+        "actual_status": "insufficient_evidence",
+        "actual_mode": "deterministic",
+        "answer": "Roadmap page scope: offset 0, 1 of 1 commitments; evaluated at 2026-11-03T00:00:00+00:00. Current-state counts in this page: {\"cancelled\": 0, \"delivered\": 0, \"in_progress\": 0, \"late\": 0, \"on_time\": 0, \"overdue_unfinished\": 1, \"planned\": 1, \"reopened\": 0, \"submitted_for_review\": 0, \"total\": 1, \"unknown_delivery_timing\": 0}. Gross recorded captured funding, including refund/reversal-affected captures: 2000 USD minor units. Net eligible completed captured funding after conservative exclusions: 2000 USD minor units. Published reported spending: 1000 USD minor units. Funding minus reported expenditure: 1000 USD minor units. This calculated difference is not an independently verified cash or bank balance. A negative difference indicates a recorded funding gap, not its cause. The records do not establish why funds were spent or why funding is insufficient. [opendev:project:1:finances@sha256:b2b040e1701d8c896ec8b9b4f4677713443f42473a966ac5d67ae4bccdf5e641] Overdue commitment IDs in this page: [1]. Financial comparisons and development assertions are separate; correlation does not establish causation. Insufficient evidence for an expenditure trend or development-after-funding chronology: immutable financial time windows and per-capture funding dates are not exposed by these aggregate tools. Counts and lists cover only this page. Current statuses are evaluated at a UTC date; a supplied earlier timestamp does not replay historical state. Deadline revisions never erase the original missed commitment. History previews are bounded to 50 events per milestone. [opendev:project:1:roadmap:offset:0@sha256:c6c800a9f38ea18113b7f417907977be1ce667aff13db2ba06bd2e95ccccb85e] [opendev:project:1:finances@sha256:b2b040e1701d8c896ec8b9b4f4677713443f42473a966ac5d67ae4bccdf5e641]\nDelivery is a maintainer assertion, not independent verification. Closed issues and merged PRs do not certify delivery. These records do not establish causes of delay, dishonesty or misuse of funding. No completion percentage or trust score is inferred.",
+        "citations": [
+          "opendev:project:1:roadmap:offset:0@sha256:c6c800a9f38ea18113b7f417907977be1ce667aff13db2ba06bd2e95ccccb85e",
+          "opendev:project:1:finances@sha256:b2b040e1701d8c896ec8b9b4f4677713443f42473a966ac5d67ae4bccdf5e641"
+        ],
+        "source_facts": {
+          "counts/total": 1
+        }
+      }
+    },
+    {
+      "case": "tests/test_agent_development.py::test_development_evaluation[spending-trend-unknown]",
+      "outcome": "passed",
+      "reason": "All expected facts, citations, forbidden claims and status assertions passed.",
+      "actual_result": {
+        "provider": "deterministic",
+        "expected": {
+          "id": "spending-trend-unknown",
+          "kind": "spending_trend",
+          "seed": "funded",
+          "expected_facts": {
+            "counts/total": 1
+          },
+          "contains": [
+            "Insufficient evidence for an expenditure trend"
+          ],
+          "required_citations": [
+            "roadmap:offset:0",
+            "finances"
+          ],
+          "forbidden_claims": [
+            "committed fraud",
+            "maintainer is dishonest",
+            "abandoned repository",
+            "100% complete",
+            "trust score:",
+            "caused the delay"
+          ],
+          "expected_limitations": [
+            "maintainer assertion"
+          ],
+          "status": "insufficient_evidence"
+        },
+        "actual_status": "insufficient_evidence",
+        "actual_mode": "deterministic",
+        "answer": "Roadmap page scope: offset 0, 1 of 1 commitments; evaluated at 2026-11-03T00:00:00+00:00. Current-state counts in this page: {\"cancelled\": 0, \"delivered\": 0, \"in_progress\": 0, \"late\": 0, \"on_time\": 0, \"overdue_unfinished\": 1, \"planned\": 1, \"reopened\": 0, \"submitted_for_review\": 0, \"total\": 1, \"unknown_delivery_timing\": 0}. Gross recorded captured funding, including refund/reversal-affected captures: 2000 USD minor units. Net eligible completed captured funding after conservative exclusions: 2000 USD minor units. Published reported spending: 1000 USD minor units. Funding minus reported expenditure: 1000 USD minor units. This calculated difference is not an independently verified cash or bank balance. A negative difference indicates a recorded funding gap, not its cause. The records do not establish why funds were spent or why funding is insufficient. [opendev:project:1:finances@sha256:7310e4f70a529e1aa6ea8f2f4035f660edcd729bd291b5a57991aa806d8069f5] Overdue commitment IDs in this page: [1]. Financial comparisons and development assertions are separate; correlation does not establish causation. Insufficient evidence for an expenditure trend or development-after-funding chronology: immutable financial time windows and per-capture funding dates are not exposed by these aggregate tools. Counts and lists cover only this page. Current statuses are evaluated at a UTC date; a supplied earlier timestamp does not replay historical state. Deadline revisions never erase the original missed commitment. History previews are bounded to 50 events per milestone. [opendev:project:1:roadmap:offset:0@sha256:ed411423245cc6e1a8561dfd43f98b6dfa9fa860629bc1306f441304d27f3ed6] [opendev:project:1:finances@sha256:7310e4f70a529e1aa6ea8f2f4035f660edcd729bd291b5a57991aa806d8069f5]\nDelivery is a maintainer assertion, not independent verification. Closed issues and merged PRs do not certify delivery. These records do not establish causes of delay, dishonesty or misuse of funding. No completion percentage or trust score is inferred.",
+        "citations": [
+          "opendev:project:1:roadmap:offset:0@sha256:ed411423245cc6e1a8561dfd43f98b6dfa9fa860629bc1306f441304d27f3ed6",
+          "opendev:project:1:finances@sha256:7310e4f70a529e1aa6ea8f2f4035f660edcd729bd291b5a57991aa806d8069f5"
+        ],
+        "source_facts": {
+          "counts/total": 1
+        }
+      }
+    },
+    {
+      "case": "tests/test_agent_development.py::test_development_evaluation[hostile-github-text]",
+      "outcome": "passed",
+      "reason": "All expected facts, citations, forbidden claims and status assertions passed.",
+      "actual_result": {
+        "provider": "deterministic",
+        "expected": {
+          "id": "hostile-github-text",
+          "kind": "github_activity",
+          "seed": "hostile",
+          "expected_facts": {
+            "activity/counts/issues_open": 1
+          },
+          "contains": [
+            "Retained GitHub snapshot counts"
+          ],
+          "required_citations": [
+            "activity:offset:0"
+          ],
+          "forbidden_claims": [
+            "committed fraud",
+            "maintainer is dishonest",
+            "abandoned repository",
+            "100% complete",
+            "trust score:",
+            "caused the delay"
+          ],
+          "expected_limitations": [
+            "sampled"
+          ],
+          "status": "answered"
+        },
+        "actual_status": "answered",
+        "actual_mode": "deterministic",
+        "answer": "Retained GitHub snapshot counts: {\"issues_closed\": 0, \"issues_open\": 1, \"pull_requests_closed\": 1, \"pull_requests_merged\": 1, \"pull_requests_open\": 0}. Available sampled commits: 1; GitHub milestones in this page: 1. Last successful synchronization: 2026-11-02T23:00:00+00:00; stale: False at evaluation 2026-11-03T00:00:00+00:00 (None means the available snapshot postdates evaluation). Closed PR counts include merged PRs; these are not disjoint quantities. Initial/incremental collections are bounded, commit history is sampled, deleted records can remain and unlinked activity need not represent funded commitments. [opendev:github_repository:1:activity:offset:0@sha256:008a01ae7abd66af423ba495c803dda0a6b810483efba67033e3380862e5d99a]\nDelivery is a maintainer assertion, not independent verification. Closed issues and merged PRs do not certify delivery. These records do not establish causes of delay, dishonesty or misuse of funding. No completion percentage or trust score is inferred.",
+        "citations": [
+          "opendev:github_repository:1:activity:offset:0@sha256:008a01ae7abd66af423ba495c803dda0a6b810483efba67033e3380862e5d99a"
+        ],
+        "source_facts": {
+          "activity/counts/issues_open": 1
+        }
+      }
+    },
+    {
+      "case": "tests/test_agent_financial.py::test_evaluation_dataset[fully-funded]",
+      "outcome": "passed",
+      "reason": "All expected facts, citations, forbidden claims and status assertions passed.",
+      "actual_result": {
+        "provider": "deterministic",
+        "expected": {
+          "id": "fully-funded",
+          "seed": "full",
+          "question": "What is the funding reconciliation?",
+          "facts": {
+            "net_recorded_funding_cents": 10000,
+            "funding_minus_reported_expenditure_cents": 9000
+          },
+          "required_claims": [
+            "finances"
+          ],
+          "contains": [
+            "10000 USD minor units",
+            "9000 USD minor units"
+          ],
+          "status": "answered"
+        },
+        "actual_status": "answered",
+        "actual_mode": "deterministic",
+        "answer": "Gross recorded captured funding, including refund/reversal-affected captures: 10000 USD minor units. Net eligible completed captured funding after conservative exclusions: 10000 USD minor units. Published reported spending: 1000 USD minor units. Funding minus reported expenditure: 9000 USD minor units. This calculated difference is not an independently verified cash or bank balance. A negative difference indicates a recorded funding gap, not its cause. The records do not establish why funds were spent or why funding is insufficient. [opendev:project:1:finances@sha256:284c72386162fae294f344fd1b59b33f05d88f3cc63560bd505e3c58a61f4d10]",
+        "citations": [
+          "opendev:project:1:finances@sha256:284c72386162fae294f344fd1b59b33f05d88f3cc63560bd505e3c58a61f4d10"
+        ],
+        "source_facts": [
+          {
+            "finances": {
+              "project_id": 1,
+              "currency": "USD",
+              "audience": "public_evidence_only",
+              "gross_completed_funding_cents": 10000,
+              "refund_excluded_cents": 0,
+              "reversal_excluded_cents": 0,
+              "exact_refund_total_cents": null,
+              "net_recorded_funding_cents": 10000,
+              "published_reported_spending_cents": 1000,
+              "funding_minus_reported_expenditure_cents": 9000,
+              "published_expense_count": 1,
+              "expenses_with_documents_count": 0,
+              "expenses_with_documents_cents": 0,
+              "expenses_without_documents_count": 1,
+              "expenses_without_documents_cents": 1000,
+              "unresolved_expenses_count": null,
+              "unresolved_discrepancy_count": null,
+              "independently_payment_matched_cents": 0,
+              "evidence_coverage": [
+                {
+                  "classification": "self_reported",
+                  "expense_count": 1,
+                  "amount_cents": 1000
+                }
+              ],
+              "budget_variance": [
+                {
+                  "category": "development",
+                  "allocated_cents": 10000,
+                  "reported_spending_cents": 1000,
+                  "remaining_cents": 9000,
+                  "overspend_cents": 0
+                }
+              ],
+              "calculated_at": "2026-11-03T08:44:40.803896+00:00",
+              "notes": [
+                "Sandbox capture records are not a verified bank balance. Funding minus reported expenses is only a calculated difference.",
+                "Refund/reversal exclusions use original contribution amounts. Partial refund amounts are not stored; exact refund totals are unavailable.",
+                "Document/OCR support and human review do not certify vendor payment. Independently payment-matched evidence is not assigned.",
+                "Public evidence coverage includes only approved published redactions; private findings and reviewer notes are withheld."
+              ]
+            }
+          }
+        ]
+      }
+    },
+    {
+      "case": "tests/test_agent_financial.py::test_evaluation_dataset[partially-funded]",
+      "outcome": "passed",
+      "reason": "All expected facts, citations, forbidden claims and status assertions passed.",
+      "actual_result": {
+        "provider": "deterministic",
+        "expected": {
+          "id": "partially-funded",
+          "seed": "partial",
+          "question": "What is the funding reconciliation?",
+          "facts": {
+            "net_recorded_funding_cents": 2000,
+            "funding_minus_reported_expenditure_cents": 1000
+          },
+          "required_claims": [
+            "finances"
+          ],
+          "contains": [
+            "2000 USD minor units"
+          ],
+          "status": "answered"
+        },
+        "actual_status": "answered",
+        "actual_mode": "deterministic",
+        "answer": "Gross recorded captured funding, including refund/reversal-affected captures: 2000 USD minor units. Net eligible completed captured funding after conservative exclusions: 2000 USD minor units. Published reported spending: 1000 USD minor units. Funding minus reported expenditure: 1000 USD minor units. This calculated difference is not an independently verified cash or bank balance. A negative difference indicates a recorded funding gap, not its cause. The records do not establish why funds were spent or why funding is insufficient. [opendev:project:1:finances@sha256:07c9e7ba1d3790927295a7db1a043196e4d005478b25de7d75538f2fd8019f98]",
+        "citations": [
+          "opendev:project:1:finances@sha256:07c9e7ba1d3790927295a7db1a043196e4d005478b25de7d75538f2fd8019f98"
+        ],
+        "source_facts": [
+          {
+            "finances": {
+              "project_id": 1,
+              "currency": "USD",
+              "audience": "public_evidence_only",
+              "gross_completed_funding_cents": 2000,
+              "refund_excluded_cents": 0,
+              "reversal_excluded_cents": 0,
+              "exact_refund_total_cents": null,
+              "net_recorded_funding_cents": 2000,
+              "published_reported_spending_cents": 1000,
+              "funding_minus_reported_expenditure_cents": 1000,
+              "published_expense_count": 1,
+              "expenses_with_documents_count": 0,
+              "expenses_with_documents_cents": 0,
+              "expenses_without_documents_count": 1,
+              "expenses_without_documents_cents": 1000,
+              "unresolved_expenses_count": null,
+              "unresolved_discrepancy_count": null,
+              "independently_payment_matched_cents": 0,
+              "evidence_coverage": [
+                {
+                  "classification": "self_reported",
+                  "expense_count": 1,
+                  "amount_cents": 1000
+                }
+              ],
+              "budget_variance": [
+                {
+                  "category": "development",
+                  "allocated_cents": 10000,
+                  "reported_spending_cents": 1000,
+                  "remaining_cents": 9000,
+                  "overspend_cents": 0
+                }
+              ],
+              "calculated_at": "2026-11-03T08:44:41.461135+00:00",
+              "notes": [
+                "Sandbox capture records are not a verified bank balance. Funding minus reported expenses is only a calculated difference.",
+                "Refund/reversal exclusions use original contribution amounts. Partial refund amounts are not stored; exact refund totals are unavailable.",
+                "Document/OCR support and human review do not certify vendor payment. Independently payment-matched evidence is not assigned.",
+                "Public evidence coverage includes only approved published redactions; private findings and reviewer notes are withheld."
+              ]
+            }
+          }
+        ]
+      }
+    },
+    {
+      "case": "tests/test_agent_financial.py::test_evaluation_dataset[no-contributions]",
+      "outcome": "passed",
+      "reason": "All expected facts, citations, forbidden claims and status assertions passed.",
+      "actual_result": {
+        "provider": "deterministic",
+        "expected": {
+          "id": "no-contributions",
+          "seed": "none",
+          "question": "How much funding has the project received?",
+          "facts": {
+            "net_recorded_funding_cents": 0
+          },
+          "required_claims": [
+            "finances"
+          ],
+          "contains": [
+            "0 USD minor units"
+          ],
+          "status": "answered"
+        },
+        "actual_status": "answered",
+        "actual_mode": "deterministic",
+        "answer": "Net recorded Sandbox funding: 0 USD minor units. This is not an available bank balance.",
+        "citations": [
+          "opendev:project:1:finances@sha256:be88c36c0a7d314509fb06124605db9b3f7ed96afca878b28aec23934a3770e7"
+        ],
+        "source_facts": [
+          {
+            "finances": {
+              "project_id": 1,
+              "currency": "USD",
+              "audience": "public_evidence_only",
+              "gross_completed_funding_cents": 0,
+              "refund_excluded_cents": 0,
+              "reversal_excluded_cents": 0,
+              "exact_refund_total_cents": null,
+              "net_recorded_funding_cents": 0,
+              "published_reported_spending_cents": 1000,
+              "funding_minus_reported_expenditure_cents": -1000,
+              "published_expense_count": 1,
+              "expenses_with_documents_count": 0,
+              "expenses_with_documents_cents": 0,
+              "expenses_without_documents_count": 1,
+              "expenses_without_documents_cents": 1000,
+              "unresolved_expenses_count": null,
+              "unresolved_discrepancy_count": null,
+              "independently_payment_matched_cents": 0,
+              "evidence_coverage": [
+                {
+                  "classification": "self_reported",
+                  "expense_count": 1,
+                  "amount_cents": 1000
+                }
+              ],
+              "budget_variance": [
+                {
+                  "category": "development",
+                  "allocated_cents": 10000,
+                  "reported_spending_cents": 1000,
+                  "remaining_cents": 9000,
+                  "overspend_cents": 0
+                }
+              ],
+              "calculated_at": "2026-11-03T08:44:42.207470+00:00",
+              "notes": [
+                "Sandbox capture records are not a verified bank balance. Funding minus reported expenses is only a calculated difference.",
+                "Refund/reversal exclusions use original contribution amounts. Partial refund amounts are not stored; exact refund totals are unavailable.",
+                "Document/OCR support and human review do not certify vendor payment. Independently payment-matched evidence is not assigned.",
+                "Public evidence coverage includes only approved published redactions; private findings and reviewer notes are withheld."
+              ]
+            }
+          }
+        ]
+      }
+    },
+    {
+      "case": "tests/test_agent_financial.py::test_evaluation_dataset[reported-expenses]",
+      "outcome": "passed",
+      "reason": "All expected facts, citations, forbidden claims and status assertions passed.",
+      "actual_result": {
+        "provider": "deterministic",
+        "expected": {
+          "id": "reported-expenses",
+          "seed": "none",
+          "question": "How much has the maintainer reported spending?",
+          "facts": {
+            "published_reported_spending_cents": 1000
+          },
+          "required_claims": [
+            "finances"
+          ],
+          "contains": [
+            "1000 USD minor units"
+          ],
+          "status": "answered"
+        },
+        "actual_status": "answered",
+        "actual_mode": "deterministic",
+        "answer": "Published reported spending: 1000 USD minor units. Reports do not verify vendor payment.",
+        "citations": [
+          "opendev:project:1:finances@sha256:77c135d191d43fb31fc60c9f2f965faacaef1eb6280e6eb420bead9ef5ca9e51"
+        ],
+        "source_facts": [
+          {
+            "finances": {
+              "project_id": 1,
+              "currency": "USD",
+              "audience": "public_evidence_only",
+              "gross_completed_funding_cents": 0,
+              "refund_excluded_cents": 0,
+              "reversal_excluded_cents": 0,
+              "exact_refund_total_cents": null,
+              "net_recorded_funding_cents": 0,
+              "published_reported_spending_cents": 1000,
+              "funding_minus_reported_expenditure_cents": -1000,
+              "published_expense_count": 1,
+              "expenses_with_documents_count": 0,
+              "expenses_with_documents_cents": 0,
+              "expenses_without_documents_count": 1,
+              "expenses_without_documents_cents": 1000,
+              "unresolved_expenses_count": null,
+              "unresolved_discrepancy_count": null,
+              "independently_payment_matched_cents": 0,
+              "evidence_coverage": [
+                {
+                  "classification": "self_reported",
+                  "expense_count": 1,
+                  "amount_cents": 1000
+                }
+              ],
+              "budget_variance": [
+                {
+                  "category": "development",
+                  "allocated_cents": 10000,
+                  "reported_spending_cents": 1000,
+                  "remaining_cents": 9000,
+                  "overspend_cents": 0
+                }
+              ],
+              "calculated_at": "2026-11-03T08:44:42.974764+00:00",
+              "notes": [
+                "Sandbox capture records are not a verified bank balance. Funding minus reported expenses is only a calculated difference.",
+                "Refund/reversal exclusions use original contribution amounts. Partial refund amounts are not stored; exact refund totals are unavailable.",
+                "Document/OCR support and human review do not certify vendor payment. Independently payment-matched evidence is not assigned.",
+                "Public evidence coverage includes only approved published redactions; private findings and reviewer notes are withheld."
+              ]
+            }
+          }
+        ]
+      }
+    },
+    {
+      "case": "tests/test_agent_financial.py::test_evaluation_dataset[no-public-support]",
+      "outcome": "passed",
+      "reason": "All expected facts, citations, forbidden claims and status assertions passed.",
+      "actual_result": {
+        "provider": "deterministic",
+        "expected": {
+          "id": "no-public-support",
+          "seed": "none",
+          "question": "Which published expenses lack supporting documents?",
+          "facts": {
+            "expenses_without_documents_cents": 1000,
+            "expenses_without_documents_count": 1
+          },
+          "required_claims": [
+            "finances",
+            "expenses:offset:0"
+          ],
+          "contains": [
+            "without approved public document support: 1000",
+            "retrieved pages"
+          ],
+          "status": "answered"
+        },
+        "actual_status": "answered",
+        "actual_mode": "deterministic",
+        "answer": "Published reported spending with approved public document support: 0 USD minor units across 0 expenses. Published reported spending without approved public document support: 1000 USD minor units across 1 expenses. Each expense is counted once regardless of document count or extraction attempts. No approved public support does not mean private supporting documents do not exist. Expense IDs without approved public support in the retrieved pages: [1]. This list covers only retrieved pages; the amounts and counts above cover the full published snapshot. [opendev:project:1:finances@sha256:ccb944caaae470df630206f99f7ee97b63ca0c78c1134a869c1552682994171a] [opendev:project:1:expenses:offset:0@sha256:b74a6ba8a3ef0031c4db3bf0589678a062484687d3e0561ee6668c8ccd1e2d33]",
+        "citations": [
+          "opendev:project:1:finances@sha256:ccb944caaae470df630206f99f7ee97b63ca0c78c1134a869c1552682994171a",
+          "opendev:project:1:expenses:offset:0@sha256:b74a6ba8a3ef0031c4db3bf0589678a062484687d3e0561ee6668c8ccd1e2d33"
+        ],
+        "source_facts": [
+          {
+            "finances": {
+              "project_id": 1,
+              "currency": "USD",
+              "audience": "public_evidence_only",
+              "gross_completed_funding_cents": 0,
+              "refund_excluded_cents": 0,
+              "reversal_excluded_cents": 0,
+              "exact_refund_total_cents": null,
+              "net_recorded_funding_cents": 0,
+              "published_reported_spending_cents": 1000,
+              "funding_minus_reported_expenditure_cents": -1000,
+              "published_expense_count": 1,
+              "expenses_with_documents_count": 0,
+              "expenses_with_documents_cents": 0,
+              "expenses_without_documents_count": 1,
+              "expenses_without_documents_cents": 1000,
+              "unresolved_expenses_count": null,
+              "unresolved_discrepancy_count": null,
+              "independently_payment_matched_cents": 0,
+              "evidence_coverage": [
+                {
+                  "classification": "self_reported",
+                  "expense_count": 1,
+                  "amount_cents": 1000
+                }
+              ],
+              "budget_variance": [
+                {
+                  "category": "development",
+                  "allocated_cents": 10000,
+                  "reported_spending_cents": 1000,
+                  "remaining_cents": 9000,
+                  "overspend_cents": 0
+                }
+              ],
+              "calculated_at": "2026-11-03T08:44:43.707905+00:00",
+              "notes": [
+                "Sandbox capture records are not a verified bank balance. Funding minus reported expenses is only a calculated difference.",
+                "Refund/reversal exclusions use original contribution amounts. Partial refund amounts are not stored; exact refund totals are unavailable.",
+                "Document/OCR support and human review do not certify vendor payment. Independently payment-matched evidence is not assigned.",
+                "Public evidence coverage includes only approved published redactions; private findings and reviewer notes are withheld."
+              ]
+            }
+          }
+        ]
+      }
+    },
+    {
+      "case": "tests/test_agent_financial.py::test_evaluation_dataset[multiple-documents]",
+      "outcome": "passed",
+      "reason": "All expected facts, citations, forbidden claims and status assertions passed.",
+      "actual_result": {
+        "provider": "deterministic",
+        "expected": {
+          "id": "multiple-documents",
+          "seed": "documents",
+          "question": "Which published expenses lack supporting documents?",
+          "facts": {
+            "expenses_with_documents_cents": 1000,
+            "expenses_with_documents_count": 1,
+            "expenses_without_documents_count": 0
+          },
+          "required_claims": [
+            "finances",
+            "expenses:offset:0"
+          ],
+          "contains": [
+            "across 1 expenses",
+            "counted once"
+          ],
+          "status": "answered"
+        },
+        "actual_status": "answered",
+        "actual_mode": "deterministic",
+        "answer": "Published reported spending with approved public document support: 1000 USD minor units across 1 expenses. Published reported spending without approved public document support: 0 USD minor units across 0 expenses. Each expense is counted once regardless of document count or extraction attempts. No approved public support does not mean private supporting documents do not exist. Expense IDs without approved public support in the retrieved pages: []. This list covers only retrieved pages; the amounts and counts above cover the full published snapshot. [opendev:project:1:finances@sha256:c5c7d2eb88bf524135bf8ea09fed45fa00b0c6fbca7c9103d6bea4f7cb6adcfc] [opendev:project:1:expenses:offset:0@sha256:9f38d914562411df7f27595230461ff43e8421af545f2c2fef000a98419a8ea8]",
+        "citations": [
+          "opendev:project:1:finances@sha256:c5c7d2eb88bf524135bf8ea09fed45fa00b0c6fbca7c9103d6bea4f7cb6adcfc",
+          "opendev:project:1:expenses:offset:0@sha256:9f38d914562411df7f27595230461ff43e8421af545f2c2fef000a98419a8ea8"
+        ],
+        "source_facts": [
+          {
+            "finances": {
+              "project_id": 1,
+              "currency": "USD",
+              "audience": "public_evidence_only",
+              "gross_completed_funding_cents": 0,
+              "refund_excluded_cents": 0,
+              "reversal_excluded_cents": 0,
+              "exact_refund_total_cents": null,
+              "net_recorded_funding_cents": 0,
+              "published_reported_spending_cents": 1000,
+              "funding_minus_reported_expenditure_cents": -1000,
+              "published_expense_count": 1,
+              "expenses_with_documents_count": 1,
+              "expenses_with_documents_cents": 1000,
+              "expenses_without_documents_count": 0,
+              "expenses_without_documents_cents": 0,
+              "unresolved_expenses_count": null,
+              "unresolved_discrepancy_count": null,
+              "independently_payment_matched_cents": 0,
+              "evidence_coverage": [
+                {
+                  "classification": "document_attached",
+                  "expense_count": 1,
+                  "amount_cents": 1000
+                }
+              ],
+              "budget_variance": [
+                {
+                  "category": "development",
+                  "allocated_cents": 10000,
+                  "reported_spending_cents": 1000,
+                  "remaining_cents": 9000,
+                  "overspend_cents": 0
+                }
+              ],
+              "calculated_at": "2026-11-03T08:44:44.412566+00:00",
+              "notes": [
+                "Sandbox capture records are not a verified bank balance. Funding minus reported expenses is only a calculated difference.",
+                "Refund/reversal exclusions use original contribution amounts. Partial refund amounts are not stored; exact refund totals are unavailable.",
+                "Document/OCR support and human review do not certify vendor payment. Independently payment-matched evidence is not assigned.",
+                "Public evidence coverage includes only approved published redactions; private findings and reviewer notes are withheld."
+              ]
+            }
+          }
+        ]
+      }
+    },
+    {
+      "case": "tests/test_agent_financial.py::test_evaluation_dataset[over-budget]",
+      "outcome": "passed",
+      "reason": "All expected facts, citations, forbidden claims and status assertions passed.",
+      "actual_result": {
+        "provider": "deterministic",
+        "expected": {
+          "id": "over-budget",
+          "seed": "overrun",
+          "question": "Which budget categories are over budget?",
+          "facts": {
+            "published_reported_spending_cents": 13000
+          },
+          "required_claims": [
+            "finances"
+          ],
+          "contains": [
+            "overrun 3000 USD minor units"
+          ],
+          "status": "answered"
+        },
+        "actual_status": "answered",
+        "actual_mode": "deterministic",
+        "answer": "Category \"development\": allocated 10000 USD minor units; published reported spending 13000 USD minor units; budget remaining -3000 USD minor units; overrun 3000 USD minor units. Budget comparisons describe reported expenses, not verified vendor payments or explanations of spending choices. [opendev:project:1:finances@sha256:edc0bfe940c807e6391e7853d720f901e62dd820725db1b82b004720ec376eae]",
+        "citations": [
+          "opendev:project:1:finances@sha256:edc0bfe940c807e6391e7853d720f901e62dd820725db1b82b004720ec376eae"
+        ],
+        "source_facts": [
+          {
+            "finances": {
+              "project_id": 1,
+              "currency": "USD",
+              "audience": "public_evidence_only",
+              "gross_completed_funding_cents": 0,
+              "refund_excluded_cents": 0,
+              "reversal_excluded_cents": 0,
+              "exact_refund_total_cents": null,
+              "net_recorded_funding_cents": 0,
+              "published_reported_spending_cents": 13000,
+              "funding_minus_reported_expenditure_cents": -13000,
+              "published_expense_count": 2,
+              "expenses_with_documents_count": 0,
+              "expenses_with_documents_cents": 0,
+              "expenses_without_documents_count": 2,
+              "expenses_without_documents_cents": 13000,
+              "unresolved_expenses_count": null,
+              "unresolved_discrepancy_count": null,
+              "independently_payment_matched_cents": 0,
+              "evidence_coverage": [
+                {
+                  "classification": "self_reported",
+                  "expense_count": 2,
+                  "amount_cents": 13000
+                }
+              ],
+              "budget_variance": [
+                {
+                  "category": "development",
+                  "allocated_cents": 10000,
+                  "reported_spending_cents": 13000,
+                  "remaining_cents": -3000,
+                  "overspend_cents": 3000
+                }
+              ],
+              "calculated_at": "2026-11-03T08:44:45.135661+00:00",
+              "notes": [
+                "Sandbox capture records are not a verified bank balance. Funding minus reported expenses is only a calculated difference.",
+                "Refund/reversal exclusions use original contribution amounts. Partial refund amounts are not stored; exact refund totals are unavailable.",
+                "Document/OCR support and human review do not certify vendor payment. Independently payment-matched evidence is not assigned.",
+                "Public evidence coverage includes only approved published redactions; private findings and reviewer notes are withheld."
+              ]
+            }
+          }
+        ]
+      }
+    },
+    {
+      "case": "tests/test_agent_financial.py::test_evaluation_dataset[under-budget]",
+      "outcome": "passed",
+      "reason": "All expected facts, citations, forbidden claims and status assertions passed.",
+      "actual_result": {
+        "provider": "deterministic",
+        "expected": {
+          "id": "under-budget",
+          "seed": "none",
+          "question": "Which budget categories are over budget?",
+          "facts": {
+            "published_reported_spending_cents": 1000
+          },
+          "required_claims": [
+            "finances"
+          ],
+          "contains": [
+            "budget remaining 9000 USD minor units",
+            "overrun 0 USD minor units"
+          ],
+          "status": "answered"
+        },
+        "actual_status": "answered",
+        "actual_mode": "deterministic",
+        "answer": "Category \"development\": allocated 10000 USD minor units; published reported spending 1000 USD minor units; budget remaining 9000 USD minor units; overrun 0 USD minor units. Budget comparisons describe reported expenses, not verified vendor payments or explanations of spending choices. [opendev:project:1:finances@sha256:3cfa2b124373fc373d7eeea0339079f092ec8d2a53519e96a9e9e6f203f10cec]",
+        "citations": [
+          "opendev:project:1:finances@sha256:3cfa2b124373fc373d7eeea0339079f092ec8d2a53519e96a9e9e6f203f10cec"
+        ],
+        "source_facts": [
+          {
+            "finances": {
+              "project_id": 1,
+              "currency": "USD",
+              "audience": "public_evidence_only",
+              "gross_completed_funding_cents": 0,
+              "refund_excluded_cents": 0,
+              "reversal_excluded_cents": 0,
+              "exact_refund_total_cents": null,
+              "net_recorded_funding_cents": 0,
+              "published_reported_spending_cents": 1000,
+              "funding_minus_reported_expenditure_cents": -1000,
+              "published_expense_count": 1,
+              "expenses_with_documents_count": 0,
+              "expenses_with_documents_cents": 0,
+              "expenses_without_documents_count": 1,
+              "expenses_without_documents_cents": 1000,
+              "unresolved_expenses_count": null,
+              "unresolved_discrepancy_count": null,
+              "independently_payment_matched_cents": 0,
+              "evidence_coverage": [
+                {
+                  "classification": "self_reported",
+                  "expense_count": 1,
+                  "amount_cents": 1000
+                }
+              ],
+              "budget_variance": [
+                {
+                  "category": "development",
+                  "allocated_cents": 10000,
+                  "reported_spending_cents": 1000,
+                  "remaining_cents": 9000,
+                  "overspend_cents": 0
+                }
+              ],
+              "calculated_at": "2026-11-03T08:44:45.888731+00:00",
+              "notes": [
+                "Sandbox capture records are not a verified bank balance. Funding minus reported expenses is only a calculated difference.",
+                "Refund/reversal exclusions use original contribution amounts. Partial refund amounts are not stored; exact refund totals are unavailable.",
+                "Document/OCR support and human review do not certify vendor payment. Independently payment-matched evidence is not assigned.",
+                "Public evidence coverage includes only approved published redactions; private findings and reviewer notes are withheld."
+              ]
+            }
+          }
+        ]
+      }
+    },
+    {
+      "case": "tests/test_agent_financial.py::test_evaluation_dataset[public-findings]",
+      "outcome": "passed",
+      "reason": "All expected facts, citations, forbidden claims and status assertions passed.",
+      "actual_result": {
+        "provider": "deterministic",
+        "expected": {
+          "id": "public-findings",
+          "seed": "overrun",
+          "question": "What discrepancies have been publicly disclosed?",
+          "facts": {
+            "published_reported_spending_cents": 13000
+          },
+          "required_claims": [
+            "finances"
+          ],
+          "contains": [
+            "findings: 1",
+            "development",
+            "not a count of all discrepancies"
+          ],
+          "status": "answered"
+        },
+        "actual_status": "answered",
+        "actual_mode": "deterministic",
+        "answer": "Public unresolved category budget-overrun findings: 1. Disclosed categories: [\"development\"]. These are comparisons of published category totals, not receipt-level allegations. Private receipt findings and human-review notes are not published; this is not a count of all discrepancies and does not establish fraud. [opendev:project:1:finances@sha256:63d43861c36a2355d731321a336570eb47311f143b589b672769832b45b6b7ee]",
+        "citations": [
+          "opendev:project:1:finances@sha256:63d43861c36a2355d731321a336570eb47311f143b589b672769832b45b6b7ee"
+        ],
+        "source_facts": [
+          {
+            "finances": {
+              "project_id": 1,
+              "currency": "USD",
+              "audience": "public_evidence_only",
+              "gross_completed_funding_cents": 0,
+              "refund_excluded_cents": 0,
+              "reversal_excluded_cents": 0,
+              "exact_refund_total_cents": null,
+              "net_recorded_funding_cents": 0,
+              "published_reported_spending_cents": 13000,
+              "funding_minus_reported_expenditure_cents": -13000,
+              "published_expense_count": 2,
+              "expenses_with_documents_count": 0,
+              "expenses_with_documents_cents": 0,
+              "expenses_without_documents_count": 2,
+              "expenses_without_documents_cents": 13000,
+              "unresolved_expenses_count": null,
+              "unresolved_discrepancy_count": null,
+              "independently_payment_matched_cents": 0,
+              "evidence_coverage": [
+                {
+                  "classification": "self_reported",
+                  "expense_count": 2,
+                  "amount_cents": 13000
+                }
+              ],
+              "budget_variance": [
+                {
+                  "category": "development",
+                  "allocated_cents": 10000,
+                  "reported_spending_cents": 13000,
+                  "remaining_cents": -3000,
+                  "overspend_cents": 3000
+                }
+              ],
+              "calculated_at": "2026-11-03T08:44:46.595010+00:00",
+              "notes": [
+                "Sandbox capture records are not a verified bank balance. Funding minus reported expenses is only a calculated difference.",
+                "Refund/reversal exclusions use original contribution amounts. Partial refund amounts are not stored; exact refund totals are unavailable.",
+                "Document/OCR support and human review do not certify vendor payment. Independently payment-matched evidence is not assigned.",
+                "Public evidence coverage includes only approved published redactions; private findings and reviewer notes are withheld."
+              ]
+            }
+          }
+        ]
+      }
+    },
+    {
+      "case": "tests/test_agent_financial.py::test_evaluation_dataset[private-findings-withheld]",
+      "outcome": "passed",
+      "reason": "All expected facts, citations, forbidden claims and status assertions passed.",
+      "actual_result": {
+        "provider": "deterministic",
+        "expected": {
+          "id": "private-findings-withheld",
+          "seed": "private",
+          "question": "What discrepancies have been publicly disclosed?",
+          "facts": {
+            "published_reported_spending_cents": 1000
+          },
+          "required_claims": [
+            "finances"
+          ],
+          "contains": [
+            "findings: 0",
+            "not a count of all discrepancies"
+          ],
+          "status": "answered"
+        },
+        "actual_status": "answered",
+        "actual_mode": "deterministic",
+        "answer": "Public unresolved category budget-overrun findings: 0. Disclosed categories: []. These are comparisons of published category totals, not receipt-level allegations. Private receipt findings and human-review notes are not published; this is not a count of all discrepancies and does not establish fraud. [opendev:project:1:finances@sha256:bd12ce9b8aed08ba8f7f733c1e46f954eddcd3e651fc9266141986e2ea4e9fe3]",
+        "citations": [
+          "opendev:project:1:finances@sha256:bd12ce9b8aed08ba8f7f733c1e46f954eddcd3e651fc9266141986e2ea4e9fe3"
+        ],
+        "source_facts": [
+          {
+            "finances": {
+              "project_id": 1,
+              "currency": "USD",
+              "audience": "public_evidence_only",
+              "gross_completed_funding_cents": 0,
+              "refund_excluded_cents": 0,
+              "reversal_excluded_cents": 0,
+              "exact_refund_total_cents": null,
+              "net_recorded_funding_cents": 0,
+              "published_reported_spending_cents": 1000,
+              "funding_minus_reported_expenditure_cents": -1000,
+              "published_expense_count": 1,
+              "expenses_with_documents_count": 0,
+              "expenses_with_documents_cents": 0,
+              "expenses_without_documents_count": 1,
+              "expenses_without_documents_cents": 1000,
+              "unresolved_expenses_count": null,
+              "unresolved_discrepancy_count": null,
+              "independently_payment_matched_cents": 0,
+              "evidence_coverage": [
+                {
+                  "classification": "self_reported",
+                  "expense_count": 1,
+                  "amount_cents": 1000
+                }
+              ],
+              "budget_variance": [
+                {
+                  "category": "development",
+                  "allocated_cents": 10000,
+                  "reported_spending_cents": 1000,
+                  "remaining_cents": 9000,
+                  "overspend_cents": 0
+                }
+              ],
+              "calculated_at": "2026-11-03T08:44:47.305990+00:00",
+              "notes": [
+                "Sandbox capture records are not a verified bank balance. Funding minus reported expenses is only a calculated difference.",
+                "Refund/reversal exclusions use original contribution amounts. Partial refund amounts are not stored; exact refund totals are unavailable.",
+                "Document/OCR support and human review do not certify vendor payment. Independently payment-matched evidence is not assigned.",
+                "Public evidence coverage includes only approved published redactions; private findings and reviewer notes are withheld."
+              ]
+            }
+          }
+        ]
+      }
+    },
+    {
+      "case": "tests/test_agent_financial.py::test_evaluation_dataset[refund-and-reversal]",
+      "outcome": "passed",
+      "reason": "All expected facts, citations, forbidden claims and status assertions passed.",
+      "actual_result": {
+        "provider": "deterministic",
+        "expected": {
+          "id": "refund-and-reversal",
+          "seed": "refunds",
+          "question": "How much has been refunded?",
+          "facts": {
+            "gross_completed_funding_cents": 9000,
+            "refund_excluded_cents": 3000,
+            "reversal_excluded_cents": 4000,
+            "net_recorded_funding_cents": 2000
+          },
+          "required_claims": [
+            "finances"
+          ],
+          "contains": [
+            "3000 USD minor units",
+            "4000 USD minor units",
+            "exact amount refunded is unavailable",
+            "partial refund"
+          ],
+          "status": "answered"
+        },
+        "actual_status": "answered",
+        "actual_mode": "deterministic",
+        "answer": "Original capture amounts excluded for refund-affected contributions: 3000 USD minor units. Original capture amounts excluded for reversal-affected contributions: 4000 USD minor units. The exact amount refunded is unavailable. A partial refund conservatively excludes the entire affected capture; exclusions are not exact cash refund totals. [opendev:project:1:finances@sha256:dacc9bf36e3b9ebbf5ab817ba533c47f5fd38b561204285bb572e07deabb28bb]",
+        "citations": [
+          "opendev:project:1:finances@sha256:dacc9bf36e3b9ebbf5ab817ba533c47f5fd38b561204285bb572e07deabb28bb"
+        ],
+        "source_facts": [
+          {
+            "finances": {
+              "project_id": 1,
+              "currency": "USD",
+              "audience": "public_evidence_only",
+              "gross_completed_funding_cents": 9000,
+              "refund_excluded_cents": 3000,
+              "reversal_excluded_cents": 4000,
+              "exact_refund_total_cents": null,
+              "net_recorded_funding_cents": 2000,
+              "published_reported_spending_cents": 1000,
+              "funding_minus_reported_expenditure_cents": 1000,
+              "published_expense_count": 1,
+              "expenses_with_documents_count": 0,
+              "expenses_with_documents_cents": 0,
+              "expenses_without_documents_count": 1,
+              "expenses_without_documents_cents": 1000,
+              "unresolved_expenses_count": null,
+              "unresolved_discrepancy_count": null,
+              "independently_payment_matched_cents": 0,
+              "evidence_coverage": [
+                {
+                  "classification": "self_reported",
+                  "expense_count": 1,
+                  "amount_cents": 1000
+                }
+              ],
+              "budget_variance": [
+                {
+                  "category": "development",
+                  "allocated_cents": 10000,
+                  "reported_spending_cents": 1000,
+                  "remaining_cents": 9000,
+                  "overspend_cents": 0
+                }
+              ],
+              "calculated_at": "2026-11-03T08:44:47.949765+00:00",
+              "notes": [
+                "Sandbox capture records are not a verified bank balance. Funding minus reported expenses is only a calculated difference.",
+                "Refund/reversal exclusions use original contribution amounts. Partial refund amounts are not stored; exact refund totals are unavailable.",
+                "Document/OCR support and human review do not certify vendor payment. Independently payment-matched evidence is not assigned.",
+                "Public evidence coverage includes only approved published redactions; private findings and reviewer notes are withheld."
+              ]
+            }
+          }
+        ]
+      }
+    },
+    {
+      "case": "tests/test_agent_financial.py::test_evaluation_dataset[receipt-consistency-unknown]",
+      "outcome": "passed",
+      "reason": "All expected facts, citations, forbidden claims and status assertions passed.",
+      "actual_result": {
+        "provider": "deterministic",
+        "expected": {
+          "id": "receipt-consistency-unknown",
+          "seed": "documents",
+          "question": "Are expense reports consistent with approved supporting evidence?",
+          "facts": {
+            "expenses_with_documents_cents": 1000
+          },
+          "required_claims": [
+            "finances",
+            "expenses:offset:0"
+          ],
+          "contains": [
+            "Consistency cannot be established",
+            "No independent payment match"
+          ],
+          "status": "insufficient_evidence"
+        },
+        "actual_status": "insufficient_evidence",
+        "actual_mode": "deterministic",
+        "answer": "Published reported spending with approved public document support: 1000 USD minor units across 1 expenses. Published reported spending without approved public document support: 0 USD minor units across 0 expenses. Each expense is counted once regardless of document count or extraction attempts. No approved public support does not mean private supporting documents do not exist. Expense IDs without approved public support in the retrieved pages: []. This list covers only retrieved pages; the amounts and counts above cover the full published snapshot. Approved redacted documents are attached evidence only. Extraction-consistent, human-reviewed, and private receipt-mismatch states are not publicly disclosed by the current publication policy. Consistency cannot be established from these public records. No independent payment match is verified; a receipt does not prove a vendor was paid. [opendev:project:1:finances@sha256:523a614a30f2f9522fb93df678a51a69c33c11da54f12ce21ab606d99201eca2] [opendev:project:1:expenses:offset:0@sha256:e1080a788d932e4e32da4bf13119a92598c167133856797980d9ba89772de8bb]",
+        "citations": [
+          "opendev:project:1:finances@sha256:523a614a30f2f9522fb93df678a51a69c33c11da54f12ce21ab606d99201eca2",
+          "opendev:project:1:expenses:offset:0@sha256:e1080a788d932e4e32da4bf13119a92598c167133856797980d9ba89772de8bb"
+        ],
+        "source_facts": [
+          {
+            "finances": {
+              "project_id": 1,
+              "currency": "USD",
+              "audience": "public_evidence_only",
+              "gross_completed_funding_cents": 0,
+              "refund_excluded_cents": 0,
+              "reversal_excluded_cents": 0,
+              "exact_refund_total_cents": null,
+              "net_recorded_funding_cents": 0,
+              "published_reported_spending_cents": 1000,
+              "funding_minus_reported_expenditure_cents": -1000,
+              "published_expense_count": 1,
+              "expenses_with_documents_count": 1,
+              "expenses_with_documents_cents": 1000,
+              "expenses_without_documents_count": 0,
+              "expenses_without_documents_cents": 0,
+              "unresolved_expenses_count": null,
+              "unresolved_discrepancy_count": null,
+              "independently_payment_matched_cents": 0,
+              "evidence_coverage": [
+                {
+                  "classification": "document_attached",
+                  "expense_count": 1,
+                  "amount_cents": 1000
+                }
+              ],
+              "budget_variance": [
+                {
+                  "category": "development",
+                  "allocated_cents": 10000,
+                  "reported_spending_cents": 1000,
+                  "remaining_cents": 9000,
+                  "overspend_cents": 0
+                }
+              ],
+              "calculated_at": "2026-11-03T08:44:48.900719+00:00",
+              "notes": [
+                "Sandbox capture records are not a verified bank balance. Funding minus reported expenses is only a calculated difference.",
+                "Refund/reversal exclusions use original contribution amounts. Partial refund amounts are not stored; exact refund totals are unavailable.",
+                "Document/OCR support and human review do not certify vendor payment. Independently payment-matched evidence is not assigned.",
+                "Public evidence coverage includes only approved published redactions; private findings and reviewer notes are withheld."
+              ]
+            }
+          }
+        ]
+      }
+    },
+    {
+      "case": "tests/test_agent_financial.py::test_evaluation_dataset[missing-information]",
+      "outcome": "passed",
+      "reason": "All expected facts, citations, forbidden claims and status assertions passed.",
+      "actual_result": {
+        "provider": "deterministic",
+        "expected": {
+          "id": "missing-information",
+          "seed": "none",
+          "question": "What financial information is missing?",
+          "facts": {
+            "expenses_without_documents_count": 1
+          },
+          "required_claims": [
+            "finances"
+          ],
+          "contains": [
+            "Exact partial-refund amounts",
+            "outside public scope"
+          ],
+          "status": "answered"
+        },
+        "actual_status": "answered",
+        "actual_mode": "deterministic",
+        "answer": "Exact partial-refund amounts and independently verified cash balances are unavailable. Private receipt extractions, consistency determinations and reviewer notes are outside public scope. No independent vendor-payment verification is available. Published records do not establish completeness of all spending or external funding. Reported expenses without approved public document support: 1 totalling 1000 USD minor units. [opendev:project:1:finances@sha256:713a59a0e7d5df1f0ef6caf5cfe97307c73f348502c5101bf534f9231b640f1b]",
+        "citations": [
+          "opendev:project:1:finances@sha256:713a59a0e7d5df1f0ef6caf5cfe97307c73f348502c5101bf534f9231b640f1b"
+        ],
+        "source_facts": [
+          {
+            "finances": {
+              "project_id": 1,
+              "currency": "USD",
+              "audience": "public_evidence_only",
+              "gross_completed_funding_cents": 0,
+              "refund_excluded_cents": 0,
+              "reversal_excluded_cents": 0,
+              "exact_refund_total_cents": null,
+              "net_recorded_funding_cents": 0,
+              "published_reported_spending_cents": 1000,
+              "funding_minus_reported_expenditure_cents": -1000,
+              "published_expense_count": 1,
+              "expenses_with_documents_count": 0,
+              "expenses_with_documents_cents": 0,
+              "expenses_without_documents_count": 1,
+              "expenses_without_documents_cents": 1000,
+              "unresolved_expenses_count": null,
+              "unresolved_discrepancy_count": null,
+              "independently_payment_matched_cents": 0,
+              "evidence_coverage": [
+                {
+                  "classification": "self_reported",
+                  "expense_count": 1,
+                  "amount_cents": 1000
+                }
+              ],
+              "budget_variance": [
+                {
+                  "category": "development",
+                  "allocated_cents": 10000,
+                  "reported_spending_cents": 1000,
+                  "remaining_cents": 9000,
+                  "overspend_cents": 0
+                }
+              ],
+              "calculated_at": "2026-11-03T08:44:49.575173+00:00",
+              "notes": [
+                "Sandbox capture records are not a verified bank balance. Funding minus reported expenses is only a calculated difference.",
+                "Refund/reversal exclusions use original contribution amounts. Partial refund amounts are not stored; exact refund totals are unavailable.",
+                "Document/OCR support and human review do not certify vendor payment. Independently payment-matched evidence is not assigned.",
+                "Public evidence coverage includes only approved published redactions; private findings and reviewer notes are withheld."
+              ]
+            }
+          }
+        ]
+      }
+    },
+    {
+      "case": "tests/test_agent_financial.py::test_evaluation_dataset[historical-comparison-unavailable]",
+      "outcome": "passed",
+      "reason": "All expected facts, citations, forbidden claims and status assertions passed.",
+      "actual_result": {
+        "provider": "deterministic",
+        "expected": {
+          "id": "historical-comparison-unavailable",
+          "seed": "partial",
+          "question": "What changed between available reporting dates?",
+          "facts": {
+            "net_recorded_funding_cents": 2000
+          },
+          "required_claims": [
+            "finances"
+          ],
+          "contains": [
+            "cannot be established",
+            "not immutable dated financial snapshots"
+          ],
+          "status": "insufficient_evidence"
+        },
+        "actual_status": "insufficient_evidence",
+        "actual_mode": "deterministic",
+        "answer": "A historical reporting comparison cannot be established: these tools provide a current read-only snapshot, not immutable dated financial snapshots. Expense dates and current update timestamps cannot reconstruct previous budgets, contribution states, approvals or edited reports. No historical change amount is inferred. [opendev:project:1:finances@sha256:4daf4dd80e44674612bd630350bf04ac0d382ec9d660baee9806f7d6b4739c46]",
+        "citations": [
+          "opendev:project:1:finances@sha256:4daf4dd80e44674612bd630350bf04ac0d382ec9d660baee9806f7d6b4739c46"
+        ],
+        "source_facts": [
+          {
+            "finances": {
+              "project_id": 1,
+              "currency": "USD",
+              "audience": "public_evidence_only",
+              "gross_completed_funding_cents": 2000,
+              "refund_excluded_cents": 0,
+              "reversal_excluded_cents": 0,
+              "exact_refund_total_cents": null,
+              "net_recorded_funding_cents": 2000,
+              "published_reported_spending_cents": 1000,
+              "funding_minus_reported_expenditure_cents": 1000,
+              "published_expense_count": 1,
+              "expenses_with_documents_count": 0,
+              "expenses_with_documents_cents": 0,
+              "expenses_without_documents_count": 1,
+              "expenses_without_documents_cents": 1000,
+              "unresolved_expenses_count": null,
+              "unresolved_discrepancy_count": null,
+              "independently_payment_matched_cents": 0,
+              "evidence_coverage": [
+                {
+                  "classification": "self_reported",
+                  "expense_count": 1,
+                  "amount_cents": 1000
+                }
+              ],
+              "budget_variance": [
+                {
+                  "category": "development",
+                  "allocated_cents": 10000,
+                  "reported_spending_cents": 1000,
+                  "remaining_cents": 9000,
+                  "overspend_cents": 0
+                }
+              ],
+              "calculated_at": "2026-11-03T08:44:50.321117+00:00",
+              "notes": [
+                "Sandbox capture records are not a verified bank balance. Funding minus reported expenses is only a calculated difference.",
+                "Refund/reversal exclusions use original contribution amounts. Partial refund amounts are not stored; exact refund totals are unavailable.",
+                "Document/OCR support and human review do not certify vendor payment. Independently payment-matched evidence is not assigned.",
+                "Public evidence coverage includes only approved published redactions; private findings and reviewer notes are withheld."
+              ]
+            }
+          }
+        ]
+      }
+    },
+    {
+      "case": "tests/test_agent_financial.py::test_evaluation_dataset[causal-question-constrained]",
+      "outcome": "passed",
+      "reason": "All expected facts, citations, forbidden claims and status assertions passed.",
+      "actual_result": {
+        "provider": "deterministic",
+        "expected": {
+          "id": "causal-question-constrained",
+          "seed": "none",
+          "question": "Why is the project running out of funds?",
+          "facts": {
+            "funding_minus_reported_expenditure_cents": -1000
+          },
+          "required_claims": [
+            "finances"
+          ],
+          "contains": [
+            "-1000 USD minor units",
+            "not its cause"
+          ],
+          "status": "answered"
+        },
+        "actual_status": "answered",
+        "actual_mode": "deterministic",
+        "answer": "Gross recorded captured funding, including refund/reversal-affected captures: 0 USD minor units. Net eligible completed captured funding after conservative exclusions: 0 USD minor units. Published reported spending: 1000 USD minor units. Funding minus reported expenditure: -1000 USD minor units. This calculated difference is not an independently verified cash or bank balance. A negative difference indicates a recorded funding gap, not its cause. The records do not establish why funds were spent or why funding is insufficient. [opendev:project:1:finances@sha256:d4e9f7d443699c3e1aca3ae61eed1e72c7dc2706f7ef174a97f4d43b2bda98da]",
+        "citations": [
+          "opendev:project:1:finances@sha256:d4e9f7d443699c3e1aca3ae61eed1e72c7dc2706f7ef174a97f4d43b2bda98da"
+        ],
+        "source_facts": [
+          {
+            "finances": {
+              "project_id": 1,
+              "currency": "USD",
+              "audience": "public_evidence_only",
+              "gross_completed_funding_cents": 0,
+              "refund_excluded_cents": 0,
+              "reversal_excluded_cents": 0,
+              "exact_refund_total_cents": null,
+              "net_recorded_funding_cents": 0,
+              "published_reported_spending_cents": 1000,
+              "funding_minus_reported_expenditure_cents": -1000,
+              "published_expense_count": 1,
+              "expenses_with_documents_count": 0,
+              "expenses_with_documents_cents": 0,
+              "expenses_without_documents_count": 1,
+              "expenses_without_documents_cents": 1000,
+              "unresolved_expenses_count": null,
+              "unresolved_discrepancy_count": null,
+              "independently_payment_matched_cents": 0,
+              "evidence_coverage": [
+                {
+                  "classification": "self_reported",
+                  "expense_count": 1,
+                  "amount_cents": 1000
+                }
+              ],
+              "budget_variance": [
+                {
+                  "category": "development",
+                  "allocated_cents": 10000,
+                  "reported_spending_cents": 1000,
+                  "remaining_cents": 9000,
+                  "overspend_cents": 0
+                }
+              ],
+              "calculated_at": "2026-11-03T08:44:50.977199+00:00",
+              "notes": [
+                "Sandbox capture records are not a verified bank balance. Funding minus reported expenses is only a calculated difference.",
+                "Refund/reversal exclusions use original contribution amounts. Partial refund amounts are not stored; exact refund totals are unavailable.",
+                "Document/OCR support and human review do not certify vendor payment. Independently payment-matched evidence is not assigned.",
+                "Public evidence coverage includes only approved published redactions; private findings and reviewer notes are withheld."
+              ]
+            }
+          }
+        ]
+      }
+    },
+    {
+      "case": "tests/test_agent_release.py::test_mocked_model_evaluation[correct-finance]",
+      "outcome": "passed",
+      "reason": "All expected facts, citations, forbidden claims and status assertions passed.",
+      "actual_result": {
+        "provider": "mocked",
+        "answer": "Gross recorded captured funding, including refund/reversal-affected captures: 2000 USD minor units. Net eligible completed captured funding after conservative exclusions: 2000 USD minor units. Published reported spending: 1000 USD minor units. Funding minus reported expenditure: 1000 USD minor units. This calculated difference is not an independently verified cash or bank balance. A negative difference indicates a recorded funding gap, not its cause. The records do not establish why funds were spent or why funding is insufficient. [opendev:project:1:finances@sha256:40e71482a39e74ce50ba8b6e8889aa0f30c396ea48d88aa145df0d3faf31c65d]",
+        "actual_status": "answered",
+        "actual_mode": "llm",
+        "diagnostics": {
+          "tool_names": [
+            "get_project_finances"
+          ],
+          "turn_count": 2,
+          "latency_ms": 10
+        },
+        "citations": [
+          "opendev:project:1:finances@sha256:40e71482a39e74ce50ba8b6e8889aa0f30c396ea48d88aa145df0d3faf31c65d"
+        ],
+        "expected_source_facts": {
+          "net_recorded_funding_cents": 2000
+        },
+        "actual_source_facts": {
+          "net_recorded_funding_cents": 2000
+        },
+        "required_citations": [
+          "finances"
+        ],
+        "forbidden_claims": [
+          "2100 USD",
+          "Funding caused",
+          "misused the money",
+          "delivery is complete"
+        ],
+        "expected_status": "answered",
+        "expected_mode": "llm"
+      }
+    },
+    {
+      "case": "tests/test_agent_release.py::test_mocked_model_evaluation[plausible-wrong-total]",
+      "outcome": "passed",
+      "reason": "All expected facts, citations, forbidden claims and status assertions passed.",
+      "actual_result": {
+        "provider": "mocked",
+        "answer": "Net recorded Sandbox funding: 2000 USD minor units. This is not an available bank balance.",
+        "actual_status": "answered",
+        "actual_mode": "deterministic",
+        "diagnostics": {
+          "tool_names": [
+            "get_project_finances"
+          ],
+          "turn_count": 2,
+          "latency_ms": 16
+        },
+        "citations": [
+          "opendev:project:1:finances@sha256:39e314e09c68fc98bfeb229de2befb8f2d4bbf7e7eeeb2b5434b71563b640b96"
+        ],
+        "expected_source_facts": {
+          "net_recorded_funding_cents": 2000
+        },
+        "actual_source_facts": {
+          "net_recorded_funding_cents": 2000
+        },
+        "required_citations": [
+          "finances"
+        ],
+        "forbidden_claims": [
+          "2100 USD",
+          "Funding caused",
+          "misused the money",
+          "delivery is complete"
+        ],
+        "expected_status": "answered",
+        "expected_mode": "deterministic"
+      }
+    },
+    {
+      "case": "tests/test_agent_release.py::test_mocked_model_evaluation[plausible-false-delivery]",
+      "outcome": "passed",
+      "reason": "All expected facts, citations, forbidden claims and status assertions passed.",
+      "actual_result": {
+        "provider": "mocked",
+        "answer": "Net recorded Sandbox funding: 2000 USD minor units. This is not an available bank balance.",
+        "actual_status": "answered",
+        "actual_mode": "deterministic",
+        "diagnostics": {
+          "tool_names": [
+            "get_project_finances"
+          ],
+          "turn_count": 2,
+          "latency_ms": 10
+        },
+        "citations": [
+          "opendev:project:1:finances@sha256:7a1445f451ef9732e8e0bde3c096face3e45e07bbd7c5fdd0d82103354a164de"
+        ],
+        "expected_source_facts": {
+          "net_recorded_funding_cents": 2000
+        },
+        "actual_source_facts": {
+          "net_recorded_funding_cents": 2000
+        },
+        "required_citations": [
+          "finances"
+        ],
+        "forbidden_claims": [
+          "2100 USD",
+          "Funding caused",
+          "misused the money",
+          "delivery is complete"
+        ],
+        "expected_status": "answered",
+        "expected_mode": "deterministic"
+      }
+    },
+    {
+      "case": "tests/test_agent_release.py::test_mocked_model_evaluation[plausible-causation]",
+      "outcome": "passed",
+      "reason": "All expected facts, citations, forbidden claims and status assertions passed.",
+      "actual_result": {
+        "provider": "mocked",
+        "answer": "Net recorded Sandbox funding: 2000 USD minor units. This is not an available bank balance.",
+        "actual_status": "answered",
+        "actual_mode": "deterministic",
+        "diagnostics": {
+          "tool_names": [
+            "get_project_finances"
+          ],
+          "turn_count": 2,
+          "latency_ms": 11
+        },
+        "citations": [
+          "opendev:project:1:finances@sha256:17d7d4d854fe3f4bcb20a466ff22a7dcc20c85ce8dda66aa2b4cc6692ab5717f"
+        ],
+        "expected_source_facts": {
+          "net_recorded_funding_cents": 2000
+        },
+        "actual_source_facts": {
+          "net_recorded_funding_cents": 2000
+        },
+        "required_citations": [
+          "finances"
+        ],
+        "forbidden_claims": [
+          "2100 USD",
+          "Funding caused",
+          "misused the money",
+          "delivery is complete"
+        ],
+        "expected_status": "answered",
+        "expected_mode": "deterministic"
+      }
+    },
+    {
+      "case": "tests/test_agent_release.py::test_mocked_model_evaluation[plausible-fraud]",
+      "outcome": "passed",
+      "reason": "All expected facts, citations, forbidden claims and status assertions passed.",
+      "actual_result": {
+        "provider": "mocked",
+        "answer": "Net recorded Sandbox funding: 2000 USD minor units. This is not an available bank balance.",
+        "actual_status": "answered",
+        "actual_mode": "deterministic",
+        "diagnostics": {
+          "tool_names": [
+            "get_project_finances"
+          ],
+          "turn_count": 2,
+          "latency_ms": 13
+        },
+        "citations": [
+          "opendev:project:1:finances@sha256:b34d44d44960e170f9b51b241fd34b925e4f1e055f4b95cc2bed3eebc4e22eac"
+        ],
+        "expected_source_facts": {
+          "net_recorded_funding_cents": 2000
+        },
+        "actual_source_facts": {
+          "net_recorded_funding_cents": 2000
+        },
+        "required_citations": [
+          "finances"
+        ],
+        "forbidden_claims": [
+          "2100 USD",
+          "Funding caused",
+          "misused the money",
+          "delivery is complete"
+        ],
+        "expected_status": "answered",
+        "expected_mode": "deterministic"
+      }
+    },
+    {
+      "case": "tests/test_agent_release.py::test_mocked_model_evaluation[fabricated-citation]",
+      "outcome": "passed",
+      "reason": "All expected facts, citations, forbidden claims and status assertions passed.",
+      "actual_result": {
+        "provider": "mocked",
+        "answer": "Net recorded Sandbox funding: 2000 USD minor units. This is not an available bank balance.",
+        "actual_status": "answered",
+        "actual_mode": "deterministic",
+        "diagnostics": {
+          "tool_names": [
+            "get_project_finances"
+          ],
+          "turn_count": 2,
+          "latency_ms": 10
+        },
+        "citations": [
+          "opendev:project:1:finances@sha256:8ba9b85289322028a164d6c94fc3de1c1f94c9f37a0bcf04d273f38b26b19115"
+        ],
+        "expected_source_facts": {
+          "net_recorded_funding_cents": 2000
+        },
+        "actual_source_facts": {
+          "net_recorded_funding_cents": 2000
+        },
+        "required_citations": [
+          "finances"
+        ],
+        "forbidden_claims": [
+          "2100 USD",
+          "Funding caused",
+          "misused the money",
+          "delivery is complete"
+        ],
+        "expected_status": "answered",
+        "expected_mode": "deterministic"
+      }
+    },
+    {
+      "case": "tests/test_agent_release.py::test_mocked_model_evaluation[provider-outage]",
+      "outcome": "passed",
+      "reason": "All expected facts, citations, forbidden claims and status assertions passed.",
+      "actual_result": {
+        "provider": "mocked",
+        "answer": "Net recorded Sandbox funding: 2000 USD minor units. This is not an available bank balance.",
+        "actual_status": "answered",
+        "actual_mode": "deterministic",
+        "diagnostics": {
+          "tool_names": [],
+          "turn_count": 0,
+          "latency_ms": 6
+        },
+        "citations": [
+          "opendev:project:1:finances@sha256:470256f40c3db518d5c20c2db065e16181a4b912692bef0cb5627cd9eb03b8a1"
+        ],
+        "expected_source_facts": {
+          "net_recorded_funding_cents": 2000
+        },
+        "actual_source_facts": {
+          "net_recorded_funding_cents": 2000
+        },
+        "required_citations": [
+          "finances"
+        ],
+        "forbidden_claims": [
+          "2100 USD",
+          "Funding caused",
+          "misused the money",
+          "delivery is complete"
+        ],
+        "expected_status": "answered",
+        "expected_mode": "deterministic"
+      }
+    }
+  ],
+  "provenance": {
+    "full_suite": "407 passed; full-run pytest exit status 0",
+    "mocked_evaluation_diagnostics": "7 passed in subsequent focused run; no live model used",
+    "live_ollama": "not run",
+    "deterministic_case_count": 45,
+    "mocked_case_count": 7
+  }
+}

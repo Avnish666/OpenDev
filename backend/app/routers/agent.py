@@ -4,12 +4,13 @@ from threading import Event
 from fastapi import APIRouter, Depends, HTTPException, Request
 from pydantic import ValidationError
 from sqlalchemy.orm import Session
+from sqlalchemy.exc import SQLAlchemyError
 from starlette.concurrency import run_in_threadpool
 from app.core.database import get_db
 from app.routers.expenses import RecordID
 from app.agent.contracts import AgentQuestion, AgentAnswer
 from app.agent.tools import EvidenceTools
-from app.agent.orchestration import orchestrate, AgentConfig, database_budget
+from app.agent.orchestration import orchestrate, AgentConfig, database_budget, insufficient
 from app.agent import limits
 from app.services.accountability import read_snapshot
 
@@ -24,6 +25,11 @@ def query(db,question,cancelled=None):
             config = AgentConfig.load()
             with database_budget(reader, config, cancelled):
                 return asyncio.run(orchestrate(EvidenceTools(reader),question,config=config,cancelled=cancelled))
+    except (TimeoutError, SQLAlchemyError):
+        # Snapshot setup and fallback reads can fail outside the model loop. The
+        # context managers have rolled back/closed before constructing this reply.
+        # Do not expose driver details or retry on an aborted transaction.
+        return insufficient('Public evidence unavailable or database execution budget exceeded.', mode='deterministic')
     finally:limits.slots.release()
 
 

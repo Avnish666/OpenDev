@@ -2,7 +2,7 @@ import { useEffect, useRef, useState, type FormEvent } from 'react';
 import { AgentRequestError, citationPresentation, queryAgent, type AgentAnswer, type AgentMode } from '../api/agent';
 import './ProjectAIChat.css';
 
-const SUGGESTIONS = ['How much funding has this project received?', 'How much has been reported as spent?', 'Which budget categories are over budget?', 'Which milestones are overdue?', 'What progress has this project made?', "What is this maintainer's delivery history?", 'What financial information is missing?'];
+const SUGGESTIONS = ['How much funding has the project received?', 'How much has been reported as spent?', 'Which budget categories are over budget?', 'Which milestones are overdue?', 'What progress has this project made?', "What is this maintainer's delivery history?", 'What financial information is missing?'];
 const MODES: Record<AgentMode, string> = { deterministic: 'Deterministic', auto: 'Auto', llm: 'LLM' };
 const STATUS: Record<AgentAnswer['answer_status'], string> = { answered: 'Answered from records', insufficient_evidence: 'Insufficient evidence', unsupported_question: 'Unsupported question', unavailable_source: 'Source unavailable', provider_unavailable: 'Model provider unavailable' };
 const stamp = (date: string | null) => date && Number.isFinite(Date.parse(date)) ? new Date(date).toISOString() : 'Unknown';

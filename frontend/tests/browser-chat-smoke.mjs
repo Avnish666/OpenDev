@@ -50,7 +50,7 @@ try{
  await call('Runtime.enable');await call('Page.enable');await call('Page.navigate',{url:`http://127.0.0.1:${port}/chat-smoke`});
  await wait("document.body.innerText.includes('Start with the evidence')");assert.equal(requests.length,0);
  assert.equal(await evaluate("document.querySelector('select').value"),'deterministic');
- await click('How much funding has this project received?');assert.equal(await evaluate("document.activeElement.tagName"),'TEXTAREA');
+ await click('How much funding has the project received?');assert.equal(await evaluate("document.activeElement.tagName"),'TEXTAREA');
  await call('Input.dispatchKeyEvent',{type:'keyDown',key:'Enter',code:'Enter',windowsVirtualKeyCode:13});await call('Input.dispatchKeyEvent',{type:'keyUp',key:'Enter',code:'Enter',windowsVirtualKeyCode:13});
  await wait("document.body.innerText.includes('Net recorded funding')");assert.equal(requests.length,1);
  assert.deepEqual(Object.keys(requests[0]).sort(),['mode','project_id','question']);

@@ -48,7 +48,7 @@ def retrieve(ac,kind):
         return e
 
 @pytest.mark.parametrize('case',CASES,ids=lambda c:c['id'])
-def test_development_evaluation(gh,case):
+def test_development_evaluation(gh,case,request):
     ac,state=gh; seed=case['seed']; kind=case['kind']
     if seed in ('on_time','late','planned','revised','multiple','reopened','cancelled','submitted','funded'):
         args={'original':'2026-10-31'}
@@ -92,6 +92,7 @@ def test_development_evaluation(gh,case):
     evidence=retrieve(ac,kind)
     plan=DevelopmentPlan.model_validate({'development_claims':[{'kind':kind,'references':[e.citation.reference for e in evidence]}]})
     result=render_development(plan,evidence)
+    request.node.user_properties.append(('phase5_result',{'provider':'deterministic','expected':case,'actual_status':result.answer_status,'actual_mode':result.execution_mode,'answer':result.answer,'citations':[c.reference for c in result.citations],'source_facts':{p:__import__('functools').reduce(lambda v,k:v[k],p.split('/'),evidence[0].value) for p in case['expected_facts']}}))
     assert result.answer_status==case['status'], result.model_dump()
     for text in case['contains']:assert text in result.answer,result.answer
     for text in case['forbidden_claims']+['PRIVATE_BACKER_NOTE','execute_sql']:assert text not in result.answer
