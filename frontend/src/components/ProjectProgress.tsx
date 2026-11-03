@@ -45,7 +45,7 @@ export default function ProjectProgress({ projectId, canManage }: { projectId: n
   },[projectId]);
   const section = (name: string) => `progress-${projectId}-${name}`;
   function navigate(name: string) { const element = document.getElementById(section(name)); element?.scrollIntoView(); element?.focus(); }
-  return <section aria-label="Public project progress"><h3>Project Progress</h3><p>Public evidence and maintainer assertions, with separate financial and development records. No inferred completion percentage or independent delivery certification.</p>
+  return <section aria-label="Public project progress"><h3>Project Progress</h3><p><a href={`#/projects/${projectId}/analytics`}>Open project analytics</a></p><p>Public evidence and maintainer assertions, with separate financial and development records. No inferred completion percentage or independent delivery certification.</p>
     <nav aria-label="Project progress sections"><button onClick={() => navigate('overview')}>Overview</button><button onClick={() => navigate('roadmap')}>Roadmap / timeline</button><button onClick={() => navigate('github')}>GitHub activity</button><button onClick={() => navigate('history')}>Delivery history</button><button onClick={() => { setLedger(true); requestAnimationFrame(() => navigate('financial')); }}>Open financial transparency ledger</button></nav>
     <button onClick={() => { setData(undefined); setVersion(v => v + 1); }}>Refresh progress summary</button>
     {error && <p role="alert">{error}</p>}{!data && !error && <p role="status">Loading public progress summary…</p>}

@@ -2,9 +2,11 @@
 import {developmentFixture} from './analytics-fixture.mjs';
 import {createServer} from 'vite';import {spawn} from 'node:child_process';import {mkdtemp,readFile,rm} from 'node:fs/promises';import {tmpdir} from 'node:os';import {join} from 'node:path';import assert from 'node:assert/strict';
 if(process.env.TEST_STUDIO==='1')process.env.ANALYTICS_STUDIO_EVALUATION='true';
-let fail=false,empty=false,delayNext=false;
+let fail=false,empty=false,delayNext=false,exportSlow=false,exportFail=false;
 const server=await createServer({envDir:'/tmp/opendev-empty-env',server:{host:'127.0.0.1',port:0},appType:'custom'});
 server.middlewares.use(async(req,res,next)=>{
+ if(req.url.startsWith('/api/projects/5/analytics/export/')){res.setHeader('Content-Type','text/csv; charset=utf-8');if(exportFail){res.statusCode=429;res.end('');return;}const body='\ufeffid,amount_cents,currency,description\r\n8,100,USD,"Café, public"\r\n';if(exportSlow)setTimeout(()=>res.end(body),300);else res.end(body);return;}
+ if(req.url==='/api/projects?limit=20&offset=0'){res.setHeader('Content-Type','application/json');res.end(JSON.stringify([{id:5,title:'Synthetic analytics project',description:'Public only',funding_goal_cents:10000,currency:'USD',status:'active'}]));return;}
  if(req.url==='/expense-link-smoke'){res.setHeader('Content-Type','text/html');res.end(await server.transformIndexHtml('/expense-link-smoke',`<html><head><meta name="viewport" content="width=device-width, initial-scale=1"></head><body><div id="root"></div><script type="module">import React from 'react';import {createRoot} from 'react-dom/client';import App from '/src/App.tsx';import {AuthProvider} from '/src/context/AuthContext.tsx';createRoot(document.getElementById('root')).render(React.createElement(AuthProvider,null,React.createElement(App)));</script></body></html>`));return;}
  if(req.url==='/api/auth/me'){res.setHeader('Content-Type','application/json');res.statusCode=401;res.end('{}');return;}
  if(req.url==='/api/projects/5/ledger/8'){res.setHeader('Content-Type','application/json');res.end(JSON.stringify({id:8,project_id:5,currency:'USD',category:'Development',vendor:'Synthetic public vendor',description:'Published report only',amount_cents:2500,expense_date:'2026-11-01',updated_at:'2026-11-03T00:00:00Z',evidence:[],findings:[],public_evidence_status:'self_reported',independently_payment_matched:false}));return;}
@@ -39,6 +41,7 @@ server.middlewares.use(async(req,res,next)=>{
   if(delayNext){delayNext=false;setTimeout(()=>res.end(JSON.stringify(d)),200);}else res.end(JSON.stringify(d));return;}
  next();
 });await server.listen();const port=server.httpServer.address().port;
+const downloads=await mkdtemp(join(tmpdir(),'opendev-csv-'));
 const profile=await mkdtemp(join(tmpdir(),'opendev-analytics-'));const browser=spawn('/usr/bin/chromium',['--headless','--no-sandbox','--disable-dev-shm-usage','--remote-debugging-port=0',`--user-data-dir=${profile}`,'about:blank'],{stdio:'ignore'});let ws;
 try{
  let debugPort;for(let i=0;i<100;i++){try{debugPort=(await readFile(join(profile,'DevToolsActivePort'),'utf8')).split('\n')[0];break;}catch{await new Promise(r=>setTimeout(r,100));}}
@@ -53,8 +56,14 @@ try{
  const click=async text=>evaluate(`[...document.querySelectorAll('button')].find(b=>b.textContent===${JSON.stringify(text)}).click()`);
  await call('Runtime.enable');await call('Page.enable');await call('Network.enable');const requests=[];ws.addEventListener('message',({data})=>{const m=JSON.parse(data);if(m.method==='Network.requestWillBeSent')requests.push(m.params.request.url);});
  const initialStart=performance.now();
+ await call('Page.setDownloadBehavior',{behavior:'allow',downloadPath:downloads});
  await call('Page.navigate',{url:`http://127.0.0.1:${port}/analytics-smoke`});await wait("document.querySelectorAll('.ag-row').length>0 && document.querySelectorAll('canvas').length>=2");
  const initialMs=performance.now()-initialStart;console.log('MEASURE initial Community navigation-to-chart ms:',initialMs.toFixed(2));
+ await click('Download CSV');await wait("document.body.innerText.includes('CSV download started')");
+ let downloaded='';for(let i=0;i<100;i++){try{downloaded=await readFile(join(downloads,'opendev-project-5-expenses.csv'),'utf8');break;}catch{await new Promise(r=>setTimeout(r,50));}}assert.ok(downloaded.includes('Café, public')&&downloaded.includes('amount_cents'));
+ exportSlow=true;await click('Download CSV');await wait("!![...document.querySelectorAll('button')].find(b=>b.textContent==='Download CSV'&&b.disabled)");await click('Cancel CSV export');await wait("document.body.innerText.includes('Export cancelled')");exportSlow=false;
+ exportFail=true;await click('Download CSV');await wait("document.body.innerText.includes('Export rate limit reached')");exportFail=false;
+ console.log('PASS: actual Chromium CSV file, fixed filename, UTF-8, disabled duplicate request, cancel and safe errors');
  assert.ok(await evaluate("document.body.innerText.includes('40.00 USD')"));assert.equal(requests.some(u=>u.includes('/studio/node_modules/')),false);
  assert.ok(await evaluate("document.body.innerText.includes('AG Charts Community')"));
  // Use native input setters so React receives real form changes.
@@ -92,6 +101,7 @@ try{
   await wait("!!document.querySelector('[studio-id=opendev-analytics]') || document.body.innerText.includes('could not initialize')");
   assert.ok(await evaluate("!!document.querySelector('[studio-id=opendev-analytics]')"),await evaluate('document.body.innerText'));
   assert.ok(requests.some(u=>u.includes('/studio/')));
+  await click('Download CSV');await wait("document.body.innerText.includes('CSV download started')");assert.ok(requests.some(u=>u.includes('/analytics/export/expenses')));
   await wait("document.querySelectorAll('[studio-id=opendev-analytics] canvas').length>=4 && document.querySelectorAll('[studio-id=opendev-analytics] .ag-row').length>0");
   await wait("!document.querySelector('[studio-id=opendev-analytics]').innerText.includes('No data to display')");
   assert.ok(await evaluate("document.querySelector('[studio-id=opendev-analytics]').innerText.includes('$40.00')"));
@@ -124,6 +134,7 @@ try{
  assert.ok(await evaluate("document.querySelector('[aria-label=\"Public expense detail\"]').innerText.includes('25.00 USD')"));
  assert.ok(await evaluate("document.querySelector('a[href=\"#/projects/5\"]')!==null"));
  assert.equal(errors.length,0);console.log('PASS: actual App hash route opens existing public expense detail while signed out');
+ await call('Page.navigate',{url:`http://127.0.0.1:${port}/expense-link-smoke#/analytics`});await wait("document.body.innerText.includes('Synthetic analytics project')");assert.ok(await evaluate("!!document.querySelector('a[href=\"#/projects/5/analytics\"]')"));console.log('PASS: signed-out Analytics navigation lists active project analytics links');
  console.log('PASS: server category/date/evidence filters, reset, reversed dates and pagination');
  console.log('PASS: actual Community charts/grid, safe default, license gate/switching, empty/error recovery, 390px layout and clean unmount');
-}finally{ws?.close();const exit=new Promise(r=>browser.once('exit',r));browser.kill('SIGTERM');await server.close();await exit;await rm(profile,{recursive:true,force:true,maxRetries:10,retryDelay:100});}
+}finally{ws?.close();const exit=new Promise(r=>browser.once('exit',r));browser.kill('SIGTERM');await server.close();await exit;await rm(profile,{recursive:true,force:true,maxRetries:10,retryDelay:100});await rm(downloads,{recursive:true,force:true});}

@@ -55,7 +55,7 @@ def github(db, project, now,filters):
 
 def dataset(db,project,now,derived,limit,offset,filters):
     own = [r for r in derived if r['project_id']==project.id]
-    own=[r for r in own if (filters.milestone_status=='all' or r['status']==filters.milestone_status) and (filters.delivery=='all' or ((r['status']=='delivered')==(filters.delivery=='delivered'))) and (filters.outcome=='all' or r['timing']==filters.outcome) and (not filters.planned_from or r['current_deadline']>=filters.planned_from) and (not filters.planned_to or r['current_deadline']<=filters.planned_to)]
+    own=filter_milestones(own,filters)
     rows = []
     for row in own[offset:offset+limit]:
         original, current, actual = row['original_deadline'],row['current_deadline'],row['actual_completion_date']
@@ -65,3 +65,7 @@ def dataset(db,project,now,derived,limit,offset,filters):
     gh = github(db,project,now,filters)
     return dict(counts=progress.counts(own,now),milestones=rows,total=len(own),limit=limit,offset=offset,
         github=gh,github_counts=gh['counts'],last_successful_sync_at=gh['sync']['last_successful_sync_at'],github_stale=gh['sync']['stale'])
+
+
+def filter_milestones(own,filters):
+    return [r for r in own if (filters.milestone_status=='all' or r['status']==filters.milestone_status) and (filters.delivery=='all' or ((r['status']=='delivered')==(filters.delivery=='delivered'))) and (filters.outcome=='all' or r['timing']==filters.outcome) and (not filters.planned_from or r['current_deadline']>=filters.planned_from) and (not filters.planned_to or r['current_deadline']<=filters.planned_to)]

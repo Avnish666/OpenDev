@@ -81,7 +81,7 @@ export default function Transparency({ projectId }: { projectId: number }) {
     return () => { live = false; };
   }, [projectId, refresh]);
   const s = data?.financial_summary;
-  return <section className="transparency" aria-labelledby="transparency-title"><h3 id="transparency-title">Financial Transparency</h3>
+  return <section className="transparency" aria-labelledby="transparency-title"><h3 id="transparency-title">Financial Transparency</h3><p><a href={`#/projects/${projectId}/analytics`}>Open project analytics</a></p>
     <p>Public records · PayPal Sandbox · amounts reported in USD minor units by the API.</p><button onClick={() => { setData(undefined); setError(''); setRefresh(v => v + 1); }}>Refresh public ledger</button>
     {error && <p role="alert">{error}</p>}{!data && !error && <p role="status">Loading financial transparency…</p>}
     {data && s && <><div className="grid">

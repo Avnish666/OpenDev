@@ -37,7 +37,7 @@ def expense_analysis(db, project, filters, category_values=None):
     return dict(categories=groups[0], months=groups[1], expense_count=count, reported_spending_cents=amount)
 
 
-def overview(db,project_id,limit=50,offset=0,filters=None,milestone_offset=0,dimensions=None):
+def overview(db,project_id,limit=50,offset=0,filters=None,milestone_offset=0,dimensions=None,*,expense_limit=None,milestone_limit=None):
     dimensions=dimensions or DashboardDimensions()
     filters = filters or ExpenseFilters()
     p=transparency.public_project(db,project_id)
@@ -61,18 +61,18 @@ def overview(db,project_id,limit=50,offset=0,filters=None,milestone_offset=0,dim
             Expense.project_id == p.id, Expense.publication_status == 'published').distinct())
             if (not filters.category or value.strip().casefold()==filters.category.strip().casefold()) and
             (dimensions.discrepancy=='all' or ((value.strip().casefold() in {r['category'] for r in s['budget_variance'] if r['overspend_cents']>0}) == (dimensions.discrepancy=='with')))]
-    ledger=transparency.ledger(db,p,limit,offset,filters.sort,'',filters.category,filters.evidence,filters.date_from,filters.date_to,summary=summary,category_values=category_values)
+    ledger=transparency.ledger(db,p,expense_limit or limit,offset,filters.sort,'',filters.category,filters.evidence,filters.date_from,filters.date_to,summary=summary,category_values=category_values)
     grouped_expenses=expense_analysis(db,p,filters,category_values)
     rows=db.scalars(select(Milestone).where(Milestone.project_id.in_(owned)).order_by(Milestone.id)).all()
     derived=credibility.delivery_rows(db,rows)
-    development=analytics_development.dataset(db,p,s['calculated_at'],derived,limit,milestone_offset,dimensions)
+    development=analytics_development.dataset(db,p,s['calculated_at'],derived,milestone_limit or limit,milestone_offset,dimensions)
     profile=credibility.profile(db,p.owner_id,s['calculated_at'],public_context=context,
         milestone_rows=rows,delivery_history=derived,include_github=False)
     result=AnalyticsOverview.model_validate(dict(project_id=p.id,currency=p.currency,as_of=s['calculated_at'],funding_goal_cents=p.funding_goal_cents,
         financial=s,budget=s['budget_variance'],expenses=[dict(id=r['id'],category=r['category'],amount_cents=r['amount_cents'],currency=r['currency'],expense_date=r['expense_date'],
             approved_public_support=bool(r['evidence']),public_category_finding_count=len(r['findings'])) for r in ledger['items']],
         expense_analysis=grouped_expenses,expense_filters=filters,public_unresolved_finding_count=summary['public_unresolved_discrepancy_count'],funding_trend={},
-        expense_total=ledger['total'],expense_limit=limit,expense_offset=offset,
+        expense_total=ledger['total'],expense_limit=ledger['limit'],expense_offset=offset,
         dashboard_filters=dimensions,development=development,
         maintainer=dict(project_rewards=credibility.reward_statistics(db,[p],s['calculated_at']),owner_id=p.owner_id,participation=profile['participation'],delivery=profile['delivery'],rewards=profile['rewards'],financial=profile['financial'],scope=profile['scope'],attribution=profile['attribution']),
         limitations=[*s['notes'],*profile['limitations'],*analytics_development.LIMITATIONS,

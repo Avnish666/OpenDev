@@ -1,0 +1,10 @@
+import {useEffect,useRef,useState} from 'react';
+import {downloadCsv,exportDatasets,type ExportDataset} from '../api/analyticsExport';
+import type {DashboardFilters} from '../api/dashboardFilters';
+export default function AnalyticsExport({projectId,filters}:{projectId:number;filters:DashboardFilters}){
+ const [dataset,setDataset]=useState<ExportDataset>('expenses'),[busy,setBusy]=useState(false),[message,setMessage]=useState('');const pending=useRef<AbortController|null>(null);
+ const filterKey=JSON.stringify(filters);
+ useEffect(()=>()=>{pending.current?.abort();},[projectId,filterKey]);
+ async function start(){if(pending.current)return;const controller=new AbortController();pending.current=controller;setBusy(true);setMessage('');try{await downloadCsv(projectId,dataset,filters,controller.signal);if(!controller.signal.aborted)setMessage('CSV download started.');}catch(e){if(!controller.signal.aborted)setMessage(e instanceof Error?e.message:'Unable to export.');}finally{if(pending.current===controller){pending.current=null;setBusy(false);}}}
+ return <section aria-label="Public analytics CSV exports"><h4>Download public CSV</h4><label>Export dataset<select value={dataset} onChange={e=>setDataset(e.target.value as ExportDataset)} disabled={busy}>{exportDatasets.map(d=><option key={d} value={d}>{d}</option>)}</select></label><button disabled={busy} onClick={()=>void start()}>Download CSV</button>{busy&&<button onClick={()=>{pending.current?.abort();pending.current=null;setBusy(false);setMessage('Export cancelled.');}}>Cancel CSV export</button>}<p role="status" aria-live="polite">{busy?'Preparing CSV…':message}</p><p>Complete matching public records, up to 1,000 rows and 2 MiB, subject to source capacity. Pagination is ignored. Financial and budget exports retain project totals; owner delivery uses owned active projects. Display-only role/reward choices do not filter CSV records. Amount columns ending in cents are integer minor units. Delivery is asserted; GitHub snapshots are incomplete. Partial refunds remain conservative; exact refund amounts are unavailable.</p></section>;
+}
