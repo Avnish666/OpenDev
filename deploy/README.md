@@ -1,6 +1,10 @@
 # Review-only same-origin deployment artifact
 
 This configuration is prepared for review. It does not authorize deployment.
+For Step 4 disposable provider diagnostics and explicit separation of mocked/local/
+live evidence, see [provider acceptance](../docs/phase7-live-provider-verification.md).
+The diagnostic CLI does not load application dotenv or perform financial/object
+mutations. A successful read-only probe never authorizes public checkout or uploads.
 Step 3 adds required production startup checks and backend release controls. See
 [the current preflight](../docs/phase7-deployment-preflight.md) and
 [environment manifest](environment-manifest.json). Production defaults disable new

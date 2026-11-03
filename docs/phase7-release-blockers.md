@@ -1,5 +1,13 @@
 # Phase 7 Step 1: release freeze and blocker register
 
+Step 4 provider acceptance (2026-11-04, Asia/Calcutta): see
+[live-provider verification](phase7-live-provider-verification.md). A dedicated,
+dry-run-first harness and synthetic fixtures are prepared; no disposable provider
+credentials or verified reachable staging webhook are available. Real PayPal,
+Supabase and genuine webhook acceptance remain blocked/not run. Malformed PayPal
+link handling is hardened and locally regression-tested. No feature gate was
+enabled and **NO-GO remains**; local/mocked evidence does not close live gates.
+
 Step 3 preflight (2026-11-04, Asia/Calcutta): production startup validation and
 backend restricted-launch controls are locally verified (see current preflight for final regression
 totals). See [the current preflight report](phase7-deployment-preflight.md) for the

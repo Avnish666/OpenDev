@@ -1,0 +1,49 @@
+{
+  "environment": "disposable-test",
+  "execution": "dry_run",
+  "configuration": {
+    "paypal": {
+      "present": [],
+      "missing": [
+        "PAYPAL_CLIENT_ID",
+        "PAYPAL_CLIENT_SECRET",
+        "PAYPAL_WEBHOOK_ID",
+        "PAYPAL_MERCHANT_ID"
+      ],
+      "application_fields_present": []
+    },
+    "supabase": {
+      "present": [],
+      "missing": [
+        "SUPABASE_PROJECT_REF",
+        "SUPABASE_STORAGE_BUCKET",
+        "SUPABASE_SERVICE_ROLE_KEY"
+      ],
+      "application_fields_present": []
+    },
+    "github": {
+      "present": [],
+      "missing": [
+        "GITHUB_CLIENT_ID",
+        "GITHUB_CLIENT_SECRET",
+        "GITHUB_CALLBACK_URL"
+      ],
+      "application_fields_present": []
+    }
+  },
+  "features": {
+    "CHECKOUT_ENABLED": "not_explicitly_configured",
+    "RECEIPT_PROCESSING_ENABLED": "not_explicitly_configured",
+    "LLM_ENABLED": "not_explicitly_configured"
+  },
+  "network": {},
+  "paypal": {
+    "status": "not_run"
+  },
+  "supabase": {
+    "status": "not_run"
+  },
+  "genuine_webhook_delivery": "blocked_no_verified_reachable_endpoint",
+  "transactions": "not_implemented",
+  "object_mutations": "not_implemented"
+}

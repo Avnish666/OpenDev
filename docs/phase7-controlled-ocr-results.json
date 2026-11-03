@@ -1,0 +1,63 @@
+{
+  "scope": "Synthetic local fixtures only; not Supabase or public OCR isolation proof",
+  "results": [
+    {
+      "fixture": "corrupt.pdf",
+      "evidence_type": "local_native_processing",
+      "status": "rejected",
+      "code": 415
+    },
+    {
+      "fixture": "invalid.png",
+      "evidence_type": "local_native_processing",
+      "status": "rejected",
+      "code": 415
+    },
+    {
+      "fixture": "large-image.png",
+      "evidence_type": "local_native_processing",
+      "status": "rejected",
+      "code": 415
+    },
+    {
+      "fixture": "oversized.pdf",
+      "evidence_type": "local_native_processing",
+      "status": "rejected",
+      "code": 415
+    },
+    {
+      "fixture": "receipt.jpg",
+      "evidence_type": "local_native_processing",
+      "status": "passed",
+      "total_cents": 1234,
+      "method": "tesseract"
+    },
+    {
+      "fixture": "receipt.png",
+      "evidence_type": "local_native_processing",
+      "status": "passed",
+      "total_cents": 1234,
+      "method": "tesseract"
+    },
+    {
+      "fixture": "scan.pdf",
+      "evidence_type": "local_native_processing",
+      "status": "passed",
+      "total_cents": 1234,
+      "method": "tesseract"
+    },
+    {
+      "fixture": "six-pages.pdf",
+      "evidence_type": "local_native_processing",
+      "status": "rejected",
+      "code": "PAGE_LIMIT"
+    },
+    {
+      "fixture": "text.pdf",
+      "evidence_type": "local_native_processing",
+      "status": "passed",
+      "total_cents": 1234,
+      "method": "pdf_text"
+    }
+  ]
+}

@@ -64,10 +64,16 @@ class PayPal:
         if result.get('verification_status') != 'SUCCESS': raise HTTPException(400,'Invalid PayPal signature')
 
     def approval(self, order):
-        for link in order.get('links',[]):
+        links=order.get('links',[])
+        if not isinstance(links,list):raise HTTPException(502,'Invalid PayPal approval links')
+        for link in links:
+            if not isinstance(link,dict) or not isinstance(link.get('href',''),str):continue
             if link.get('rel') in ('approve','payer-action'):
-                url = urlparse(link.get('href',''))
-                if url.scheme == 'https' and url.hostname == 'www.sandbox.paypal.com' and url.port in (None,443) and not url.username:
+                try:
+                    url = urlparse(link.get('href',''))
+                    port = url.port
+                except ValueError:continue
+                if url.scheme == 'https' and url.hostname == 'www.sandbox.paypal.com' and port in (None,443) and not url.username and not url.password:
                     return link['href']
         raise HTTPException(502,'PayPal did not supply a Sandbox approval URL')
 

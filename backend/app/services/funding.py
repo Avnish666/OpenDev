@@ -165,9 +165,12 @@ async def process_webhook(db, event, headers):
             for link in links:
                 if not isinstance(link,dict) or not isinstance(link.get('href',''),str):raise HTTPException(400,'Malformed refund references')
                 if link.get('rel') == 'up':
-                    url = urlparse(link.get('href',''))
+                    try:
+                        url = urlparse(link.get('href',''))
+                        port=url.port
+                    except ValueError:raise HTTPException(400,'Malformed refund references') from None
                     prefix = '/v2/payments/captures/'
-                    if url.scheme == 'https' and url.hostname == 'api-m.sandbox.paypal.com' and url.path.startswith(prefix):
+                    if url.scheme == 'https' and url.hostname == 'api-m.sandbox.paypal.com' and port in (None,443) and not url.username and not url.password and not url.query and not url.fragment and url.path.startswith(prefix):
                         cap_id = paypal.identifier(url.path[len(prefix):])
         c = db.scalar(select(Contribution).where(Contribution.order_id == oid).with_for_update().execution_options(populate_existing=True)) if oid else None
         if c is None and cap_id:
