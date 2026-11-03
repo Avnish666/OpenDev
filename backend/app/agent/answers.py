@@ -2,6 +2,7 @@
 from fastapi import HTTPException
 from app.agent.contracts import AgentAnswer
 from app.agent.financial_reasoning import FINANCIAL_INTENTS, deterministic_financial
+from app.agent.development_reasoning import INTENTS as DEVELOPMENT_INTENTS, deterministic_development
 
 INTENTS={
  'funding':('How much funding has the project received?',),
@@ -14,6 +15,7 @@ INTENTS={
  'reward_fulfillment':('What is the reward fulfillment history?',),
 }
 INTENTS.update(FINANCIAL_INTENTS)
+INTENTS.update(DEVELOPMENT_INTENTS)
 
 
 def intent_for(question):
@@ -28,6 +30,8 @@ def answer(tools,question):
     intent=intent_for(question.question)
     if not intent:return AgentAnswer(answer='Unsupported question. Use one of: '+', '.join(INTENTS),limitations=['Only explicit baseline intents are supported; no LLM reasoning.'],confidence='not_applicable',answer_status='unsupported_question')
     try:
+        if intent in DEVELOPMENT_INTENTS or intent=='overdue':
+            return deterministic_development(tools,question,intent)
         if intent in FINANCIAL_INTENTS:
             return deterministic_financial(tools, question, intent)
         if intent in ('funding','spending','categories'):

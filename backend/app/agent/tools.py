@@ -17,11 +17,15 @@ PAGE=50
 
 
 class EvidenceTools:
-    def __init__(self,db):
+    def __init__(self,db,evaluation_at=None):
         if db.scalar(text('SHOW transaction_read_only'))!='on':
             raise ValueError('Evidence tools require a read-only snapshot')
         self.db=db
         self.now=db.scalar(select(func.transaction_timestamp()))
+        from datetime import timezone
+        if evaluation_at is not None and evaluation_at.tzinfo is None:
+            raise ValueError('Evaluation timestamp must be timezone-aware')
+        self.evaluation_at=(evaluation_at or self.now).astimezone(timezone.utc)
 
     def project(self,pid):return transparency.public_project(self.db,pid)
 
@@ -42,14 +46,25 @@ class EvidenceTools:
     def get_project_roadmap(self,project_id:int,offset:int=0) -> AgentEvidence:
         self.page(offset);p=self.project(project_id)
         rows=self.db.scalars(select(Milestone).where(Milestone.project_id==p.id).order_by(Milestone.display_order,Milestone.id).limit(PAGE).offset(offset)).all()
+        from app.models.roadmap import MilestoneStatusHistory as History
+        from app.agent.development_reasoning import deadline_analysis
+        from app.services.progress import counts
+        ids=[r.id for r in rows]
+        if self.db.scalar(select(func.count()).select_from(History).where(History.milestone_id.in_(ids)))>10000:
+            raise HTTPException(413,'Roadmap history exceeds analysis capacity')
+        events=self.db.scalars(select(History).where(History.milestone_id.in_(ids)).order_by(History.milestone_id,History.version)).all()
+        grouped={}
+        for event in events:grouped.setdefault(event.milestone_id,[]).append(event)
         derived=credibility.delivery_rows(self.db,rows)
         items=[]
         for row,delivery in zip(rows,derived):
             history=roadmap.history(self.db,row,None,PAGE,0)
             items.append(dict(commitment=MilestoneResponse.model_validate(roadmap.view(self.db,row,None)).model_dump(),
-                delivery=DeliveryRow.model_validate(delivery).model_dump(),history=[HistoryResponse.model_validate(h).model_dump() for h in history]))
+                delivery=DeliveryRow.model_validate(delivery).model_dump(),history=[HistoryResponse.model_validate(h).model_dump() for h in history],
+                analysis=deadline_analysis(delivery,grouped.get(row.id,[]),self.evaluation_at)))
         total=self.db.scalar(select(func.count()).select_from(Milestone).where(Milestone.project_id==p.id))
-        return evidence('project',p.id,p.id,f'roadmap:offset:{offset}',dict(items=items,total=total,limit=PAGE,offset=offset),f'/api/projects/{p.id}/roadmap?limit={PAGE}&offset={offset}',self.now,
+        return evidence('project',p.id,p.id,f'roadmap:offset:{offset}',dict(items=items,total=total,limit=PAGE,offset=offset,owner_id=p.owner_id,
+            evaluated_at=self.evaluation_at,counts=counts(derived,self.evaluation_at)),f'/api/projects/{p.id}/roadmap?limit={PAGE}&offset={offset}',self.now,
             limitations=[credibility.DELIVERY_LIMIT,'History preview at most 50 events per milestone; use cited milestone IDs with /api/roadmap/{id}/history pagination. Delivery is self-reported.'])
 
     def get_github_activity(self,project_id:int,offset:int=0) -> AgentEvidence:
@@ -57,8 +72,12 @@ class EvidenceTools:
         github_progress.read_project(self.db,p.id,None)
         activity=ActivityResponse.model_validate(github_progress.public_activity(self.db,p.id,PAGE,offset))
         milestones=self.db.scalars(select(GHMilestone).where(GHMilestone.project_id==p.id).order_by(GHMilestone.number,GHMilestone.github_id).limit(PAGE).offset(offset)).all()
-        return evidence('github_repository',p.github_repo_id,p.id,f'activity:offset:{offset}',dict(activity=activity.model_dump(),milestones=[GHResponse.model_validate(m).model_dump() for m in milestones]),
-            f'/api/projects/{p.id}/github/activity?limit={PAGE}&offset={offset}',self.now,activity.sync.last_successful_sync_at,activity.sync.stale,
+        stamp=activity.sync.last_successful_sync_at
+        age=(self.evaluation_at-stamp).total_seconds() if stamp else None
+        evaluated_stale=None if age is not None and age<0 else (age is None or age>21600 or bool(activity.sync.latest and activity.sync.latest.status!='completed'))
+        return evidence('github_repository',p.github_repo_id,p.id,f'activity:offset:{offset}',dict(activity=activity.model_dump(),milestones=[GHResponse.model_validate(m).model_dump() for m in milestones],
+            evaluated_at=self.evaluation_at,stale_at_evaluation=evaluated_stale),
+            f'/api/projects/{p.id}/github/activity?limit={PAGE}&offset={offset}',self.now,activity.sync.last_successful_sync_at,evaluated_stale,
             ['Bounded retained snapshots and at most 30 commits, not exhaustive live GitHub activity. Absence does not prove inactivity. Milestone page uses /github/milestones.'])
 
     def get_maintainer_history(self,maintainer_id:int) -> AgentEvidence:
@@ -69,7 +88,7 @@ class EvidenceTools:
         mids=select(Milestone.id).where(Milestone.project_id.in_(ids))
         if self.db.scalar(select(func.count()).select_from(History).where(History.milestone_id.in_(mids)))>10000:
             raise HTTPException(413,'Public history exceeds baseline capacity')
-        data=CredibilityProfile.model_validate(credibility.profile(self.db,maintainer_id,self.now))
+        data=CredibilityProfile.model_validate(credibility.profile(self.db,maintainer_id,self.evaluation_at))
         return evidence('maintainer',maintainer_id,None,'history',data.model_dump(),f'/api/maintainers/{maintainer_id}/credibility',self.now,limitations=data.limitations)
 
     def get_reward_fulfillment(self,project_id:int) -> AgentEvidence:

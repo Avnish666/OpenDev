@@ -16,6 +16,7 @@ from app.agent.providers import (DeterministicProvider, FunctionCall, Generation
                                  ModelProvider, OllamaProvider, ProviderError)
 from app.agent.tools import TOOL_NAMES, invoke
 from app.agent.financial_reasoning import FinancialPlan, render_financial
+from app.agent.development_reasoning import DevelopmentPlan, render_development
 
 
 class AgentConfig(BaseModel):
@@ -91,7 +92,18 @@ These templates use backend reconciliation, conservative refund exclusions, publ
 budget findings and document coverage. Private receipt/OCR/review details are not
 public. Historical financial snapshots are unavailable; select reporting_changes
 to explain that gap. Repeated/unknown citations and invented values are rejected.
-Use either facts or financial_claims, never both. The server renders values and
+For development questions select {"development_claims":[{"kind":"progress","references":["exact roadmap citation.reference"]}]}.
+Kinds progress, overdue, on_time, deadlines, roadmap_changes, linked_evidence,
+delivery_support, schedule_explanation, missing_delivery_evidence require roadmap.
+github_activity and activity_trend require GitHub activity. maintainer_history and
+reward_history require the authorized owner's maintainer history; owner_comparison
+requires both owner history and current roadmap. funding_schedule, spending_trend,
+after_funding require roadmap and finances. Do not supply counts, dates, statuses,
+URLs, percentages, trust scores, accusations or causal prose. The backend evaluates
+deadline calculations using the evidence evaluation timestamp. Original deadlines
+cannot be replaced by revisions. Counts are page-scoped; trends and causation may
+be unavailable. Choose exactly one of facts, financial_claims, development_claims.
+The server renders values and
 limitations; it will reject any other response.'''
 
 
@@ -125,6 +137,10 @@ def dispatch(tools, call, project_id, owner_id):
 def grounded(content, evidence, config):
     """No semantic verifier: accept only exact scalar selections, never model prose."""
     raw = json.loads(content)
+    if isinstance(raw, dict) and 'development_claims' in raw:
+        result=render_development(DevelopmentPlan.model_validate(raw),evidence,config.max_response_chars)
+        result.execution_mode='llm'
+        return result
     if isinstance(raw, dict) and 'financial_claims' in raw:
         result = render_financial(FinancialPlan.model_validate(raw), evidence, config.max_response_chars)
         result.execution_mode = 'llm'

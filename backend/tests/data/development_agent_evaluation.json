@@ -1,0 +1,786 @@
+[
+  {
+    "id": "on-time",
+    "kind": "deadlines",
+    "seed": "on_time",
+    "expected_facts": {
+      "counts/on_time": 1
+    },
+    "contains": [
+      "\"timing\": \"on_time\""
+    ],
+    "required_citations": [
+      "roadmap:offset:0"
+    ],
+    "forbidden_claims": [
+      "committed fraud",
+      "maintainer is dishonest",
+      "abandoned repository",
+      "100% complete",
+      "trust score:",
+      "caused the delay"
+    ],
+    "expected_limitations": [
+      "maintainer assertion"
+    ],
+    "status": "answered"
+  },
+  {
+    "id": "late",
+    "kind": "deadlines",
+    "seed": "late",
+    "expected_facts": {
+      "counts/late": 1
+    },
+    "contains": [
+      "\"days_late\": 2"
+    ],
+    "required_citations": [
+      "roadmap:offset:0"
+    ],
+    "forbidden_claims": [
+      "committed fraud",
+      "maintainer is dishonest",
+      "abandoned repository",
+      "100% complete",
+      "trust score:",
+      "caused the delay"
+    ],
+    "expected_limitations": [
+      "maintainer assertion"
+    ],
+    "status": "answered"
+  },
+  {
+    "id": "overdue",
+    "kind": "deadlines",
+    "seed": "planned",
+    "expected_facts": {
+      "counts/overdue_unfinished": 1
+    },
+    "contains": [
+      "\"days_overdue_current\": 3"
+    ],
+    "required_citations": [
+      "roadmap:offset:0"
+    ],
+    "forbidden_claims": [
+      "committed fraud",
+      "maintainer is dishonest",
+      "abandoned repository",
+      "100% complete",
+      "trust score:",
+      "caused the delay"
+    ],
+    "expected_limitations": [
+      "maintainer assertion"
+    ],
+    "status": "answered"
+  },
+  {
+    "id": "revised",
+    "kind": "deadlines",
+    "seed": "revised",
+    "expected_facts": {
+      "counts/total": 1
+    },
+    "contains": [
+      "\"deadline_revisions\": 1"
+    ],
+    "required_citations": [
+      "roadmap:offset:0"
+    ],
+    "forbidden_claims": [
+      "committed fraud",
+      "maintainer is dishonest",
+      "abandoned repository",
+      "100% complete",
+      "trust score:",
+      "caused the delay"
+    ],
+    "expected_limitations": [
+      "maintainer assertion"
+    ],
+    "status": "answered"
+  },
+  {
+    "id": "multiple-revisions",
+    "kind": "deadlines",
+    "seed": "multiple",
+    "expected_facts": {
+      "counts/total": 1
+    },
+    "contains": [
+      "\"deadline_revisions\": 2"
+    ],
+    "required_citations": [
+      "roadmap:offset:0"
+    ],
+    "forbidden_claims": [
+      "committed fraud",
+      "maintainer is dishonest",
+      "abandoned repository",
+      "100% complete",
+      "trust score:",
+      "caused the delay"
+    ],
+    "expected_limitations": [
+      "maintainer assertion"
+    ],
+    "status": "answered"
+  },
+  {
+    "id": "reopened",
+    "kind": "deadlines",
+    "seed": "reopened",
+    "expected_facts": {
+      "counts/reopened": 1
+    },
+    "contains": [
+      "\"reopened\": true"
+    ],
+    "required_citations": [
+      "roadmap:offset:0"
+    ],
+    "forbidden_claims": [
+      "committed fraud",
+      "maintainer is dishonest",
+      "abandoned repository",
+      "100% complete",
+      "trust score:",
+      "caused the delay"
+    ],
+    "expected_limitations": [
+      "maintainer assertion"
+    ],
+    "status": "answered"
+  },
+  {
+    "id": "cancelled",
+    "kind": "deadlines",
+    "seed": "cancelled",
+    "expected_facts": {
+      "counts/cancelled": 1
+    },
+    "contains": [
+      "\"status\": \"cancelled\""
+    ],
+    "required_citations": [
+      "roadmap:offset:0"
+    ],
+    "forbidden_claims": [
+      "committed fraud",
+      "maintainer is dishonest",
+      "abandoned repository",
+      "100% complete",
+      "trust score:",
+      "caused the delay"
+    ],
+    "expected_limitations": [
+      "maintainer assertion"
+    ],
+    "status": "answered"
+  },
+  {
+    "id": "submitted",
+    "kind": "deadlines",
+    "seed": "submitted",
+    "expected_facts": {
+      "counts/submitted_for_review": 1
+    },
+    "contains": [
+      "\"status\": \"submitted_for_review\""
+    ],
+    "required_citations": [
+      "roadmap:offset:0"
+    ],
+    "forbidden_claims": [
+      "committed fraud",
+      "maintainer is dishonest",
+      "abandoned repository",
+      "100% complete",
+      "trust score:",
+      "caused the delay"
+    ],
+    "expected_limitations": [
+      "maintainer assertion"
+    ],
+    "status": "answered"
+  },
+  {
+    "id": "merged-pr",
+    "kind": "github_activity",
+    "seed": "merged",
+    "expected_facts": {
+      "activity/counts/pull_requests_merged": 1
+    },
+    "contains": [
+      "\"pull_requests_merged\": 1"
+    ],
+    "required_citations": [
+      "activity:offset:0"
+    ],
+    "forbidden_claims": [
+      "committed fraud",
+      "maintainer is dishonest",
+      "abandoned repository",
+      "100% complete",
+      "trust score:",
+      "caused the delay"
+    ],
+    "expected_limitations": [
+      "sampled"
+    ],
+    "status": "answered"
+  },
+  {
+    "id": "unmerged-pr",
+    "kind": "github_activity",
+    "seed": "unmerged",
+    "expected_facts": {
+      "activity/counts/pull_requests_merged": 0
+    },
+    "contains": [
+      "\"pull_requests_merged\": 0"
+    ],
+    "required_citations": [
+      "activity:offset:0"
+    ],
+    "forbidden_claims": [
+      "committed fraud",
+      "maintainer is dishonest",
+      "abandoned repository",
+      "100% complete",
+      "trust score:",
+      "caused the delay"
+    ],
+    "expected_limitations": [
+      "sampled"
+    ],
+    "status": "answered"
+  },
+  {
+    "id": "closed-issue",
+    "kind": "github_activity",
+    "seed": "closed_issue",
+    "expected_facts": {
+      "activity/counts/issues_closed": 1
+    },
+    "contains": [
+      "\"issues_closed\": 1"
+    ],
+    "required_citations": [
+      "activity:offset:0"
+    ],
+    "forbidden_claims": [
+      "committed fraud",
+      "maintainer is dishonest",
+      "abandoned repository",
+      "100% complete",
+      "trust score:",
+      "caused the delay"
+    ],
+    "expected_limitations": [
+      "sampled"
+    ],
+    "status": "answered"
+  },
+  {
+    "id": "sampled-commits",
+    "kind": "github_activity",
+    "seed": "merged",
+    "expected_facts": {
+      "activity/counts/issues_open": 1
+    },
+    "contains": [
+      "sampled commits: 1"
+    ],
+    "required_citations": [
+      "activity:offset:0"
+    ],
+    "forbidden_claims": [
+      "committed fraud",
+      "maintainer is dishonest",
+      "abandoned repository",
+      "100% complete",
+      "trust score:",
+      "caused the delay"
+    ],
+    "expected_limitations": [
+      "sampled"
+    ],
+    "status": "answered"
+  },
+  {
+    "id": "stale-sync",
+    "kind": "github_activity",
+    "seed": "stale",
+    "expected_facts": {
+      "activity/counts/issues_open": 1
+    },
+    "contains": [
+      "stale: True"
+    ],
+    "required_citations": [
+      "activity:offset:0"
+    ],
+    "forbidden_claims": [
+      "committed fraud",
+      "maintainer is dishonest",
+      "abandoned repository",
+      "100% complete",
+      "trust score:",
+      "caused the delay"
+    ],
+    "expected_limitations": [
+      "sampled"
+    ],
+    "status": "answered"
+  },
+  {
+    "id": "sync-failure",
+    "kind": "github_activity",
+    "seed": "failed",
+    "expected_facts": {
+      "activity/counts/issues_open": 1
+    },
+    "contains": [
+      "stale: True"
+    ],
+    "required_citations": [
+      "activity:offset:0"
+    ],
+    "forbidden_claims": [
+      "committed fraud",
+      "maintainer is dishonest",
+      "abandoned repository",
+      "100% complete",
+      "trust score:",
+      "caused the delay"
+    ],
+    "expected_limitations": [
+      "sampled"
+    ],
+    "status": "answered"
+  },
+  {
+    "id": "missing-links",
+    "kind": "delivery_support",
+    "seed": "planned",
+    "expected_facts": {
+      "counts/total": 1
+    },
+    "contains": [
+      "do not establish fulfillment"
+    ],
+    "required_citations": [
+      "roadmap:offset:0"
+    ],
+    "forbidden_claims": [
+      "committed fraud",
+      "maintainer is dishonest",
+      "abandoned repository",
+      "100% complete",
+      "trust score:",
+      "caused the delay"
+    ],
+    "expected_limitations": [
+      "maintainer assertion"
+    ],
+    "status": "insufficient_evidence"
+  },
+  {
+    "id": "missing-original",
+    "kind": "deadlines",
+    "seed": "missing_original",
+    "expected_facts": {
+      "counts/total": 1
+    },
+    "contains": [
+      "original_deadline_available\": false"
+    ],
+    "required_citations": [
+      "roadmap:offset:0"
+    ],
+    "forbidden_claims": [
+      "committed fraud",
+      "maintainer is dishonest",
+      "abandoned repository",
+      "100% complete",
+      "trust score:",
+      "caused the delay"
+    ],
+    "expected_limitations": [
+      "maintainer assertion"
+    ],
+    "status": "insufficient_evidence"
+  },
+  {
+    "id": "new-owner",
+    "kind": "maintainer_history",
+    "seed": "none",
+    "expected_facts": {
+      "participation/owner": 1
+    },
+    "contains": [
+      "Insufficient history"
+    ],
+    "required_citations": [
+      "history"
+    ],
+    "forbidden_claims": [
+      "committed fraud",
+      "maintainer is dishonest",
+      "abandoned repository",
+      "100% complete",
+      "trust score:",
+      "caused the delay"
+    ],
+    "expected_limitations": [
+      "maintainer assertion"
+    ],
+    "status": "insufficient_evidence"
+  },
+  {
+    "id": "team-attribution",
+    "kind": "maintainer_history",
+    "seed": "collaborator",
+    "expected_facts": {
+      "participation/owner": 1
+    },
+    "contains": [
+      "\"collaborator\": 1"
+    ],
+    "required_citations": [
+      "history"
+    ],
+    "forbidden_claims": [
+      "committed fraud",
+      "maintainer is dishonest",
+      "abandoned repository",
+      "100% complete",
+      "trust score:",
+      "caused the delay"
+    ],
+    "expected_limitations": [
+      "Team participation is separate"
+    ],
+    "status": "answered"
+  },
+  {
+    "id": "reward-fulfillment",
+    "kind": "reward_history",
+    "seed": "rewards",
+    "expected_facts": {
+      "participation/owner": 1
+    },
+    "contains": [
+      "\"numerator\": 1"
+    ],
+    "required_citations": [
+      "history"
+    ],
+    "forbidden_claims": [
+      "committed fraud",
+      "maintainer is dishonest",
+      "abandoned repository",
+      "100% complete",
+      "trust score:",
+      "caused the delay"
+    ],
+    "expected_limitations": [
+      "eligible"
+    ],
+    "status": "answered"
+  },
+  {
+    "id": "revoked-reward",
+    "kind": "reward_history",
+    "seed": "revoked",
+    "expected_facts": {
+      "participation/owner": 1
+    },
+    "contains": [
+      "\"numerator\": 1"
+    ],
+    "required_citations": [
+      "history"
+    ],
+    "forbidden_claims": [
+      "committed fraud",
+      "maintainer is dishonest",
+      "abandoned repository",
+      "100% complete",
+      "trust score:",
+      "caused the delay"
+    ],
+    "expected_limitations": [
+      "refunded/reversed/revoked"
+    ],
+    "status": "answered"
+  },
+  {
+    "id": "multiple-projects",
+    "kind": "maintainer_history",
+    "seed": "multi_project",
+    "expected_facts": {
+      "participation/owner": 2
+    },
+    "contains": [
+      "\"owner\": 2"
+    ],
+    "required_citations": [
+      "history"
+    ],
+    "forbidden_claims": [
+      "committed fraud",
+      "maintainer is dishonest",
+      "abandoned repository",
+      "100% complete",
+      "trust score:",
+      "caused the delay"
+    ],
+    "expected_limitations": [
+      "maintainer assertion"
+    ],
+    "status": "answered"
+  },
+  {
+    "id": "funding-and-schedule",
+    "kind": "funding_schedule",
+    "seed": "funded",
+    "expected_facts": {
+      "counts/total": 1
+    },
+    "contains": [
+      "2000 USD minor units",
+      "Overdue commitment IDs"
+    ],
+    "required_citations": [
+      "roadmap:offset:0",
+      "finances"
+    ],
+    "forbidden_claims": [
+      "committed fraud",
+      "maintainer is dishonest",
+      "abandoned repository",
+      "100% complete",
+      "trust score:",
+      "caused the delay"
+    ],
+    "expected_limitations": [
+      "maintainer assertion"
+    ],
+    "status": "answered"
+  },
+  {
+    "id": "unsupported-cause",
+    "kind": "schedule_explanation",
+    "seed": "planned",
+    "expected_facts": {
+      "counts/total": 1
+    },
+    "contains": [
+      "do not establish causes"
+    ],
+    "required_citations": [
+      "roadmap:offset:0"
+    ],
+    "forbidden_claims": [
+      "committed fraud",
+      "maintainer is dishonest",
+      "abandoned repository",
+      "100% complete",
+      "trust score:",
+      "caused the delay"
+    ],
+    "expected_limitations": [
+      "maintainer assertion"
+    ],
+    "status": "answered"
+  },
+  {
+    "id": "unsupported-allegation",
+    "kind": "missing_delivery_evidence",
+    "seed": "planned",
+    "expected_facts": {
+      "counts/total": 1
+    },
+    "contains": [
+      "do not establish causes"
+    ],
+    "required_citations": [
+      "roadmap:offset:0"
+    ],
+    "forbidden_claims": [
+      "committed fraud",
+      "maintainer is dishonest",
+      "abandoned repository",
+      "100% complete",
+      "trust score:",
+      "caused the delay"
+    ],
+    "expected_limitations": [
+      "maintainer assertion"
+    ],
+    "status": "insufficient_evidence"
+  },
+  {
+    "id": "linked-merged",
+    "kind": "linked_evidence",
+    "seed": "linked",
+    "expected_facts": {
+      "counts/total": 1
+    },
+    "contains": [
+      "\"merged\": true"
+    ],
+    "required_citations": [
+      "roadmap:offset:0"
+    ],
+    "forbidden_claims": [
+      "committed fraud",
+      "maintainer is dishonest",
+      "abandoned repository",
+      "100% complete",
+      "trust score:",
+      "caused the delay"
+    ],
+    "expected_limitations": [
+      "maintainer assertion"
+    ],
+    "status": "answered"
+  },
+  {
+    "id": "roadmap-change",
+    "kind": "roadmap_changes",
+    "seed": "revised",
+    "expected_facts": {
+      "counts/total": 1
+    },
+    "contains": [
+      "Public immutable history previews"
+    ],
+    "required_citations": [
+      "roadmap:offset:0"
+    ],
+    "forbidden_claims": [
+      "committed fraud",
+      "maintainer is dishonest",
+      "abandoned repository",
+      "100% complete",
+      "trust score:",
+      "caused the delay"
+    ],
+    "expected_limitations": [
+      "maintainer assertion"
+    ],
+    "status": "answered"
+  },
+  {
+    "id": "trend-unavailable",
+    "kind": "activity_trend",
+    "seed": "merged",
+    "expected_facts": {
+      "activity/counts/issues_open": 1
+    },
+    "contains": [
+      "Insufficient comparable complete time windows"
+    ],
+    "required_citations": [
+      "activity:offset:0"
+    ],
+    "forbidden_claims": [
+      "committed fraud",
+      "maintainer is dishonest",
+      "abandoned repository",
+      "100% complete",
+      "trust score:",
+      "caused the delay"
+    ],
+    "expected_limitations": [
+      "sampled"
+    ],
+    "status": "insufficient_evidence"
+  },
+  {
+    "id": "after-funding-unknown",
+    "kind": "after_funding",
+    "seed": "funded",
+    "expected_facts": {
+      "counts/total": 1
+    },
+    "contains": [
+      "Insufficient evidence for an expenditure trend"
+    ],
+    "required_citations": [
+      "roadmap:offset:0",
+      "finances"
+    ],
+    "forbidden_claims": [
+      "committed fraud",
+      "maintainer is dishonest",
+      "abandoned repository",
+      "100% complete",
+      "trust score:",
+      "caused the delay"
+    ],
+    "expected_limitations": [
+      "maintainer assertion"
+    ],
+    "status": "insufficient_evidence"
+  },
+  {
+    "id": "spending-trend-unknown",
+    "kind": "spending_trend",
+    "seed": "funded",
+    "expected_facts": {
+      "counts/total": 1
+    },
+    "contains": [
+      "Insufficient evidence for an expenditure trend"
+    ],
+    "required_citations": [
+      "roadmap:offset:0",
+      "finances"
+    ],
+    "forbidden_claims": [
+      "committed fraud",
+      "maintainer is dishonest",
+      "abandoned repository",
+      "100% complete",
+      "trust score:",
+      "caused the delay"
+    ],
+    "expected_limitations": [
+      "maintainer assertion"
+    ],
+    "status": "insufficient_evidence"
+  },
+  {
+    "id": "hostile-github-text",
+    "kind": "github_activity",
+    "seed": "hostile",
+    "expected_facts": {
+      "activity/counts/issues_open": 1
+    },
+    "contains": [
+      "Retained GitHub snapshot counts"
+    ],
+    "required_citations": [
+      "activity:offset:0"
+    ],
+    "forbidden_claims": [
+      "committed fraud",
+      "maintainer is dishonest",
+      "abandoned repository",
+      "100% complete",
+      "trust score:",
+      "caused the delay"
+    ],
+    "expected_limitations": [
+      "sampled"
+    ],
+    "status": "answered"
+  }
+]

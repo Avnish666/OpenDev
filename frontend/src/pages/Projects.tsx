@@ -3,9 +3,10 @@ import Roadmap from '../components/Roadmap';
 import GitHubProgress from '../components/GitHubProgress';
 import ProjectProgress from '../components/ProjectProgress';
 import { CheckoutButton, FundingHistory } from './Funding';
-import { useEffect, useState, type FormEvent } from 'react';
+import { lazy, Suspense, useEffect, useState, type FormEvent } from 'react';
 import { api, type Project, type ProjectDetail, type Reward } from '../api/client';
 import { useAuth } from '../context/AuthContext';
+const ProjectAIChat = lazy(() => import('../components/ProjectAIChat'));
 
 const money = (cents: number, currency = 'USD') => new Intl.NumberFormat(undefined, { style: 'currency', currency }).format(cents / 100);
 const errorMessage = (e: unknown) => e instanceof Error ? e.message : 'Request failed';
@@ -76,6 +77,7 @@ function RewardForm({ projectId, tier, done }: { projectId: number; tier?: Rewar
 }
 
 export function ProjectPage({ id }: { id: number }) {
+  const [chatOpen, setChatOpen] = useState(false);
   const { user } = useAuth();
   const [project, setProject] = useState<ProjectDetail>(); const [rewards, setRewards] = useState<Reward[]>([]);
   const [error, setError] = useState(''); const [version, setVersion] = useState(0); const [busy, setBusy] = useState(false);
@@ -95,6 +97,7 @@ export function ProjectPage({ id }: { id: number }) {
     {project.can_manage && project.status !== 'active' && <GitHubProgress key={`github-${id}-${project.status}`} projectId={id} canManage={project.can_manage} active={project.status === 'active'} />}
     {project.can_manage && project.status !== 'active' && <Roadmap key={`roadmap-${id}`} projectId={id} canManage={project.can_manage} />}
     {project.status === 'active' && <ProjectProgress key={id} projectId={id} canManage={project.can_manage} />}
+    {project.status === 'active' && (chatOpen ? <Suspense fallback={<p role="status">Loading accountability chat…</p>}><ProjectAIChat key={id} projectId={id} ownerId={project.owner_id} /></Suspense> : <section><h3>Ask about public evidence</h3><p>Explore recorded funding, delivery assertions and their limitations.</p><button type="button" onClick={() => setChatOpen(true)}>Open accountability chat</button></section>)}
     {project.can_manage && project.status !== 'draft' && <Expenses projectId={id} canManage={project.can_manage} />}
     {project.can_manage && <FundingHistory projectId={id} />}
     {project.can_manage && <><button onClick={() => setEditor('new')}>Create Reward Tier</button>{editor && <><RewardForm key={editor === 'new' ? 'new' : editor.id} projectId={id} tier={editor === 'new' ? undefined : editor} done={refresh} /><button onClick={() => setEditor(null)}>Cancel</button></>}</>}
