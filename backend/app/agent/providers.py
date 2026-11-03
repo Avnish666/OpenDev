@@ -1,6 +1,7 @@
 """Provider boundary: serialized public messages only; no application tools or DB."""
 import asyncio
 import json
+import re
 from typing import Protocol
 from urllib.parse import urlsplit
 
@@ -50,10 +51,14 @@ class DeterministicProvider:
 
 class OllamaProvider:
     def __init__(self, base_url: str, model: str, transport=None):
-        url = urlsplit(base_url)
+        try:
+            url = urlsplit(base_url)
+            port=url.port
+        except (TypeError,ValueError):raise ProviderError('Invalid provider configuration') from None
         if url.scheme not in ('http', 'https') or not url.hostname or url.username or url.password or url.query or url.fragment or url.path not in ('', '/'):
             raise ProviderError('Invalid provider configuration')
-        if not model or len(model) > 200:
+        if port is not None and not 1<=port<=65535:raise ProviderError('Invalid provider configuration')
+        if not isinstance(model,str) or not re.fullmatch(r'[A-Za-z0-9][A-Za-z0-9_.:/-]{0,199}',model):
             raise ProviderError('Invalid provider configuration')
         self.base_url, self.model, self.transport = base_url.rstrip('/'), model, transport
 
@@ -68,9 +73,9 @@ class OllamaProvider:
                         response.raise_for_status()
                         body = bytearray()
                         async for chunk in response.aiter_bytes():
-                            body.extend(chunk)
-                            if len(body) > 32768:
+                            if len(body)+len(chunk) > 32768:
                                 raise ProviderError('Provider response too large')
+                            body.extend(chunk)
                         return json.loads(body)
         except (httpx.HTTPError, TimeoutError, ValueError, RecursionError) as exc:
             raise ProviderError('Provider unavailable or invalid response') from exc
@@ -88,6 +93,7 @@ class OllamaProvider:
             if result.get('done') is not True:
                 raise ValueError('Incomplete response')
             raw = result['message']
+            if not isinstance(raw,dict) or raw.get('role')!='assistant':raise ValueError('Invalid role')
             # Ollama may include thinking and timing fields; never forward them.
             message = ModelMessage.model_validate({k: raw[k] for k in ('role', 'content', 'tool_calls') if k in raw})
             if message.role != 'assistant':

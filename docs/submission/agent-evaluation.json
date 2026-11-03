@@ -1,0 +1,440 @@
+{
+  "scope": "Existing synthetic deterministic datasets and mocked policy cases; application mode llm is not proof of real inference",
+  "pytest_exit_status": 0,
+  "groups": {
+    "deterministic": {
+      "n": 45,
+      "passed": 45,
+      "failed": 0,
+      "cases": [
+        {
+          "case": "tests/test_agent_development.py::test_development_evaluation[on-time]",
+          "outcome": "passed",
+          "actual_mode": "deterministic",
+          "status": "answered",
+          "citation_count": 1,
+          "tool_count": 0
+        },
+        {
+          "case": "tests/test_agent_development.py::test_development_evaluation[late]",
+          "outcome": "passed",
+          "actual_mode": "deterministic",
+          "status": "answered",
+          "citation_count": 1,
+          "tool_count": 0
+        },
+        {
+          "case": "tests/test_agent_development.py::test_development_evaluation[overdue]",
+          "outcome": "passed",
+          "actual_mode": "deterministic",
+          "status": "answered",
+          "citation_count": 1,
+          "tool_count": 0
+        },
+        {
+          "case": "tests/test_agent_development.py::test_development_evaluation[revised]",
+          "outcome": "passed",
+          "actual_mode": "deterministic",
+          "status": "answered",
+          "citation_count": 1,
+          "tool_count": 0
+        },
+        {
+          "case": "tests/test_agent_development.py::test_development_evaluation[multiple-revisions]",
+          "outcome": "passed",
+          "actual_mode": "deterministic",
+          "status": "answered",
+          "citation_count": 1,
+          "tool_count": 0
+        },
+        {
+          "case": "tests/test_agent_development.py::test_development_evaluation[reopened]",
+          "outcome": "passed",
+          "actual_mode": "deterministic",
+          "status": "answered",
+          "citation_count": 1,
+          "tool_count": 0
+        },
+        {
+          "case": "tests/test_agent_development.py::test_development_evaluation[cancelled]",
+          "outcome": "passed",
+          "actual_mode": "deterministic",
+          "status": "answered",
+          "citation_count": 1,
+          "tool_count": 0
+        },
+        {
+          "case": "tests/test_agent_development.py::test_development_evaluation[submitted]",
+          "outcome": "passed",
+          "actual_mode": "deterministic",
+          "status": "answered",
+          "citation_count": 1,
+          "tool_count": 0
+        },
+        {
+          "case": "tests/test_agent_development.py::test_development_evaluation[merged-pr]",
+          "outcome": "passed",
+          "actual_mode": "deterministic",
+          "status": "answered",
+          "citation_count": 1,
+          "tool_count": 0
+        },
+        {
+          "case": "tests/test_agent_development.py::test_development_evaluation[unmerged-pr]",
+          "outcome": "passed",
+          "actual_mode": "deterministic",
+          "status": "answered",
+          "citation_count": 1,
+          "tool_count": 0
+        },
+        {
+          "case": "tests/test_agent_development.py::test_development_evaluation[closed-issue]",
+          "outcome": "passed",
+          "actual_mode": "deterministic",
+          "status": "answered",
+          "citation_count": 1,
+          "tool_count": 0
+        },
+        {
+          "case": "tests/test_agent_development.py::test_development_evaluation[sampled-commits]",
+          "outcome": "passed",
+          "actual_mode": "deterministic",
+          "status": "answered",
+          "citation_count": 1,
+          "tool_count": 0
+        },
+        {
+          "case": "tests/test_agent_development.py::test_development_evaluation[stale-sync]",
+          "outcome": "passed",
+          "actual_mode": "deterministic",
+          "status": "answered",
+          "citation_count": 1,
+          "tool_count": 0
+        },
+        {
+          "case": "tests/test_agent_development.py::test_development_evaluation[sync-failure]",
+          "outcome": "passed",
+          "actual_mode": "deterministic",
+          "status": "answered",
+          "citation_count": 1,
+          "tool_count": 0
+        },
+        {
+          "case": "tests/test_agent_development.py::test_development_evaluation[missing-links]",
+          "outcome": "passed",
+          "actual_mode": "deterministic",
+          "status": "insufficient_evidence",
+          "citation_count": 1,
+          "tool_count": 0
+        },
+        {
+          "case": "tests/test_agent_development.py::test_development_evaluation[missing-original]",
+          "outcome": "passed",
+          "actual_mode": "deterministic",
+          "status": "insufficient_evidence",
+          "citation_count": 1,
+          "tool_count": 0
+        },
+        {
+          "case": "tests/test_agent_development.py::test_development_evaluation[new-owner]",
+          "outcome": "passed",
+          "actual_mode": "deterministic",
+          "status": "insufficient_evidence",
+          "citation_count": 1,
+          "tool_count": 0
+        },
+        {
+          "case": "tests/test_agent_development.py::test_development_evaluation[team-attribution]",
+          "outcome": "passed",
+          "actual_mode": "deterministic",
+          "status": "answered",
+          "citation_count": 1,
+          "tool_count": 0
+        },
+        {
+          "case": "tests/test_agent_development.py::test_development_evaluation[reward-fulfillment]",
+          "outcome": "passed",
+          "actual_mode": "deterministic",
+          "status": "answered",
+          "citation_count": 1,
+          "tool_count": 0
+        },
+        {
+          "case": "tests/test_agent_development.py::test_development_evaluation[revoked-reward]",
+          "outcome": "passed",
+          "actual_mode": "deterministic",
+          "status": "answered",
+          "citation_count": 1,
+          "tool_count": 0
+        },
+        {
+          "case": "tests/test_agent_development.py::test_development_evaluation[multiple-projects]",
+          "outcome": "passed",
+          "actual_mode": "deterministic",
+          "status": "answered",
+          "citation_count": 1,
+          "tool_count": 0
+        },
+        {
+          "case": "tests/test_agent_development.py::test_development_evaluation[funding-and-schedule]",
+          "outcome": "passed",
+          "actual_mode": "deterministic",
+          "status": "answered",
+          "citation_count": 2,
+          "tool_count": 0
+        },
+        {
+          "case": "tests/test_agent_development.py::test_development_evaluation[unsupported-cause]",
+          "outcome": "passed",
+          "actual_mode": "deterministic",
+          "status": "answered",
+          "citation_count": 1,
+          "tool_count": 0
+        },
+        {
+          "case": "tests/test_agent_development.py::test_development_evaluation[unsupported-allegation]",
+          "outcome": "passed",
+          "actual_mode": "deterministic",
+          "status": "insufficient_evidence",
+          "citation_count": 1,
+          "tool_count": 0
+        },
+        {
+          "case": "tests/test_agent_development.py::test_development_evaluation[linked-merged]",
+          "outcome": "passed",
+          "actual_mode": "deterministic",
+          "status": "answered",
+          "citation_count": 1,
+          "tool_count": 0
+        },
+        {
+          "case": "tests/test_agent_development.py::test_development_evaluation[roadmap-change]",
+          "outcome": "passed",
+          "actual_mode": "deterministic",
+          "status": "answered",
+          "citation_count": 1,
+          "tool_count": 0
+        },
+        {
+          "case": "tests/test_agent_development.py::test_development_evaluation[trend-unavailable]",
+          "outcome": "passed",
+          "actual_mode": "deterministic",
+          "status": "insufficient_evidence",
+          "citation_count": 1,
+          "tool_count": 0
+        },
+        {
+          "case": "tests/test_agent_development.py::test_development_evaluation[after-funding-unknown]",
+          "outcome": "passed",
+          "actual_mode": "deterministic",
+          "status": "insufficient_evidence",
+          "citation_count": 2,
+          "tool_count": 0
+        },
+        {
+          "case": "tests/test_agent_development.py::test_development_evaluation[spending-trend-unknown]",
+          "outcome": "passed",
+          "actual_mode": "deterministic",
+          "status": "insufficient_evidence",
+          "citation_count": 2,
+          "tool_count": 0
+        },
+        {
+          "case": "tests/test_agent_development.py::test_development_evaluation[hostile-github-text]",
+          "outcome": "passed",
+          "actual_mode": "deterministic",
+          "status": "answered",
+          "citation_count": 1,
+          "tool_count": 0
+        },
+        {
+          "case": "tests/test_agent_financial.py::test_evaluation_dataset[fully-funded]",
+          "outcome": "passed",
+          "actual_mode": "deterministic",
+          "status": "answered",
+          "citation_count": 1,
+          "tool_count": 0
+        },
+        {
+          "case": "tests/test_agent_financial.py::test_evaluation_dataset[partially-funded]",
+          "outcome": "passed",
+          "actual_mode": "deterministic",
+          "status": "answered",
+          "citation_count": 1,
+          "tool_count": 0
+        },
+        {
+          "case": "tests/test_agent_financial.py::test_evaluation_dataset[no-contributions]",
+          "outcome": "passed",
+          "actual_mode": "deterministic",
+          "status": "answered",
+          "citation_count": 1,
+          "tool_count": 0
+        },
+        {
+          "case": "tests/test_agent_financial.py::test_evaluation_dataset[reported-expenses]",
+          "outcome": "passed",
+          "actual_mode": "deterministic",
+          "status": "answered",
+          "citation_count": 1,
+          "tool_count": 0
+        },
+        {
+          "case": "tests/test_agent_financial.py::test_evaluation_dataset[no-public-support]",
+          "outcome": "passed",
+          "actual_mode": "deterministic",
+          "status": "answered",
+          "citation_count": 2,
+          "tool_count": 0
+        },
+        {
+          "case": "tests/test_agent_financial.py::test_evaluation_dataset[multiple-documents]",
+          "outcome": "passed",
+          "actual_mode": "deterministic",
+          "status": "answered",
+          "citation_count": 2,
+          "tool_count": 0
+        },
+        {
+          "case": "tests/test_agent_financial.py::test_evaluation_dataset[over-budget]",
+          "outcome": "passed",
+          "actual_mode": "deterministic",
+          "status": "answered",
+          "citation_count": 1,
+          "tool_count": 0
+        },
+        {
+          "case": "tests/test_agent_financial.py::test_evaluation_dataset[under-budget]",
+          "outcome": "passed",
+          "actual_mode": "deterministic",
+          "status": "answered",
+          "citation_count": 1,
+          "tool_count": 0
+        },
+        {
+          "case": "tests/test_agent_financial.py::test_evaluation_dataset[public-findings]",
+          "outcome": "passed",
+          "actual_mode": "deterministic",
+          "status": "answered",
+          "citation_count": 1,
+          "tool_count": 0
+        },
+        {
+          "case": "tests/test_agent_financial.py::test_evaluation_dataset[private-findings-withheld]",
+          "outcome": "passed",
+          "actual_mode": "deterministic",
+          "status": "answered",
+          "citation_count": 1,
+          "tool_count": 0
+        },
+        {
+          "case": "tests/test_agent_financial.py::test_evaluation_dataset[refund-and-reversal]",
+          "outcome": "passed",
+          "actual_mode": "deterministic",
+          "status": "answered",
+          "citation_count": 1,
+          "tool_count": 0
+        },
+        {
+          "case": "tests/test_agent_financial.py::test_evaluation_dataset[receipt-consistency-unknown]",
+          "outcome": "passed",
+          "actual_mode": "deterministic",
+          "status": "insufficient_evidence",
+          "citation_count": 2,
+          "tool_count": 0
+        },
+        {
+          "case": "tests/test_agent_financial.py::test_evaluation_dataset[missing-information]",
+          "outcome": "passed",
+          "actual_mode": "deterministic",
+          "status": "answered",
+          "citation_count": 1,
+          "tool_count": 0
+        },
+        {
+          "case": "tests/test_agent_financial.py::test_evaluation_dataset[historical-comparison-unavailable]",
+          "outcome": "passed",
+          "actual_mode": "deterministic",
+          "status": "insufficient_evidence",
+          "citation_count": 1,
+          "tool_count": 0
+        },
+        {
+          "case": "tests/test_agent_financial.py::test_evaluation_dataset[causal-question-constrained]",
+          "outcome": "passed",
+          "actual_mode": "deterministic",
+          "status": "answered",
+          "citation_count": 1,
+          "tool_count": 0
+        }
+      ]
+    },
+    "mocked": {
+      "n": 7,
+      "passed": 7,
+      "failed": 0,
+      "cases": [
+        {
+          "case": "tests/test_agent_release.py::test_mocked_model_evaluation[correct-finance]",
+          "outcome": "passed",
+          "actual_mode": "llm",
+          "status": "answered",
+          "citation_count": 1,
+          "tool_count": 1
+        },
+        {
+          "case": "tests/test_agent_release.py::test_mocked_model_evaluation[plausible-wrong-total]",
+          "outcome": "passed",
+          "actual_mode": "deterministic",
+          "status": "answered",
+          "citation_count": 1,
+          "tool_count": 1
+        },
+        {
+          "case": "tests/test_agent_release.py::test_mocked_model_evaluation[plausible-false-delivery]",
+          "outcome": "passed",
+          "actual_mode": "deterministic",
+          "status": "answered",
+          "citation_count": 1,
+          "tool_count": 1
+        },
+        {
+          "case": "tests/test_agent_release.py::test_mocked_model_evaluation[plausible-causation]",
+          "outcome": "passed",
+          "actual_mode": "deterministic",
+          "status": "answered",
+          "citation_count": 1,
+          "tool_count": 1
+        },
+        {
+          "case": "tests/test_agent_release.py::test_mocked_model_evaluation[plausible-fraud]",
+          "outcome": "passed",
+          "actual_mode": "deterministic",
+          "status": "answered",
+          "citation_count": 1,
+          "tool_count": 1
+        },
+        {
+          "case": "tests/test_agent_release.py::test_mocked_model_evaluation[fabricated-citation]",
+          "outcome": "passed",
+          "actual_mode": "deterministic",
+          "status": "answered",
+          "citation_count": 1,
+          "tool_count": 1
+        },
+        {
+          "case": "tests/test_agent_release.py::test_mocked_model_evaluation[provider-outage]",
+          "outcome": "passed",
+          "actual_mode": "deterministic",
+          "status": "answered",
+          "citation_count": 1,
+          "tool_count": 0
+        }
+      ]
+    }
+  },
+  "actual_ollama": {
+    "n": 0,
+    "status": "NOT RUN; no runtime/model available"
+  }
+}

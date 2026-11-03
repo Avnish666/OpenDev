@@ -1,0 +1,19 @@
+{
+  "scope": "Current registry audit for default Community lockfile only; optional commercial and OS/native graphs excluded",
+  "vulnerabilities": {
+    "info": 0,
+    "low": 0,
+    "moderate": 0,
+    "high": 0,
+    "critical": 0,
+    "total": 0
+  },
+  "dependencies": {
+    "prod": 26,
+    "dev": 67,
+    "optional": 46,
+    "peer": 0,
+    "peerOptional": 0,
+    "total": 92
+  }
+}

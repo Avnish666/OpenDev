@@ -1,6 +1,16 @@
 # Review-only same-origin deployment artifact
 
 This configuration is prepared for review. It does not authorize deployment.
+For Step 6 use the [guarded local demo](../docs/demo-setup.md) and
+[final handoff](../docs/phase7-final-handoff.md). The submission package is prepared
+for owner review; a completed submission/video or public release is not claimed.
+Normal authorization stays intact; synthetic demo data and regression databases
+are separate. Public deployment remains NO-GO.
+For Step 5 local AI detection, safe acceptance commands, measured application
+capacity and deterministic hosting guidance, see
+[AI and capacity verification](../docs/phase7-ai-capacity-verification.md).
+Real Ollama inference remains NOT RUN; model RAM/VRAM and Render capacity are
+unverified. Keep LLM disabled and preserve the public deployment NO-GO.
 For Step 4 disposable provider diagnostics and explicit separation of mocked/local/
 live evidence, see [provider acceptance](../docs/phase7-live-provider-verification.md).
 The diagnostic CLI does not load application dotenv or perform financial/object

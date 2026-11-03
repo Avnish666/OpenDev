@@ -1,0 +1,102 @@
+{
+  "scope": "Phase 7 Step 6 local synthetic verification; no public deployment or genuine provider acceptance",
+  "source_head": "fc8fef005cc1021c3d2603b4cd0bf445c8708cd5",
+  "working_tree": "Step 5 and Step 6 remain uncommitted and unstaged on main",
+  "backend": {
+    "passed": 630,
+    "failed": 0,
+    "errors": 0,
+    "skipped": 0,
+    "warnings": 2,
+    "seconds": 334.99
+  },
+  "frontend": {
+    "passed": 87,
+    "failed": 0,
+    "skipped": 0,
+    "cancelled": 0
+  },
+  "new_demo_backend_cases": 12,
+  "typescript": {
+    "app": "passed",
+    "node": "passed"
+  },
+  "builds": {
+    "community": "passed",
+    "isolated_studio_evaluation": "passed",
+    "large_chunk_warnings": true
+  },
+  "lint": {
+    "status": "passed",
+    "existing_auth_context_warnings": 2
+  },
+  "chromium": {
+    "chat": {
+      "passed": 1,
+      "deselected": 26,
+      "seconds": 14.44
+    },
+    "community": {
+      "passed": 1,
+      "deselected": 6,
+      "seconds": 7.2
+    },
+    "isolated_studio_trial": {
+      "passed": 1,
+      "deselected": 6,
+      "seconds": 21.74
+    },
+    "demo": {
+      "status": "passed",
+      "actual_screenshots": 9,
+      "runtime_exceptions": 0
+    }
+  },
+  "migrations": {
+    "head": "b7a200000001",
+    "upgrade": "passed",
+    "consistency": "no new operations"
+  },
+  "image": {
+    "tag": "opendev-review:phase7-step6",
+    "id": "sha256:982995b489062c948ce51e0a98eaa71fa4549a16c6ae676b48d5c0c0aec836ce",
+    "restricted_static_upload_ocr_smoke": "passed"
+  },
+  "dependency_checks": {
+    "pip_check": "passed",
+    "npm_ls_default": "passed",
+    "npm_ls_optional_studio": "passed",
+    "pypi_versions_checked": 32,
+    "reported_pypi_entries": 0,
+    "reported_default_npm_entries": 0,
+    "pdfium_notice_hashes_matched": 18,
+    "default_graph_studio_enterprise_absent": true,
+    "full_os_native_advisory_audit": "NOT RUN"
+  },
+  "deterministic_evaluations": {
+    "passed": 45,
+    "failed": 0
+  },
+  "mocked_policy_evaluations": {
+    "passed": 7,
+    "failed": 0
+  },
+  "real_ollama": {
+    "n": 0,
+    "status": "NOT RUN; local metadata probe unavailable"
+  },
+  "release": "NO-GO for public deployment; GO for isolated synthetic demonstration",
+  "submission": "Prepared documentation/screenshots; owner video, rule checks, sharing approval and actual submission pending",
+  "shutdown": {
+    "final_demo_api_exit_code": 0,
+    "final_demo_frontend_exit_code": 0,
+    "signal": "SIGINT",
+    "dedicated_test_postgres": "stopped; data retained",
+    "original_environment_postgres": "preserved running"
+  },
+  "current_source_credential_scan": {
+    "files_scanned": 345,
+    "findings": 0,
+    "scope": "Heuristic non-ignored source scan; ignored secret files and historical revocation excluded"
+  }
+}

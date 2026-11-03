@@ -1,0 +1,41 @@
+{
+  "scope": "Local testing-mode DB/static concurrency sample; not hosted production/HTTPS or worst-case OCR capacity",
+  "startup_seconds": 3.09,
+  "static_root": [
+    200,
+    63.7,
+    458
+  ],
+  "concurrency": 8,
+  "requests": 20,
+  "statuses": [
+    200,
+    200,
+    200,
+    200,
+    200,
+    200,
+    200,
+    200,
+    200,
+    200,
+    200,
+    200,
+    200,
+    200,
+    200,
+    200,
+    200,
+    200,
+    200,
+    200
+  ],
+  "median_ms": 24.175,
+  "max_ms": 42.59,
+  "retained_db_connections": 3,
+  "docker_cpu_sample": "0.18%",
+  "docker_memory_sample": "69.51MiB / 512MiB",
+  "image": "opendev-review:phase7-step5",
+  "shutdown_seconds": 0.61,
+  "exit_code": 0
+}

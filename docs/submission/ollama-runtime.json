@@ -1,0 +1,12 @@
+{
+  "evidence_type": "local_runtime_probe",
+  "status": "unavailable",
+  "real_inference": "NOT RUN",
+  "ollama_binary_present": false,
+  "gpu_utility_present": false,
+  "model_selected": null,
+  "model_present": false,
+  "tool_capability": false,
+  "reason": "Endpoint unavailable or bounded metadata validation failed; details withheld",
+  "probe_seconds": 0.028
+}

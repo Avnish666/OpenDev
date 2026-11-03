@@ -1,5 +1,25 @@
 # Phase 7 Step 1: release freeze and blocker register
 
+Step 6 demo/submission handoff (2026-11-04, Asia/Calcutta): see
+[final handoff](phase7-final-handoff.md), [local demo](demo-setup.md) and the
+[submission checklist](submission/submission-checklist.md). A guarded synthetic
+fixture, normal-auth loopback launchers, actual public-page screenshots and final
+acceptance evidence are prepared. This does not establish a completed video,
+submission, sponsor eligibility, credential rotation, public licensing, genuine
+provider acceptance, full document isolation or hosted capacity. **Public NO-GO
+and all relevant open gates below remain.** Step 1 sections retain historical state;
+the final handoff contains current repository and verification results.
+
+Step 5 AI/capacity verification (2026-11-04, Asia/Calcutta): see
+[AI and capacity verification](phase7-ai-capacity-verification.md). Backend 618,
+frontend 87 and three relevant Chromium journeys pass locally. Deterministic
+reference evaluations: 45/45; mocked model scenarios: 7/7. No local Ollama server
+or weights are available; real inference and model resource measurements are
+**NOT RUN**. The loopback-only explicit local-test benchmark is prepared without
+downloads. P7-09 remains open, deterministic mode remains the public default
+recommendation, and **NO-GO remains**. Local image measurements do not establish
+Render Free capacity or close other release blockers.
+
 Step 4 provider acceptance (2026-11-04, Asia/Calcutta): see
 [live-provider verification](phase7-live-provider-verification.md). A dedicated,
 dry-run-first harness and synthetic fixtures are prepared; no disposable provider

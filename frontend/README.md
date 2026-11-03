@@ -1,32 +1,18 @@
-# React + TypeScript + Vite
+# OpenDev frontend
 
-This template provides a minimal setup to get React working in Vite with HMR and some Oxlint rules.
+React/TypeScript/Vite UI for public campaigns, financial transparency, roadmap,
+maintainer outcomes, analytics and cited accountability chat.
 
-Currently, two official plugins are available:
+Use Node 24 and `npm ci` here. `npm test`, both `tsc --noEmit -p tsconfig.app.json`
+and `tsconfig.node.json`, `npm run lint` and `npm run build` are the checks.
+`VITE_API_URL` is public configuration; an empty value uses same-origin `/api`.
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Oxc](https://oxc.rs)
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/)
+For the credential-free synthetic local demo use the [root README](../README.md)
+and [demo setup](../docs/demo-setup.md). The root command `node frontend/demo.mjs`
+starts a guarded loopback-only Community server with a fixed local API proxy.
+Normal `npm run dev` does not automatically supply that demo proxy.
 
-## React Compiler
-
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
-
-## Expanding the Oxlint configuration
-
-If you are developing a production application, we recommend enabling type-aware lint rules by installing `oxlint-tsgolint` and editing `.oxlintrc.json`:
-
-```json
-{
-  "$schema": "./node_modules/oxlint/configuration_schema.json",
-  "plugins": ["react", "typescript", "oxc"],
-  "options": {
-    "typeAware": true
-  },
-  "rules": {
-    "react/rules-of-hooks": "error",
-    "react/only-export-components": ["warn", { "allowConstantExport": true }]
-  }
-}
-```
-
-See the [Oxlint rules documentation](https://oxc.rs/docs/guide/usage/linter/rules) for the full list of rules and categories.
+Optional Studio installation and terms are isolated in `studio/`; normal installs
+and Community builds exclude Studio/Enterprise. Do not put backend keys in Vite,
+suppress evaluation warnings or treat a trial as public deployment authorization.
+Public deployment remains NO-GO; see [final handoff](../docs/phase7-final-handoff.md).

@@ -1,0 +1,69 @@
+{
+  "scope": "LOCAL SYNTHETIC DEMO; no live-provider verification",
+  "questions": [
+    {
+      "key": "funding",
+      "question": "How much funding has the project received?",
+      "answer": "Net recorded Sandbox funding: 95000 USD minor units. This is not an available bank balance.",
+      "answer_status": "answered",
+      "actual_mode": "deterministic",
+      "citation_count": 1
+    },
+    {
+      "key": "spending",
+      "question": "What is the reported spending by category?",
+      "answer": "Reported spending by category (integer minor units): [{'category': 'development', 'allocated_cents': 60000, 'reported_spending_cents': 35000, 'remaining_cents': 25000, 'overspend_cents': 0}, {'category': 'documentation', 'allocated_cents': 20000, 'reported_spending_cents': 5000, 'remaining_cents': 15000, 'overspend_cents': 0}, {'category': 'hosting', 'allocated_cents': 20000, 'reported_spending_cents': 25000, 'remaining_cents': -5000, 'overspend_cents': 5000}]",
+      "answer_status": "answered",
+      "actual_mode": "deterministic",
+      "citation_count": 1
+    },
+    {
+      "key": "findings",
+      "question": "What discrepancies have been publicly disclosed?",
+      "answer": "Public unresolved category budget-overrun findings: 1. Disclosed categories: [\"hosting\"]. These are comparisons of published category totals, not receipt-level allegations. Private receipt findings and human-review notes are not published; this is not a count of all discrepancies and does not establish fraud. [opendev:project:1:finances@sha256:13098229360b80303232195b68e2583942e0f040838af51930f00fac781e95ba]",
+      "answer_status": "answered",
+      "actual_mode": "deterministic",
+      "citation_count": 1
+    },
+    {
+      "key": "overdue",
+      "question": "Which milestones are overdue?",
+      "answer": "Roadmap page scope: offset 0, 3 of 3 commitments; evaluated at 2026-11-03T20:41:13.046227+00:00. Current-state counts in this page: {\"cancelled\": 0, \"delivered\": 1, \"in_progress\": 1, \"late\": 0, \"on_time\": 1, \"overdue_unfinished\": 1, \"planned\": 1, \"reopened\": 0, \"submitted_for_review\": 0, \"total\": 3, \"unknown_delivery_timing\": 0}. Commitment facts: [{\"asserted_delivery_date\": null, \"current_deadline\": \"2026-10-20\", \"days_late\": null, \"days_overdue_current\": 14, \"days_overdue_original\": 24, \"deadline_revisions\": 1, \"evaluated_at\": \"2026-11-03T20:41:13.046227+00:00\", \"id\": 2, \"original_deadline\": \"2026-10-10\", \"original_deadline_available\": true, \"reopened\": false, \"status\": \"in_progress\", \"timing\": \"not_currently_delivered\", \"title\": \"[LOCAL DEMO] Documentation and release\"}]. Counts and lists cover only this page. Current statuses are evaluated at a UTC date; a supplied earlier timestamp does not replay historical state. Deadline revisions never erase the original missed commitment. History previews are bounded to 50 events per milestone. [opendev:project:1:roadmap:offset:0@sha256:b8b885b66a9ae25f35e84b7f9d220cf91160c5304a86ebff439a0a22577018c3]\nDelivery is a maintainer assertion, not independent verification. Closed issues and merged PRs do not certify delivery. These records do not establish causes of delay, dishonesty or misuse of funding. No completion percentage or trust score is inferred.",
+      "answer_status": "answered",
+      "actual_mode": "deterministic",
+      "citation_count": 1
+    },
+    {
+      "key": "deadlines",
+      "question": "Which commitments were delayed or rescheduled?",
+      "answer": "Roadmap page scope: offset 0, 3 of 3 commitments; evaluated at 2026-11-03T20:41:13.074523+00:00. Current-state counts in this page: {\"cancelled\": 0, \"delivered\": 1, \"in_progress\": 1, \"late\": 0, \"on_time\": 1, \"overdue_unfinished\": 1, \"planned\": 1, \"reopened\": 0, \"submitted_for_review\": 0, \"total\": 3, \"unknown_delivery_timing\": 0}. Commitment facts: [{\"asserted_delivery_date\": \"2026-10-04\", \"current_deadline\": \"2026-10-05\", \"days_late\": 0, \"days_overdue_current\": 0, \"days_overdue_original\": null, \"deadline_revisions\": 0, \"evaluated_at\": \"2026-11-03T20:41:13.074523+00:00\", \"id\": 1, \"original_deadline\": \"2026-10-05\", \"original_deadline_available\": true, \"reopened\": false, \"status\": \"delivered\", \"timing\": \"on_time\", \"title\": \"[LOCAL DEMO] Public evidence schema\"}, {\"asserted_delivery_date\": null, \"current_deadline\": \"2026-10-20\", \"days_late\": null, \"days_overdue_current\": 14, \"days_overdue_original\": 24, \"deadline_revisions\": 1, \"evaluated_at\": \"2026-11-03T20:41:13.074523+00:00\", \"id\": 2, \"original_deadline\": \"2026-10-10\", \"original_deadline_available\": true, \"reopened\": false, \"status\": \"in_progress\", \"timing\": \"not_currently_delivered\", \"title\": \"[LOCAL DEMO] Documentation and release\"}, {\"asserted_delivery_date\": null, \"current_deadline\": \"2027-12-01\", \"days_late\": null, \"days_overdue_current\": 0, \"days_overdue_original\": 0, \"deadline_revisions\": 0, \"evaluated_at\": \"2026-11-03T20:41:13.074523+00:00\", \"id\": 3, \"original_deadline\": \"2027-12-01\", \"original_deadline_available\": true, \"reopened\": false, \"status\": \"planned\", \"timing\": \"not_currently_delivered\", \"title\": \"[LOCAL DEMO] Community feedback\"}]. Counts and lists cover only this page. Current statuses are evaluated at a UTC date; a supplied earlier timestamp does not replay historical state. Deadline revisions never erase the original missed commitment. History previews are bounded to 50 events per milestone. [opendev:project:1:roadmap:offset:0@sha256:27c0206fcc572d617e4c557b9bedede29150af0b9ce6c2bcdc7ad6880ed93bcd]\nDelivery is a maintainer assertion, not independent verification. Closed issues and merged PRs do not certify delivery. These records do not establish causes of delay, dishonesty or misuse of funding. No completion percentage or trust score is inferred.",
+      "answer_status": "answered",
+      "actual_mode": "deterministic",
+      "citation_count": 1
+    },
+    {
+      "key": "github",
+      "question": "What GitHub activity is available?",
+      "answer": "Retained GitHub snapshot counts: {\"issues_closed\": 1, \"issues_open\": 0, \"pull_requests_closed\": 1, \"pull_requests_merged\": 1, \"pull_requests_open\": 0}. Available sampled commits: 1; GitHub milestones in this page: 0. Last successful synchronization: 2026-10-01T12:00:00+00:00; stale: True at evaluation 2026-11-03T20:41:13.102860+00:00 (None means the available snapshot postdates evaluation). Closed PR counts include merged PRs; these are not disjoint quantities. Initial/incremental collections are bounded, commit history is sampled, deleted records can remain and unlinked activity need not represent funded commitments. [opendev:github_repository:970000001:activity:offset:0@sha256:f956706a3494bbdceb2fc9718be955fed9d5e3c767cc4d209f432eba85566845]\nDelivery is a maintainer assertion, not independent verification. Closed issues and merged PRs do not certify delivery. These records do not establish causes of delay, dishonesty or misuse of funding. No completion percentage or trust score is inferred.",
+      "answer_status": "answered",
+      "actual_mode": "deterministic",
+      "citation_count": 1
+    },
+    {
+      "key": "cross_domain",
+      "question": "Are the reported expenses increasing while delivery is delayed?",
+      "answer": "Roadmap page scope: offset 0, 3 of 3 commitments; evaluated at 2026-11-03T20:41:13.121590+00:00. Current-state counts in this page: {\"cancelled\": 0, \"delivered\": 1, \"in_progress\": 1, \"late\": 0, \"on_time\": 1, \"overdue_unfinished\": 1, \"planned\": 1, \"reopened\": 0, \"submitted_for_review\": 0, \"total\": 3, \"unknown_delivery_timing\": 0}. Gross recorded captured funding, including refund/reversal-affected captures: 110000 USD minor units. Net eligible completed captured funding after conservative exclusions: 95000 USD minor units. Published reported spending: 65000 USD minor units. Funding minus reported expenditure: 30000 USD minor units. This calculated difference is not an independently verified cash or bank balance. A negative difference indicates a recorded funding gap, not its cause. The records do not establish why funds were spent or why funding is insufficient. [opendev:project:1:finances@sha256:27769ce2ad6a48be0aac09a324b7fab33829642d7c367596f1583015ab4dc9dd] Overdue commitment IDs in this page: [2]. Financial comparisons and development assertions are separate; correlation does not establish causation. Insufficient evidence for an expenditure trend or development-after-funding chronology: immutable financial time windows and per-capture funding dates are not exposed by these aggregate tools. Counts and lists cover only this page. Current statuses are evaluated at a UTC date; a supplied earlier timestamp does not replay historical state. Deadline revisions never erase the original missed commitment. History previews are bounded to 50 events per milestone. [opendev:project:1:roadmap:offset:0@sha256:af1a2e9174c4dcedc4dea799627e10bfdf44cf0e3284274a1edcda9857cb74ae] [opendev:project:1:finances@sha256:27769ce2ad6a48be0aac09a324b7fab33829642d7c367596f1583015ab4dc9dd]\nDelivery is a maintainer assertion, not independent verification. Closed issues and merged PRs do not certify delivery. These records do not establish causes of delay, dishonesty or misuse of funding. No completion percentage or trust score is inferred.",
+      "answer_status": "insufficient_evidence",
+      "actual_mode": "deterministic",
+      "citation_count": 2
+    },
+    {
+      "key": "limitations",
+      "question": "What financial information is missing?",
+      "answer": "Exact partial-refund amounts require authoritative cumulative observations; unknown historical amounts remain unavailable. Independently verified cash balances are unavailable. Private receipt extractions, consistency determinations and reviewer notes are outside public scope. No independent vendor-payment verification is available. Published records do not establish completeness of all spending or external funding. Reported expenses without approved public document support: 2 totalling 40000 USD minor units. [opendev:project:1:finances@sha256:5299e24b3edc33eb3a8c7167db0a4f991136dd3c09adeb2c833696476ee26019]",
+      "answer_status": "answered",
+      "actual_mode": "deterministic",
+      "citation_count": 1
+    }
+  ]
+}

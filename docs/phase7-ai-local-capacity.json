@@ -1,0 +1,311 @@
+{
+  "scope": "Synthetic PostgreSQL TestClient; external model outage mocked; not Render or real inference",
+  "workloads": [
+    {
+      "workload": "project",
+      "n": 10,
+      "median_ms": 6.5655,
+      "empirical_p95_ms": 9.024,
+      "samples": [
+        {
+          "ms": 9.024,
+          "sql_statements": 3,
+          "bytes": 409
+        },
+        {
+          "ms": 6.297,
+          "sql_statements": 3,
+          "bytes": 409
+        },
+        {
+          "ms": 6.144,
+          "sql_statements": 3,
+          "bytes": 409
+        },
+        {
+          "ms": 7.426,
+          "sql_statements": 3,
+          "bytes": 409
+        },
+        {
+          "ms": 6.837,
+          "sql_statements": 3,
+          "bytes": 409
+        },
+        {
+          "ms": 6.717,
+          "sql_statements": 3,
+          "bytes": 409
+        },
+        {
+          "ms": 6.752,
+          "sql_statements": 3,
+          "bytes": 409
+        },
+        {
+          "ms": 6.414,
+          "sql_statements": 3,
+          "bytes": 409
+        },
+        {
+          "ms": 5.693,
+          "sql_statements": 3,
+          "bytes": 409
+        },
+        {
+          "ms": 5.553,
+          "sql_statements": 3,
+          "bytes": 409
+        }
+      ],
+      "errors": 0
+    },
+    {
+      "workload": "financial_analytics",
+      "n": 10,
+      "median_ms": 29.9115,
+      "empirical_p95_ms": 55.135,
+      "samples": [
+        {
+          "ms": 55.135,
+          "sql_statements": 31,
+          "bytes": 33564
+        },
+        {
+          "ms": 28.517,
+          "sql_statements": 31,
+          "bytes": 33564
+        },
+        {
+          "ms": 28.655,
+          "sql_statements": 31,
+          "bytes": 33564
+        },
+        {
+          "ms": 26.413,
+          "sql_statements": 31,
+          "bytes": 33564
+        },
+        {
+          "ms": 32.285,
+          "sql_statements": 31,
+          "bytes": 33564
+        },
+        {
+          "ms": 41.091,
+          "sql_statements": 31,
+          "bytes": 33564
+        },
+        {
+          "ms": 31.168,
+          "sql_statements": 31,
+          "bytes": 33564
+        },
+        {
+          "ms": 28.55,
+          "sql_statements": 31,
+          "bytes": 33564
+        },
+        {
+          "ms": 25.21,
+          "sql_statements": 31,
+          "bytes": 33564
+        },
+        {
+          "ms": 32.259,
+          "sql_statements": 31,
+          "bytes": 33564
+        }
+      ],
+      "errors": 0
+    },
+    {
+      "workload": "development",
+      "n": 10,
+      "median_ms": 13.613499999999998,
+      "empirical_p95_ms": 20.648,
+      "samples": [
+        {
+          "ms": 20.648,
+          "sql_statements": 17,
+          "bytes": 4601
+        },
+        {
+          "ms": 15.361,
+          "sql_statements": 17,
+          "bytes": 4601
+        },
+        {
+          "ms": 12.869,
+          "sql_statements": 17,
+          "bytes": 4601
+        },
+        {
+          "ms": 13.395,
+          "sql_statements": 17,
+          "bytes": 4601
+        },
+        {
+          "ms": 12.917,
+          "sql_statements": 17,
+          "bytes": 4601
+        },
+        {
+          "ms": 14.168,
+          "sql_statements": 17,
+          "bytes": 4601
+        },
+        {
+          "ms": 13.764,
+          "sql_statements": 17,
+          "bytes": 4601
+        },
+        {
+          "ms": 12.368,
+          "sql_statements": 17,
+          "bytes": 4601
+        },
+        {
+          "ms": 13.463,
+          "sql_statements": 17,
+          "bytes": 4601
+        },
+        {
+          "ms": 14.642,
+          "sql_statements": 17,
+          "bytes": 4601
+        }
+      ],
+      "errors": 0
+    },
+    {
+      "workload": "agent_deterministic",
+      "n": 10,
+      "median_ms": 10.25,
+      "empirical_p95_ms": 12.365,
+      "samples": [
+        {
+          "ms": 12.365,
+          "sql_statements": 9,
+          "bytes": 5001
+        },
+        {
+          "ms": 9.612,
+          "sql_statements": 9,
+          "bytes": 5001
+        },
+        {
+          "ms": 9.785,
+          "sql_statements": 9,
+          "bytes": 5001
+        },
+        {
+          "ms": 10.735,
+          "sql_statements": 9,
+          "bytes": 5001
+        },
+        {
+          "ms": 10.261,
+          "sql_statements": 9,
+          "bytes": 5001
+        },
+        {
+          "ms": 9.984,
+          "sql_statements": 9,
+          "bytes": 5001
+        },
+        {
+          "ms": 11.495,
+          "sql_statements": 9,
+          "bytes": 5001
+        },
+        {
+          "ms": 10.326,
+          "sql_statements": 9,
+          "bytes": 5001
+        },
+        {
+          "ms": 10.239,
+          "sql_statements": 9,
+          "bytes": 5001
+        },
+        {
+          "ms": 9.583,
+          "sql_statements": 9,
+          "bytes": 5001
+        }
+      ],
+      "errors": 0
+    },
+    {
+      "workload": "csv",
+      "n": 10,
+      "median_ms": 32.829499999999996,
+      "empirical_p95_ms": 65.428,
+      "samples": [
+        {
+          "ms": 30.394,
+          "sql_statements": 31,
+          "bytes": 3698
+        },
+        {
+          "ms": 28.764,
+          "sql_statements": 31,
+          "bytes": 3698
+        },
+        {
+          "ms": 31.901,
+          "sql_statements": 31,
+          "bytes": 3698
+        },
+        {
+          "ms": 35.174,
+          "sql_statements": 31,
+          "bytes": 3698
+        },
+        {
+          "ms": 30.2,
+          "sql_statements": 31,
+          "bytes": 3698
+        },
+        {
+          "ms": 65.428,
+          "sql_statements": 31,
+          "bytes": 3698
+        },
+        {
+          "ms": 48.191,
+          "sql_statements": 31,
+          "bytes": 3698
+        },
+        {
+          "ms": 36.16,
+          "sql_statements": 31,
+          "bytes": 3698
+        },
+        {
+          "ms": 33.496,
+          "sql_statements": 31,
+          "bytes": 3698
+        },
+        {
+          "ms": 32.163,
+          "sql_statements": 31,
+          "bytes": 3698
+        }
+      ],
+      "errors": 0
+    }
+  ],
+  "concurrent_project_reads": {
+    "workers": 4,
+    "n": 12,
+    "errors": 0,
+    "median_ms": 23.076,
+    "max_ms": 33.919
+  },
+  "auto_outage_actual_mode": "deterministic",
+  "test_process_cpu_seconds": 0.839,
+  "cumulative_test_process_peak_rss_kib": 138860,
+  "limits": "Ten samples: empirical p95 equals maximum, not a production percentile estimate. SQL excludes driver controls. RSS is cumulative pytest peak; DB/model CPU/RAM excluded."
+}

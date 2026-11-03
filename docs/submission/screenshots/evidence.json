@@ -1,0 +1,66 @@
+{
+  "scope": "LOCAL SYNTHETIC DEMO; no live-provider verification",
+  "viewport": {
+    "width": 1440,
+    "height": 1000
+  },
+  "provider_status": "No external provider calls; seeded fixtures; no model inference",
+  "screenshots": [
+    {
+      "file": "01-public-campaigns.png",
+      "caption": "LOCAL SYNTHETIC DEMO — Two fixture campaigns; no provider claims",
+      "sha256": "7e2d861a5e6cfc9bb27972288e2da441630fcf1de9d276fbe5940b99c30f57c3"
+    },
+    {
+      "file": "02-project-overview.png",
+      "caption": "LOCAL SYNTHETIC DEMO — Campaign, budget and fixture reward tier",
+      "sha256": "1be827d8a94a3fc8b6ea97d7f3f8c8163011d1d8b741157da3dc7a412debe682"
+    },
+    {
+      "file": "03-financial-transparency.png",
+      "caption": "LOCAL SYNTHETIC DEMO — Recorded funding, spending and public findings",
+      "sha256": "1bbd122536ede69b513b8b6ab72dd4f5e6d2469bb3323e83864269d0b6ca8e14"
+    },
+    {
+      "file": "04-expense-evidence.png",
+      "caption": "LOCAL SYNTHETIC DEMO — Published report and approved fixture metadata; no storage objects",
+      "sha256": "b1a8cf54dd699621823a515097337a99acc57a486e529673db4ff7ef0bbd055c"
+    },
+    {
+      "file": "05-bryntum-roadmap.png",
+      "caption": "LOCAL SYNTHETIC DEMO — Real Bryntum Community rendering of synthetic commitments",
+      "sha256": "c46b01f6d146060d7de5c8037691a74f1a7e419e57159b2c0023754151efe6fb"
+    },
+    {
+      "file": "06-community-financial-analytics.png",
+      "caption": "LOCAL SYNTHETIC DEMO — Real Community charts and public data",
+      "sha256": "0ee4d06fb7d458539b7148f6e36166e2d47b89da278ecdda37ea79bcee46dd7b"
+    },
+    {
+      "file": "07-development-analytics.png",
+      "caption": "LOCAL SYNTHETIC DEMO — Deadline and development record analytics",
+      "sha256": "43c87ad6dfdb98fc7aced654299d0c13e13022f622f4c3e1c2f6c2fdc66a40bf"
+    },
+    {
+      "file": "08-maintainer-history.png",
+      "caption": "LOCAL SYNTHETIC DEMO — Current-owner outcome aggregates; not a trust score",
+      "sha256": "641b21933535f3e0229eda3b6365a41921d0bdf43e7e71e836b5161aa24386b1"
+    },
+    {
+      "file": "09-deterministic-chat.png",
+      "caption": "LOCAL SYNTHETIC DEMO — Backend-rendered answer with actual-mode label and public citations",
+      "sha256": "3c3b9f158197b8ab88fd7d324c2f7eb0120cd9f868c84568155f39cda3dc8593"
+    }
+  ],
+  "checks": {
+    "public_pages": true,
+    "community_analytics": true,
+    "development_analytics": true,
+    "gantt": true,
+    "csv": true,
+    "deterministic_chat": true,
+    "private_project_404": true,
+    "unauthenticated_create_denied": true
+  },
+  "runtime_exceptions": 0
+}
