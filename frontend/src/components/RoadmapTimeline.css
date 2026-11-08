@@ -1,3 +1,8 @@
-.opendev-gantt { width: 100%; min-width: 0; overflow: auto; border: 1px solid #cdd7e0; }
+.opendev-gantt { width: 100%; min-width: 0; overflow: auto; border: 1px solid var(--border); }
 .opendev-gantt .b-gantt { min-width: 320px; }
 @media (max-width: 600px) { .opendev-gantt { max-width: calc(100vw - 40px); } }
+.opendev-gantt { border-radius: 12px; margin: 24px 0; --b-primary: var(--primary); }
+[aria-label='Roadmap timeline'] > .actions { padding: 16px; background: var(--surface-muted); border: 1px solid var(--border); border-radius: 12px; }
+[aria-label='Roadmap timeline'] .actions label { margin: 0; min-width: 160px; }
+[aria-label='Confirm schedule change'] { border-color: var(--primary); background: var(--soft-blue); }
+.opendev-gantt { scroll-margin-top: 110px; }

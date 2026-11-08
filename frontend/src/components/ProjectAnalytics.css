@@ -1,4 +1,4 @@
-.project-analytics { border-top:2px solid #cdd7e0; padding-top:24px; overflow-wrap:anywhere; min-width:0; }
+.project-analytics { border-top:2px solid var(--border); padding-top:24px; overflow-wrap:anywhere; min-width:0; }
 .analytics-charts { display:grid; grid-template-columns:repeat(auto-fit,minmax(min(100%,350px),1fr)); gap:18px; }
 .analytics-chart { height:350px; min-width:0; }
 .analytics-grid { height:380px; width:100%; }
@@ -7,7 +7,7 @@
 
 .analytics-table { overflow-x:auto; max-width:100%; margin:16px 0; }
 .analytics-table table { border-collapse:collapse; width:100%; }
-.analytics-table th,.analytics-table td { text-align:left; padding:10px; border-bottom:1px solid #cdd7e0; }
+.analytics-table th,.analytics-table td { text-align:left; padding:10px; border-bottom:1px solid var(--border); }
 .analytics-filters { display:flex; flex-wrap:wrap; gap:12px; align-items:end; padding:16px 0; }
 .analytics-filters p { flex-basis:100%; }
 .analytics-filters label { min-width:0; flex:1 1 180px; }
@@ -20,3 +20,20 @@
 .analytics-metrics>li { margin-bottom:16px; }
 .development-cards h5 { font-size:1rem; }
 .project-analytics select[name=analytics_view] { max-width:100%; margin-bottom:12px; }
+.project-analytics { margin-top: 40px; padding-top: 36px; }
+.analytics-filters { max-width: none; padding: 24px; background: var(--surface-muted); }
+.analytics-filters label { font-size: 12px; }
+.analytics-chart { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); padding: 12px; overflow: hidden; }
+.analytics-charts { margin: 24px 0; }
+.analytics-grid { margin: 24px 0; border-radius: var(--radius); overflow: hidden; }
+.analytics-table { border: 1px solid var(--border); border-radius: 12px; background: var(--surface); }
+.analytics-table caption { padding: 12px; font-size: 12px; text-align: left; color: var(--muted); }
+.analytics-table thead { background: var(--surface-muted); font-size: 12px; }
+.analytics-table td { font-size: 13px; font-variant-numeric: tabular-nums; }
+.coverage-facts { background: var(--surface); border: 1px solid var(--border); border-radius: 12px; padding: 24px; }
+.coverage-facts dt { color: var(--muted); font-size: 13px; }
+.coverage-facts dd { text-align: right; font-weight: 700; font-variant-numeric: tabular-nums; }
+.project-analytics > label { max-width: 420px; }
+.project-analytics .financial-cards { margin: 24px 0; }
+.analytics-charts { grid-template-columns: repeat(2,minmax(0,1fr)); scroll-margin-top: 110px; }
+@media(max-width:767px) { .analytics-charts { grid-template-columns: 1fr; } }
