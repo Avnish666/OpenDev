@@ -11,6 +11,14 @@ from pydantic import BaseModel, ConfigDict, Field
 
 class ProviderError(Exception):
     """Safe error: provider payloads and endpoint details must never reach clients."""
+    def __init__(self, message, category='provider_unavailable'):
+        super().__init__(message)
+        self.category = category if category in {
+            'provider_unavailable', 'provider_timeout', 'provider_http_error',
+            'provider_response_too_large', 'provider_invalid_json',
+            'provider_invalid_message', 'provider_incomplete_response',
+            'model_output_truncated', 'tool_model_unavailable',
+        } else 'provider_unavailable'
 
 
 class FunctionCall(BaseModel):
@@ -31,6 +39,8 @@ class GenerationSettings(BaseModel):
     temperature: float = 0
     num_predict: int = 512
     num_ctx: int = 8192
+    # Ollama's grammar belongs at the request root, never inside options.
+    response_schema: dict | None = Field(default=None, exclude=True)
 
 
 class ModelProvider(Protocol):
@@ -74,24 +84,39 @@ class OllamaProvider:
                         body = bytearray()
                         async for chunk in response.aiter_bytes():
                             if len(body)+len(chunk) > 32768:
-                                raise ProviderError('Provider response too large')
+                                raise ProviderError('Provider response too large', 'provider_response_too_large')
                             body.extend(chunk)
                         return json.loads(body)
-        except (httpx.HTTPError, TimeoutError, ValueError, RecursionError) as exc:
-            raise ProviderError('Provider unavailable or invalid response') from exc
+        except (httpx.TimeoutException, TimeoutError) as exc:
+            raise ProviderError('Provider request timed out', 'provider_timeout') from exc
+        except httpx.HTTPError as exc:
+            raise ProviderError('Provider unavailable', 'provider_http_error') from exc
+        except (ValueError, RecursionError) as exc:
+            raise ProviderError('Invalid provider JSON', 'provider_invalid_json') from exc
 
     async def available(self, timeout):
         result = await self._request('/api/show', {'model': self.model}, timeout)
         return isinstance(result, dict) and isinstance(result.get('capabilities'), list) and 'tools' in result['capabilities']
 
     async def chat(self, messages, tools, settings, timeout):
-        result = await self._request('/api/chat', {
-            'model': self.model, 'messages': messages, 'tools': tools, 'stream': False,
+        payload = {
+            'model': self.model, 'messages': messages, 'stream': False,
             'think': False, 'options': settings.model_dump(), 'keep_alive': '5m',
-        }, timeout)
+        }
+        if settings.response_schema is not None:
+            if tools:
+                raise ProviderError('Structured generation cannot also request native tools')
+            payload['format'] = settings.response_schema
+        elif tools:
+            payload['tools'] = tools
+        result = await self._request('/api/chat', payload, timeout)
         try:
+            if not isinstance(result, dict):
+                raise ValueError('Invalid response envelope')
+            if result.get('done_reason') == 'length':
+                raise ProviderError('Model output exceeded its token budget', 'model_output_truncated')
             if result.get('done') is not True:
-                raise ValueError('Incomplete response')
+                raise ProviderError('Incomplete provider response', 'provider_incomplete_response')
             raw = result['message']
             if not isinstance(raw,dict) or raw.get('role')!='assistant':raise ValueError('Invalid role')
             # Ollama may include thinking and timing fields; never forward them.
@@ -100,4 +125,4 @@ class OllamaProvider:
                 raise ValueError('Invalid role')
             return message
         except (ValueError, TypeError, KeyError, AttributeError) as exc:
-            raise ProviderError('Invalid provider response') from exc
+            raise ProviderError('Invalid provider response', 'provider_invalid_message') from exc
