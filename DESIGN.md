@@ -1,107 +1,123 @@
-# OpenDev visual identity
+# OpenDev — an editorial financial operating system
 
-## Direction
+## Decision and alternatives
 
-Premium fintech meets developer infrastructure. Build on the existing original
-OpenDev bracket mark, clear blue actions, navy surfaces and the message:
-“Fund open source. Track every milestone.” PayPal/Pentagram inform confident
-composition; Linear informs density and control precision; Stripe informs financial
-hierarchy; GitHub informs repository and evidence presentation. No proprietary
-logos, fonts, illustrations or copied layouts are used.
+The previous split hero, navy workflow illustration, repeated feature steps and
+rounded campaign cards postponed the real product and made unrelated information
+look alike. The redesign begins with actual projects and separates a public
+directory from a financial/development workspace.
 
-## Product priorities
+Three directions were compared before implementation:
 
-Visitors discover public projects. Backers inspect funding, expenses and delivery
-before choosing a reward. Maintainers create drafts and publish evidence. The UI
-must distinguish recorded funding, reported expenses and calculated differences.
-A receipt is not payment verification; delivery is a maintainer assertion. Sandbox
-labels stay visible. Model execution badges always describe actual returned mode.
+1. **The ledger:** compact numerical registers and ruled tables. Strong for finance,
+   too severe for first-time discovery on its own.
+2. **The dispatch:** an editorial introduction, a prominent actual project, then a
+   structured directory. Strong discovery and distinct typography, but needs more
+   operational density on authenticated screens.
+3. **The command center:** conventional sidebar/dashboard panels. Familiar, but
+   reproduces the generic application composition the redesign must replace.
 
-## Tokens and typography
+The chosen direction combines the dispatch for discovery with the ledger for
+application screens. Warm paper, charcoal type, thin rules and controlled blue
+links create the identity. Dark mode uses neutral charcoal, not layered navy.
+There is no decorative workflow, marketing feature sequence, invented chart or
+fictional campaign. The first available project is prominent because of its place
+in the current API page; it is not described as curated, verified or recommended.
 
-`frontend/src/index.css` owns colors, spacing, typography, radius, shadow and motion
-tokens. `frontend/src/design/analyticsTheme.ts` owns the SDK's resolved chart/grid
-colors, which canvas renderers cannot inherit as CSS variables. Keep these palettes
-aligned. System typography avoids font downloads, licensing ambiguity and layout
-shifts; no external font service or new runtime dependency is required.
+## Product and information boundaries
 
-- Body: 15px / 1.65; compact supporting text: 12–13px / 1.6.
-- Hero: responsive 44–72px, tight tracking, 1.06 line height.
-- Page title: 32–48px; section: 24–30px; card: 17–20px.
-- Money and metric values use tabular numerals and restrained tracking.
-- Spacing: 4, 8, 12, 16, 20, 24, 32, 40, 48, 64px.
-- Radii: controls 10px, cards 16px, major panels 24px, status pills fully round.
-- Shadows: a subtle resting shadow and a modest interactive elevation.
+Project discovery has only title, description, repository, owner ID, status, goal
+and currency. It must not imply funding totals or a maintainer identity that the
+list API does not supply. Repository namespace is labeled as a repository owner.
+Recorded funding appears where the existing progress/financial API supplies it.
+Search explicitly filters the current page. Pagination requests remain unchanged.
 
-Light surfaces are white on cool neutral backgrounds with navy text. Dark surfaces
-are layered navy on #090F1C with bright readable text. Muted text and primary button
-labels meet 4.5:1 target contrast; form boundaries target 3:1. Blue communicates
-actions; green, amber and red communicate actual semantic state only. Drafts and
-unknown states use neutral badges.
+Money is server-derived. Recorded Sandbox funding, maintainer-reported spending,
+calculated difference, document support and independent verification remain
+separate concepts. Do not use a trust score or imply a bank balance. The returned
+chat execution mode is always visible and accurate. All evidence, timestamps,
+source limitations, safety checks, checkout disclosures and licensing behavior
+remain present. Backend, authentication, payment, scheduling and request logic are
+outside this visual redesign.
 
-## Layout and shared primitives
+## Typography and assets
 
-The app container is at most 1440px with responsive 18–64px side gutters. Navigation
-stays compact and sticky; project navigation scrolls within its own region when
-necessary. Sections have a title, short context and nearby actions. Long evidence
-and calculation details remain available in clearly labeled native disclosures.
+- **DM Sans**, variable 400–700: body, navigation, controls, data, tables, headings.
+- **Instrument Serif**, regular/italic: editorial opening and featured project title.
+- Body 15px/1.6; supporting text 12–13px; field labels 12px; table data 12–13px.
+- Editorial heading 44–72px, 1.03 line height; page 30–42px; section 22–28px.
+- Money 28–38px with tabular numerals; exact long values wrap rather than truncate.
 
-`components/UI.tsx` provides PageHeading, SectionHeading, MetricCard, StatusBadge,
-FormSection and EmptyState. `HeroVisual.tsx` is a lightweight, explicitly labeled
-workflow illustration, not a financial dashboard or fictional campaign. New custom
-SVG icons extend the existing original Icon component.
+Latin WOFF2 subsets are self-hosted in `frontend/src/assets/fonts`, with original
+SIL Open Font License files. No Google Fonts runtime request. Fallbacks support
+characters outside these subsets. Use at most these two designed font families;
+monospace remains a system fallback for hashes/code. Font loading uses swap.
 
-- Discovery: clear page-scoped search, consistent cards, aligned goal/CTA rows.
-- Project: overview, funding/budget, reward tiers, progress/evidence, assistant and
-  analytics. Existing subnavigation and lazy feature entry points remain usable.
-- Forms: numbered field groups, readable hints, unchanged names/constraints/payloads,
-  and a secondary checklist column on wide screens.
-- Financial dashboard: primary recorded-funding/spending/difference KPIs first;
-  reconciliation details and source limitations remain visible below. Filters are
-  grouped into expense, evidence and development controls. No filters silently
-  change financial scope.
-- Tables: exact values, clear headers, local horizontal scrolling, tabular numerals.
-- Chat: distinct messages, visible requested/returned execution mode, question chips,
-  structured source cards, clear limitations and a calm input composer.
-- Gantt: style the surrounding toolbar/details/confirmation; preserve the vendor
-  widget and scheduling behavior. Its native theme follows explicit color-scheme.
-- Checkout/history: status and reward entitlement are separate. Sandbox remains
-  explicit; no frontend state implies successful capture.
+## Tokens
 
-## Responsive and accessibility rules
+`frontend/src/index.css` owns typography, colors, spacing, radii and motion.
+`frontend/src/design/analyticsTheme.ts` resolves matching colors for SDK canvases
+and AG Grid. Light: warm #F6F5F1, white surfaces, #20252B text, #1469E8 accent.
+Dark: charcoal background/surfaces with warm neutral text and accessible blue.
+Muted type targets 4.5:1, input boundaries 3:1, focus is visibly blue.
 
-Check 360, 390, 768, 1280 and 1440px in both themes. Cards use one column on phones,
-two on tablets and up to three where appropriate. Forms stack on phones; desktop
-helper panels collapse into normal flow. No page-level horizontal scrolling;
-financial tables, project navigation and Gantt own their scroll regions.
+Spacing: 4, 8, 12, 16, 20, 24, 32, 40, 48, 64px. Controls use 4px radii;
+functional panels 6px. Status indicators are small text/dot labels rather than
+pill-shaped decoration. Thin dividers replace repeated card boundaries. Shadows
+are reserved for popovers. Buttons and primary interactive controls are at least
+44px high. Blue means action or selection; semantic colors mean actual state.
 
-Touch targets are at least 44px. Preserve semantic headings, field labels, alerts,
-focus rings and native details behavior. The mobile menu supports focus entry,
-Escape, closing on navigation and keyboard return. The account dropdown supports
-keyboard dismissal. Respect prefers-reduced-motion and avoid motion as an indicator
-of payment, delivery or AI success.
+## Compositions and reusable primitives
 
-## Motion and performance
+`UI.tsx` supplies PageHeading, SectionHeading, MetricCard, StatusBadge, FormSection
+and EmptyState. `ProjectListing` presents the same genuine project fields in a
+featured article or ruled row. The feature treatment is limited to discovery;
+maintainer and analytics selection screens remain compact.
 
-Use 160–220ms color/elevation transitions and a small theme icon transition. The
-hero uses CSS/SVG only with gentle connector emphasis. Reduce motion disables all
-nonessential animations. Keep AG/Bryntum and chat lazy-loaded, avoid image/font
-requests and reserve loading space. Record build output before and after; report
-large vendor chunks as an existing limitation, not as a new optimization claim.
+- **Shell:** original bracket mark and wordmark, restrained top navigation,
+  underlined current route, Create Project action, persistent theme control,
+  keyboard-operable account disclosure and mobile navigation.
+- **Opening:** single editorial headline and a short explanation. No split hero,
+  illustration or redundant feature strip. Actual project content follows directly.
+- **Directory:** a first-project feature with repository and campaign target;
+  remaining projects are readable records, with consistent status/goal/action.
+- **Project workspace:** compact identity, horizontal section index, a funding
+  plan and reward area, followed by a public evidence register and operational
+  tools. Primary funding/spending/difference values are easy to scan.
+- **Analytics:** integrated controls, compact metric registers, paired chart
+  canvases and locally scrollable tables. Calculation scope and reconciliation
+  stay available, including visible funding goal. Community SDKs are preserved.
+- **Assistant:** an evidence notebook. Questions and answers are records, not
+  alternating bubbles. Suggestions are text rows; citations are indexed source
+  entries; requested/returned modes and source uncertainty are explicit.
+- **Forms:** ruled field groups with short explanatory notes, unnumbered titles,
+  aligned action footer and a plain secondary guidance column. Original field
+  names, constraints, validation and payloads remain unchanged.
+- **Funding:** contribution records and restrained receipt layout; payment status
+  and reward entitlement remain independently labeled. Sandbox remains prominent.
+- **Roadmap:** compact surrounding toolbar and selected-record detail. SDK DOM,
+  drag/resize, confirmation, immutable history and persistence remain untouched.
 
-## Theme behavior
+## States, responsiveness and motion
 
-Light remains the default. The explicit saved choice wins over device preference.
-The existing early HTML bootstrap, guarded localStorage writes, cross-tab sync and
-storage-disabled behavior are preserved. All application surfaces and SDK themes
-follow the same explicit selection.
+Empty states explain what records would populate the view and offer an appropriate
+existing action. Loading uses a small indicator or flat skeleton, not decorative
+charts. Errors retain original recovery and cancellation behavior. Native details
+provide accessible source/calculation expansion. Visible focus, skip link and
+existing mobile focus/escape behavior are retained.
 
-## Scope and validation
+Maximum content width 1440px with 24–64px gutters. At 1100px navigation collapses;
+at 900px directory metadata rearranges; at 767px records and forms become single
+column. Tables/timeline scroll within their own region. Check 360, 390, 768, 1280
+and 1440px in both themes. Interactive transitions are 160–220ms; no continuous
+marketing animation. Respect prefers-reduced-motion globally, including SDK shells.
 
-This refinement changes frontend presentation and documentation only. Backend,
-OAuth/payment logic, API contracts, form payloads/validation, model selection,
-financial calculations, database records and migration history remain untouched.
-Synthetic fixtures live only in isolated browser tests; never ship fixture data as
-application content. Capture before/after renders, exercise both themes at all five
-widths, verify interaction requests, run npm test, tsc -b, lint and production build.
-No commit, push or deployment is part of this task.
+## Verification
+
+Use the actual React application in Chromium with isolated synthetic API fixtures
+when a live backend is unavailable. Never alter real financial records. Capture
+before/after at 390, 768 and 1440px in both themes. Perform three visual review
+passes and record findings/fixes. Run unit, TypeScript, lint, production build and
+existing browser contracts for theme, chat, analytics and Bryntum. Measure actual
+JS/CSS and added font bytes; keep heavy SDK renderers lazy. Do not describe fixture
+screenshots as live-provider acceptance or independent evidence verification.

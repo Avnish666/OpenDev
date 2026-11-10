@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { type ReactNode, useEffect, useState } from 'react';
 import { api } from '../api/client';
 import { githubSource, onTimeLabel, type ProgressSummary } from '../api/progress';
 import { displayMoney } from '../api/transparency';
@@ -10,20 +10,26 @@ import { MetricCard } from './UI';
 const timestamp = (value: string | null) => value ? new Date(value).toLocaleString() : 'Not recorded';
 const message = (e: unknown) => e instanceof Error ? e.message : 'Unable to load project progress';
 
-export function ProgressOverview({ data, fundingGoalCents, currency }: { data: ProgressSummary; fundingGoalCents?: number; currency?: string }) {
-  const c = data.counts; const f = data.financial;
+/** The same public snapshot, composed into stable financial and development regions. */
+function FundingSnapshot({ data, fundingGoalCents, currency }: { data: ProgressSummary; fundingGoalCents?: number; currency?: string }) {
+  const f = data.financial;
   const showProgress = fundingGoalCents !== undefined && Number.isSafeInteger(fundingGoalCents) && fundingGoalCents > 0 && Number.isSafeInteger(f.net_recorded_funding_cents) && currency === f.currency;
   return <><div className="grid funding-metrics"><MetricCard label="Net recorded funding" value={displayMoney(f.net_recorded_funding_cents, f.currency)} note="Recorded PayPal Sandbox funding" emphasis /><MetricCard label="Published reported spending" value={displayMoney(f.published_reported_spending_cents, f.currency)} note="Maintainer reports, not independently verified payments" /><MetricCard label="Calculated funding difference" value={displayMoney(f.funding_minus_reported_expenditure_cents, f.currency)} note="Funding minus reported spending · not a bank balance" /></div>
-    {showProgress && <div className="funding-progress"><div><span>Recorded funding toward campaign goal</span><strong>{(f.net_recorded_funding_cents / fundingGoalCents * 100).toFixed(1)}%</strong></div><progress aria-label="Recorded funding toward campaign goal" value={Math.max(0, Math.min(f.net_recorded_funding_cents, fundingGoalCents))} max={fundingGoalCents} /><p>{displayMoney(f.net_recorded_funding_cents, f.currency)} recorded / {displayMoney(fundingGoalCents, f.currency)} goal · Sandbox records only</p></div>}
-    <div className="grid progress-cards"><article><h4>Maintainer-reported delivery</h4><p>{c.delivered} asserted delivered / {c.total} roadmap commitments</p><p>{c.in_progress} in progress · {c.submitted_for_review} submitted for review · {c.planned} planned</p><p>{onTimeLabel(c)}</p><p>{c.late} late · {c.unknown_delivery_timing} delivered with unknown timing</p></article>
+    {showProgress && <div className="funding-progress"><div><span>Recorded funding toward campaign goal</span><strong>{(f.net_recorded_funding_cents / fundingGoalCents * 100).toFixed(1)}%</strong></div><progress aria-label="Recorded funding toward campaign goal" value={Math.max(0, Math.min(f.net_recorded_funding_cents, fundingGoalCents))} max={fundingGoalCents} /><p>{displayMoney(f.net_recorded_funding_cents, f.currency)} recorded / {displayMoney(fundingGoalCents, f.currency)} goal · Sandbox records only</p></div>}</>;
+}
+function DevelopmentSnapshot({ data }: { data: ProgressSummary }) {
+  const c = data.counts; const f = data.financial;
+  return <><h4 className="register-title">Development evidence at a glance</h4><div className="grid progress-cards"><article><h4>Maintainer-reported delivery</h4><p>{c.delivered} asserted delivered / {c.total} roadmap commitments</p><p>{c.in_progress} in progress · {c.submitted_for_review} submitted for review · {c.planned} planned</p><p>{onTimeLabel(c)}</p><p>{c.late} late · {c.unknown_delivery_timing} delivered with unknown timing</p></article>
     <article><h4>Commitments needing context</h4><p>{c.overdue_unfinished} overdue unfinished commitments</p><p>{c.cancelled} cancelled · {c.reopened} distinct milestones reopened after delivery</p><p>Overdue means unfinished and past the current deadline (UTC). It is separate from original-deadline delivery timing.</p></article>
     <article><h4>Linked development signals</h4><p>{data.linked_issues ?? 'Unavailable'} unique linked issues · {data.linked_merged_pull_requests ?? 'Unavailable'} unique linked merged PRs</p><p>Activity is not independent proof of deliverable fulfillment.</p></article>
     </div><details className="record-details"><summary>Recorded financial accountability · calculation and evidence coverage</summary><div><h4>Recorded financial accountability</h4><p>Net Sandbox funding: {displayMoney(f.net_recorded_funding_cents, f.currency)}</p><p>Published reported spending: {displayMoney(f.published_reported_spending_cents, f.currency)}</p><p>Calculated difference: {displayMoney(f.funding_minus_reported_expenditure_cents, f.currency)} (not available cash or a verified balance)</p><p>{f.expenses_with_documents_count} / {f.published_expense_count} expenses with approved public document support; {displayMoney(f.expenses_with_documents_cents, f.currency)}</p><p>{f.public_unresolved_discrepancy_count} public budget findings; private receipt findings are withheld.</p><ul>{f.notes.map(note => <li key={note}>{note}</li>)}</ul></div></details>
-    <h4>Freshness of observations</h4><p>Last successful GitHub sync: {timestamp(data.sync.last_successful_sync_at)}</p><p>Last attempted GitHub sync: {timestamp(data.sync.latest?.started_at ?? null)} · {data.sync.latest?.status ?? 'No attempt recorded'}</p><p>Attempt finished: {timestamp(data.sync.latest?.completed_at ?? null)}{data.sync.latest?.error_code && ` · ${data.sync.latest.error_code}`}</p><p>Internal roadmap update: {timestamp(data.roadmap_updated_at)}</p><p>Snapshot age at calculation: {data.snapshot_age_seconds === null ? 'Unknown' : `${data.snapshot_age_seconds} seconds`} · calculated {timestamp(data.calculated_at)}</p>
+    <div className="provenance-register"><div><h4>Freshness of observations</h4><p>Last successful GitHub sync: {timestamp(data.sync.last_successful_sync_at)}</p><p>Last attempted GitHub sync: {timestamp(data.sync.latest?.started_at ?? null)} · {data.sync.latest?.status ?? 'No attempt recorded'}</p><p>Attempt finished: {timestamp(data.sync.latest?.completed_at ?? null)}{data.sync.latest?.error_code && ` · ${data.sync.latest.error_code}`}</p><p>Internal roadmap update: {timestamp(data.roadmap_updated_at)}</p><p>Snapshot age at calculation: {data.snapshot_age_seconds === null ? 'Unknown' : `${data.snapshot_age_seconds} seconds`} · calculated {timestamp(data.calculated_at)}</p>
     <p>Linked source freshness: {data.linked_evidence_stale === null ? 'No available linked observations to assess' : data.linked_evidence_stale ? 'Stale linked observations exist; inspect the roadmap evidence' : 'No stale linked observations detected at calculation; retained/deleted-item limits still apply'}</p>
     {data.sync.stale && <p role="status">Stale or missing GitHub data. A failed synchronization preserves previous observations; these are not live updates.</p>}
-    <h4>Owner history</h4><p><a href={`#/maintainers/${data.owner.identity.user_id}`}>{data.owner.identity.username}: public maintainer profile</a></p><p>{data.owner.public_projects} owned public projects · {data.owner.delivery.delivered} / {data.owner.delivery.total} commitments currently asserted delivered</p><p>{onTimeLabel(data.owner.delivery)}</p><p>{data.owner.scope}</p>
-  </>;
+    </div><div><h4>Owner history</h4><p><a href={`#/maintainers/${data.owner.identity.user_id}`}>{data.owner.identity.username}: public maintainer profile</a></p><p>{data.owner.public_projects} owned public projects · {data.owner.delivery.delivered} / {data.owner.delivery.total} commitments currently asserted delivered</p><p>{onTimeLabel(data.owner.delivery)}</p><p>{data.owner.scope}</p></div></div></>;
+}
+export function ProgressOverview({ data, fundingGoalCents, currency }: { data: ProgressSummary; fundingGoalCents?: number; currency?: string }) {
+  return <><FundingSnapshot data={data} fundingGoalCents={fundingGoalCents} currency={currency} /><DevelopmentSnapshot data={data} /></>;
 }
 
 export function GitHubActivity({ data }: { data: ProgressSummary }) {
@@ -38,7 +44,7 @@ export function GitHubActivity({ data }: { data: ProgressSummary }) {
   </>;
 }
 
-export default function ProjectProgress({ projectId, canManage, fundingGoalCents, currency }: { projectId: number; canManage: boolean; fundingGoalCents?: number; currency?: string }) {
+export default function ProjectProgress({ projectId, canManage, fundingGoalCents, currency, children }: { projectId: number; canManage: boolean; fundingGoalCents?: number; currency?: string; children?: ReactNode }) {
   const [data, setData] = useState<ProgressSummary>(); const [error, setError] = useState(''); const [version, setVersion] = useState(0);
   const [ledger, setLedger] = useState(false); const [controls, setControls] = useState(false);
   useEffect(() => { let live = true; api<ProgressSummary>(`/api/projects/${projectId}/progress-summary`).then(v => { if (live) { setData(v); setError(''); } }).catch(e => { if (live) setError(message(e)); }); return () => { live = false; }; }, [projectId, version]);
@@ -49,11 +55,12 @@ export default function ProjectProgress({ projectId, canManage, fundingGoalCents
   },[projectId]);
   const section = (name: string) => `progress-${projectId}-${name}`;
   function navigate(name: string) { const element = document.getElementById(section(name)); element?.scrollIntoView(); element?.focus(); }
-  return <section className="project-progress" aria-label="Public project progress"><p className="eyebrow">FUNDING. COMMITMENTS. EVIDENCE.</p><h3>Project Progress</h3><p><a href={`#/projects/${projectId}/analytics`}>Open project analytics</a></p><p>Public evidence and maintainer assertions, with separate financial and development records. No inferred completion percentage or independent delivery certification.</p>
-    <nav aria-label="Project progress sections"><button onClick={() => navigate('overview')}>Overview</button><button onClick={() => navigate('roadmap')}>Roadmap / timeline</button><button onClick={() => navigate('github')}>GitHub activity</button><button onClick={() => navigate('history')}>Delivery history</button><button onClick={() => { setLedger(true); requestAnimationFrame(() => navigate('financial')); }}>Open financial transparency ledger</button></nav>
+  return <section className="project-progress" aria-label="Public project progress"><div className="workspace-heading"><h3>Project Progress</h3><a href={`#/projects/${projectId}/analytics`}>Open project analytics</a></div><p>Public funding records and maintainer assertions. Delivery is not independently certified; activity is not a completion percentage.</p>
+
     <button onClick={() => { setData(undefined); setVersion(v => v + 1); }}>Refresh progress summary</button>
     {error && <p role="alert">{error}</p>}{!data && !error && <p role="status">Loading public progress summary…</p>}
-    <section id={section('overview')} tabIndex={-1} aria-label="Progress overview">{data && <ProgressOverview data={data} fundingGoalCents={fundingGoalCents} currency={currency} />}</section>
+    <section id={section('overview')} tabIndex={-1} aria-label="Progress overview">{data && <FundingSnapshot data={data} fundingGoalCents={fundingGoalCents} currency={currency} />}{children}{data && <DevelopmentSnapshot data={data} />}</section>
+    <nav aria-label="Project progress sections"><button onClick={() => navigate('overview')}>Overview</button><button onClick={() => navigate('roadmap')}>Roadmap / timeline</button><button onClick={() => navigate('github')}>GitHub activity</button><button onClick={() => navigate('history')}>Delivery history</button><button onClick={() => { setLedger(true); requestAnimationFrame(() => navigate('financial')); }}>Open financial transparency ledger</button></nav>
     <section id={section('roadmap')} tabIndex={-1} aria-label="Roadmap and timeline"><Roadmap projectId={projectId} canManage={canManage} /></section>
     <section className="evidence-section" id={section('github')} tabIndex={-1} aria-label="GitHub development activity"><h3>GitHub development activity</h3>{data && <GitHubActivity data={data} />}
       {canManage && <><button onClick={() => setControls(!controls)}>Maintainer GitHub sync controls</button>{controls && <GitHubProgress projectId={projectId} canManage active />}</>}

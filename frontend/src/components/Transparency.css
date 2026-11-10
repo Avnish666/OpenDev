@@ -1,7 +1,7 @@
-.transparency { padding-top: 24px; border-top: 2px solid var(--border); text-align: left; }
+.transparency { padding-top: 24px; border-top: 1px solid var(--border); text-align: left; }
 .transparency p { margin: 10px 0; }
 .financial-value { font-size: 1.5rem; font-weight: 700; color: var(--link); }
-.budget-track { height: 12px; background: var(--surface-muted); border-radius: 3px; overflow: hidden; }
+.budget-track { height: 5px; background: var(--surface-muted); border-radius: 0; overflow: hidden; }
 .budget-track span { display: block; height: 100%; }
 .allocation-bar { background: var(--link); }
 .spending-bar { background: var(--warning); }
@@ -10,4 +10,4 @@
 .ledger-table table { border-collapse: collapse; width: 100%; text-align: left; }
 .ledger-table th, .ledger-table td { padding: 12px; border-bottom: 1px solid var(--border); overflow-wrap: anywhere; }
 .ledger-table caption { text-align: left; padding: 12px 0; }
-.transparency aside { background: var(--soft-blue); padding: 20px; border-radius: 10px; }
+.transparency aside { border-left: 2px solid var(--border); padding: 12px 24px; }

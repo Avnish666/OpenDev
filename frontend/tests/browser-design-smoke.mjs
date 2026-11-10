@@ -82,7 +82,7 @@ try {
   for(const key of ['body','muted','link','button']) assert.ok(ratios[key]>=4.5, `${key} text contrast ${ratios[key]}`);
   assert.ok(ratios.field>=3, `input boundary contrast ${ratios.field}`); checks.push({theme:await evaluate('document.documentElement.dataset.theme'),contrast:ratios});
  };
- const capture = async (name, selector) => { if (selector) await evaluate(`document.querySelector(${JSON.stringify(selector)}).scrollIntoView({block:'start'})`); await new Promise(r => setTimeout(r, 250)); const screenshot = await call('Page.captureScreenshot', { format: 'png', captureBeyondViewport: false }); await writeFile(join(output, name + '.png'), Buffer.from(screenshot.data, 'base64')); };
+ const capture = async (name, selector) => { await evaluate('document.fonts.ready.then(()=>true)'); if (selector) await evaluate(`document.querySelector(${JSON.stringify(selector)}).scrollIntoView({block:'start'})`); await new Promise(r => setTimeout(r, 250)); const screenshot = await call('Page.captureScreenshot', { format: 'png', captureBeyondViewport: false }); await writeFile(join(output, name + '.png'), Buffer.from(screenshot.data, 'base64')); };
  const choose = (selector,value)=>evaluate(`(()=>{const s=document.querySelector(${JSON.stringify(selector)});s.value=${JSON.stringify(value)};s.dispatchEvent(new Event('change',{bubbles:true}));})()`);
  const input = (selector,value)=>evaluate(`(()=>{const e=document.querySelector(${JSON.stringify(selector)});const proto=e.tagName==='TEXTAREA'?HTMLTextAreaElement.prototype:HTMLInputElement.prototype;Object.getOwnPropertyDescriptor(proto,'value').set.call(e,${JSON.stringify(value)});e.dispatchEvent(new Event('input',{bubbles:true}));e.dispatchEvent(new Event('change',{bubbles:true}));})()`);
  const scene = async(name,selector,width,theme)=>{
@@ -91,7 +91,7 @@ try {
   assert.equal(overlap,false,`${name}-${theme}-${width}: grid cards must not overlap`);
   const tiny=await evaluate(`([...document.querySelectorAll('.page-container button:not(.b-bryntum *):not(.ag-root *),.header-actions button')].filter(e=>e.getClientRects().length).filter(e=>e.getBoundingClientRect().height<43.5).map(e=>e.textContent))`);
   assert.deepEqual(tiny,[],`${name}-${theme}-${width}: touch target height`);
-  if(width===1440||width===390)await capture(`${name}-${theme}-${width}`,selector);
+  if(width===1440||width===768||width===390)await capture(`${name}-${theme}-${width}`,selector);
  };
  const setTheme = async theme=>{if(await evaluate('document.documentElement.dataset.theme')!==theme)await toggle();await checkContrast();};
  await call('Runtime.enable');await call('Page.enable');await call('Network.enable');await call('Page.bringToFront');
