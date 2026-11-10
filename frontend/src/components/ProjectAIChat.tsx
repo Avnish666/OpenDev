@@ -15,7 +15,7 @@ export function CitationList({ answer, projectId, ownerId }: { answer: AgentAnsw
       const e = answer.evidence_used.find(e => e.citation.reference === c.reference);
       const source = citationPresentation(c, e, projectId, ownerId);
       const freshness = e?.freshness === 'stale' ? 'Stale evidence' : e?.freshness === 'current_database_snapshot' ? 'Current database snapshot · not live verification' : 'Freshness unknown';
-      return <li key={`${c.reference}-${index}`}><strong>{source.title}</strong> <span className="chat-tag">{source.category}</span>
+      return <li className="citation-card" key={`${c.reference}-${index}`}><div className="citation-heading"><span className="citation-number" aria-hidden="true">{String(index + 1).padStart(2, '0')}</span><strong>{source.title}</strong><span className="chat-tag">{source.category}</span></div>
         <p>{source.explanation}</p><p className={e?.freshness === 'stale' ? 'chat-notice' : ''}>{freshness}</p>
         <dl><dt>Retrieved</dt><dd>{stamp(c.retrieved_at)}</dd><dt>Last source update</dt><dd>{stamp(e?.last_updated_at ?? null)}</dd></dl>
         {source.verifiedReference && <details><summary>Reference and projection hash</summary><code>{source.verifiedReference}</code></details>}
@@ -25,7 +25,7 @@ export function CitationList({ answer, projectId, ownerId }: { answer: AgentAnsw
 }
 export function AgentResponse({ answer, projectId, ownerId }: { answer: AgentAnswer; projectId: number; ownerId?: number }) {
   const unavailable = answer.answer_status === 'provider_unavailable';
-  return <><div className="chat-meta"><strong>{STATUS[answer.answer_status]}</strong><span className="chat-tag">Returned mode: {MODES[answer.execution_mode]}{unavailable ? ' · unavailable' : ''}</span></div>
+  return <><div className="chat-meta"><strong>{STATUS[answer.answer_status]}</strong><span className="chat-tag chat-execution-tag" data-mode={answer.execution_mode} data-unavailable={unavailable}>Returned mode: {MODES[answer.execution_mode]}{unavailable ? ' · unavailable' : ''}</span></div>
     {unavailable && <p className="chat-notice">No live model answer is available. Try Deterministic mode.</p>}
     {answer.answer_status === 'insufficient_evidence' && <p className="chat-notice">The available records cannot fully establish the requested conclusion.</p>}
     <div className="chat-answer">{answer.answer}</div>
@@ -79,17 +79,17 @@ function ChatSession({ projectId, ownerId }: { projectId: number; ownerId?: numb
     <div className="chat-heading"><div><span className="chat-eyebrow"><span className="ai-mark" aria-hidden="true">✦</span> PUBLIC RECORDS · READ ONLY</span><h3 id={`chat-title-${projectId}`}>AI Accountability Assistant</h3></div><button type="button" className="chat-secondary" onClick={clear} disabled={!messages.length && !question}>Clear conversation</button></div>
     <p>Ask about funding, reported spending, commitments and public evidence. Reports and citations do not independently verify delivery or payment.</p>
     <p className="chat-caption">Each question is independent; earlier messages are not sent to the agent. History stays on this page only (up to 12 exchanges) and clears on refresh.</p>
-    {!messages.length && <div className="chat-empty"><h4>Start with the evidence</h4><p>Choose a supported question or write your own. No sign-in is required.</p><div className="chat-suggestions">{SUGGESTIONS.map(s => <button type="button" className="chat-secondary" key={s} onClick={() => { setQuestion(s); input.current?.focus(); }}>{s}</button>)}</div></div>}
+    {!messages.length && <div className="chat-empty"><span className="chat-empty-icon" aria-hidden="true"><svg width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5"><path d="M4 4h16v12H9l-5 5V4Zm4 4h8M8 12h5" /></svg></span><p className="chat-eyebrow">CLARITY STARTS WITH A QUESTION</p><h4>Start with the evidence</h4><p>Choose a supported question or write your own. No sign-in is required.</p><div className="chat-suggestions">{SUGGESTIONS.map(s => <button type="button" className="chat-secondary" key={s} onClick={() => { setQuestion(s); input.current?.focus(); }}>{s}</button>)}</div></div>}
     <div className="chat-history" role="region" aria-label="Conversation history" aria-busy={busy}>{messages.map((m, index) => <div className="chat-exchange" key={m.id}>
-      <div className="chat-user"><strong>You</strong><p>{m.question}</p><small>Requested: {MODES[m.mode]}</small></div>
-      <article className="chat-assistant"><h4 tabIndex={-1} ref={index === messages.length - 1 ? result : undefined}>Accountability answer</h4>
+      <div className="chat-user"><div className="chat-user-label"><span aria-hidden="true">YOU</span><strong>You</strong></div><p>{m.question}</p><small>Requested: {MODES[m.mode]}</small></div>
+      <article className="chat-assistant"><h4 className="assistant-answer-heading" tabIndex={-1} ref={index === messages.length - 1 ? result : undefined}>Accountability answer</h4>
         {m.answer ? <AgentResponse answer={m.answer} projectId={projectId} ownerId={ownerId} /> : m.cancelled ? <p>Request cancelled. No answer was accepted.</p> : m.error ? <><p role="alert">{m.error}</p>{m.retryAt && <p>Retry after {new Date(m.retryAt).toLocaleTimeString()}.</p>}<button type="button" disabled={busy || cooldown} onClick={() => void send(m.question, m.mode)}>Retry question</button></> : <p className="chat-loading"><span className="loading-dot" aria-hidden="true" />Retrieving bounded public evidence…</p>}
       </article></div>)}</div>
     <p role="status" aria-live="polite">{busy ? 'Preparing an evidence-backed answer…' : notice}</p>
     <form className="chat-composer" onSubmit={submit}>
       <label htmlFor={`chat-question-${projectId}`}>Your question<textarea placeholder="Ask about this project’s funding or progress…" id={`chat-question-${projectId}`} ref={input} value={question} maxLength={1000} rows={2} aria-describedby={`chat-help-${projectId}`} onChange={e => setQuestion(e.target.value)} onKeyDown={e => { if (e.key === 'Enter' && !e.shiftKey && !e.nativeEvent.isComposing) { e.preventDefault(); if (valid) void send(question, mode); } }} /></label>
       <p id={`chat-help-${projectId}`} className="chat-caption">3–1,000 characters. Enter to ask; Shift+Enter for a new line. {Array.from(question).length}/1,000</p>
-      <div className="chat-controls"><label>Execution mode<select value={mode} onChange={e => setMode(e.target.value as AgentMode)} disabled={busy}><option value="deterministic">Deterministic</option><option value="auto">Auto</option><option value="llm">LLM</option></select></label><button type="submit" disabled={!valid || busy || cooldown}>{busy ? 'Answering…' : 'Ask question'}</button>{busy && <button type="button" className="chat-secondary" onClick={cancel}>Cancel request</button>}</div>
+      <div className="chat-controls"><label>Execution mode<select value={mode} onChange={e => setMode(e.target.value as AgentMode)} disabled={busy}><option value="deterministic">Deterministic</option><option value="auto">Auto</option><option value="llm">LLM</option></select></label><span className="chat-requested-mode">Requested mode: <strong>{MODES[mode]}</strong></span><button type="submit" disabled={!valid || busy || cooldown}>{busy ? 'Answering…' : 'Ask question'}</button>{busy && <button type="button" className="chat-secondary" onClick={cancel}>Cancel request</button>}</div>
       <p className="chat-caption">Deterministic uses verified backend rules. LLM requests model-assisted tool selection and requires a configured provider. Auto may fall back to deterministic rules. Select LLM only when a model provider is available. Deterministic works without one.</p>
     </form>
   </section>;

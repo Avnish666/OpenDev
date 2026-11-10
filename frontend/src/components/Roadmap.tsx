@@ -29,7 +29,7 @@ function CommitmentForm({ projectId, row, done }: { projectId: number; row?: Roa
     try { await api(row ? `/api/roadmap/${row.id}` : `/api/projects/${projectId}/roadmap`, row ? 'PATCH' : 'POST', body); done(); }
     catch (e) { setError(message(e)); } finally { setBusy(false); }
   }
-  return <form onSubmit={event => void submit(event)}><h4>{row ? 'Edit commitment / order' : 'Create roadmap commitment'}</h4>
+  return <form className="roadmap-editor" onSubmit={event => void submit(event)}><h4>{row ? 'Edit commitment / order' : 'Create roadmap commitment'}</h4>
     {commitment && <><label>Title<input name="title" required minLength={3} maxLength={200} defaultValue={row?.title} /></label>
       <label>Description<textarea name="description" required maxLength={10000} defaultValue={row?.description} /></label>
       <label>Specific deliverable<textarea name="deliverable_description" required minLength={10} maxLength={10000} defaultValue={row?.deliverable_description} /></label>
@@ -61,7 +61,7 @@ function MilestoneCard({ row, canManage, done }: { row: RoadmapMilestone; canMan
     try { setHistory(await api<RoadmapHistory[]>(`/api/roadmap/${row.id}/history?limit=10&offset=${page * 10}`)); setHistoryPage(page); }
     catch (e) { setError(message(e)); } finally { setBusy(false); }
   }
-  return <article><h4>{row.title} · {row.status.replaceAll('_', ' ')}</h4><p className="description">{row.description}</p>
+  return <article className="milestone-card"><h4>{row.title} · {row.status.replaceAll('_', ' ')}</h4><p className="description">{row.description}</p>
     <h5>Deliverable commitment</h5><p className="description">{row.deliverable_description}</p>
     <p>Planned: {row.planned_start_date} → {row.planned_end_date}</p><p>Maintainer-reported delivery date: {row.actual_completion_date ?? 'Not delivered'}</p><p>{row.notice}</p>
     <h5>Development signals (not delivery certification)</h5><ul>{Object.entries(row.development_signals).map(([key, value]) => <li key={key}>{key.replaceAll('_', ' ')}: {value}</li>)}</ul>
@@ -95,8 +95,8 @@ export default function Roadmap({ projectId, canManage }: { projectId: number; c
     return () => { live = false; };
   }, [projectId, page, version]);
   function refresh() { setData(undefined); setVersion(v => v + 1); setCreating(false); }
-  return <section><h3>Project roadmap and funding deliverables</h3><p>Maintainer commitments are separate from synchronized GitHub milestones. Issue closure and PR merges never automatically mark delivery.</p>
-    <div className="actions"><button aria-pressed={view === 'list'} onClick={() => { setView('list'); refresh(); }}>Milestone list</button><button aria-pressed={view === 'timeline'} onClick={() => setView('timeline')}>Timeline</button></div>
+  return <section className="roadmap-section"><p className="eyebrow">A PUBLIC PLAN FOR WHAT COMES NEXT</p><h3>Project roadmap and funding deliverables</h3><p>Maintainer commitments are separate from synchronized GitHub milestones. Issue closure and PR merges never automatically mark delivery.</p>
+    <div className="actions roadmap-view-toggle"><button aria-pressed={view === 'list'} onClick={() => { setView('list'); refresh(); }}>Milestone list</button><button aria-pressed={view === 'timeline'} onClick={() => setView('timeline')}>Timeline</button></div>
     {view === 'timeline' && <TimelineBoundary><Suspense fallback={<p role="status">Loading timeline module…</p>}><Timeline projectId={projectId} canManage={canManage} /></Suspense></TimelineBoundary>}
     <div hidden={view !== 'list'}><button onClick={refresh}>Refresh roadmap</button>{canManage && <button onClick={() => setCreating(!creating)}>Create milestone</button>}
     {creating && <CommitmentForm projectId={projectId} done={refresh} />}

@@ -28,7 +28,7 @@ function ExpenseDetail({ projectId, expenseId }: { projectId: number; expenseId:
       window.location.assign(url.href);
     } catch (e) { setError(message(e)); } finally { setBusy(false); }
   }
-  return <article aria-label="Public expense detail" aria-live="polite">
+  return <article className="public-expense-card" aria-label="Public expense detail" aria-live="polite">
     <h4>Expense details</h4>{error && <p role="alert">{error}</p>}
     {!entry && !error && <p role="status">Loading expense…</p>}
     {entry && <><h5>{entry.vendor} · {money(entry.amount_cents, entry.currency)}</h5><p className="description">{entry.description}</p>
@@ -81,7 +81,7 @@ export default function Transparency({ projectId }: { projectId: number }) {
     return () => { live = false; };
   }, [projectId, refresh]);
   const s = data?.financial_summary;
-  return <section className="transparency" aria-labelledby="transparency-title"><h3 id="transparency-title">Financial Transparency</h3><p><a href={`#/projects/${projectId}/analytics`}>Open project analytics</a></p>
+  return <section className="transparency" aria-labelledby="transparency-title"><p className="eyebrow">OPEN BOOKS, WITH CONTEXT</p><h3 id="transparency-title">Financial Transparency</h3><p><a href={`#/projects/${projectId}/analytics`}>Open project analytics</a></p>
     <p>Public records · PayPal Sandbox · amounts reported in USD minor units by the API.</p><button onClick={() => { setData(undefined); setError(''); setRefresh(v => v + 1); }}>Refresh public ledger</button>
     {error && <p role="alert">{error}</p>}{!data && !error && <p role="status">Loading financial transparency…</p>}
     {data && s && <><div className="grid">
@@ -105,5 +105,5 @@ export default function Transparency({ projectId }: { projectId: number }) {
 
 // A shareable route reuses the existing authorized public ledger detail component.
 export function PublicExpensePage({projectId,expenseId}:{projectId:number;expenseId:number}) {
-  return <section><h2>Public expense</h2><a href={`#/projects/${projectId}`}>Return to project</a><ExpenseDetail key={`${projectId}-${expenseId}`} projectId={projectId} expenseId={expenseId}/></section>;
+  return <section className="public-expense-page"><p className="eyebrow">PUBLIC FINANCIAL EVIDENCE</p><h2>Public expense</h2><a href={`#/projects/${projectId}`}>Return to project</a><ExpenseDetail key={`${projectId}-${expenseId}`} projectId={projectId} expenseId={expenseId}/></section>;
 }

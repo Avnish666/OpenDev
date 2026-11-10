@@ -10,6 +10,7 @@ import { displayMoney } from '../api/transparency';
 import {MaintainerFacts} from './DevelopmentFacts';
 import DevelopmentCommunity from './DevelopmentCommunity';
 import { FinancialOverview, FinancialTables } from './FinancialFacts';
+import { EmptyState } from './UI';
 ModuleRegistry.registerModules([AllCommunityModule]);ChartsRegistry.registerModules([ChartsCommunityModule]);
 export default function ProjectAnalyticsCommunity({data,view='financial'}:{data:AnalyticsOverview;view?:'financial'|'development'|'spending'|'maintainer'}){return view==='maintainer'?<MaintainerFacts data={data}/>:view==='development'?<DevelopmentCommunity data={data}/>:<FinancialCommunity data={data} spending={view==='spending'}/>;}
 function FinancialCommunity({data,spending=false}:{data:AnalyticsOverview;spending?:boolean}){
@@ -33,7 +34,7 @@ function FinancialCommunity({data,spending=false}:{data:AnalyticsOverview;spendi
   <div className="analytics-charts">{options.map((option,i)=><div key={i} className="analytics-chart" role="region" aria-label={String(option.title?.text)}><AgCharts options={option}/></div>)}</div>
   <FinancialTables data={data}/>
   <h4>Published expense analytics · current page</h4><p>Expense charts use all matching records. Months are maintainer-reported expense dates, not receipt uploads or PayPal capture dates. Months with no observations are omitted.</p>
-  {!data.expenses.length?<p>No published expense rows match these filters.</p>:<div className="analytics-grid" aria-label="Published expense detail grid"><AgGridReact<AnalyticsExpense> theme={gridTheme} rowData={data.expenses} columnDefs={columns} rowSelection={{mode:'singleRow',checkboxes:false,enableClickSelection:true}} defaultColDef={{sortable:true,resizable:true,editable:false}} getRowId={p=>String(p.data.id)} /></div>}
+  {!data.expenses.length?<EmptyState title={data.financial.published_expense_count === 0 ? "No published expenses yet." : "No published expense rows match these filters."} description={data.financial.published_expense_count === 0 ? "Once the maintainer publishes expense reports, spending analytics will appear here." : "Try a broader date range or reset the dashboard filters to inspect other public records."} />:<div className="analytics-grid" aria-label="Published expense detail grid"><AgGridReact<AnalyticsExpense> theme={gridTheme} rowData={data.expenses} columnDefs={columns} rowSelection={{mode:'singleRow',checkboxes:false,enableClickSelection:true}} defaultColDef={{sortable:true,resizable:true,editable:false}} getRowId={p=>String(p.data.id)} /></div>}
   <p>Column sorting applies to the current page. Use expense order above for server-side date sorting across all pages. Category findings describe full-project categories, not individual payment allegations.</p>
  </div>;
 }

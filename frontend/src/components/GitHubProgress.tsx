@@ -23,9 +23,9 @@ export default function GitHubProgress({ projectId, canManage, active }: { proje
     try { await api<Run>(`/api/projects/${projectId}/github/sync`, 'POST'); setVersion(v => v + 1); }
     catch (e) { setError(message(e)); } finally { setBusy(false); }
   }
-  return <section><h3>GitHub development signals</h3><p>Observed repository activity does not prove funded deliverables are complete. Counts include retained observations; deleted GitHub records may remain.</p>
-    {canManage && <button disabled={busy} onClick={() => void sync()}>{busy ? 'Synchronizing GitHub…' : 'Sync GitHub'}</button>}
-    <button disabled={busy} onClick={() => { setStatus(undefined); setVersion(v => v + 1); }}>Refresh sync status</button>
+  return <section className="github-controls"><p className="eyebrow">CONNECTED TO THE CODE</p><h3>GitHub development signals</h3><p>Observed repository activity does not prove funded deliverables are complete. Counts include retained observations; deleted GitHub records may remain.</p>
+    <div className="actions">{canManage && <button disabled={busy} onClick={() => void sync()}>{busy ? 'Synchronizing GitHub…' : 'Sync GitHub'}</button>}
+    <button disabled={busy} onClick={() => { setStatus(undefined); setVersion(v => v + 1); }}>Refresh sync status</button></div>
     {error && <p role="alert">{error}</p>}{!status && !error && <p role="status">Loading repository progress…</p>}
     {status && <><p>Latest attempt: {status.latest?.status ?? 'Not synchronized'}</p>
       <p>Last successful sync: {status.last_successful_sync_at ? new Date(status.last_successful_sync_at).toLocaleString() : 'Never'}</p>

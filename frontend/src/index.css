@@ -3,21 +3,27 @@
   font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
   color: var(--text); background: var(--bg); color-scheme: light;
   font-synthesis: none; text-rendering: optimizeLegibility; -webkit-font-smoothing: antialiased;
-  --bg: #f7f9fc; --surface: #fff; --surface-raised: #fff; --surface-muted: #f0f4f9;
-  --text: #111827; --muted: #526176; --border: #dce3ed; --input-border: #8191a5;
+  --bg: #f7f9fd; --surface: #fff; --surface-raised: #fff; --surface-muted: #f1f5fb;
+  --text: #101828; --muted: #52647b; --border: #e1e8f0; --input-border: #8191a5;
   --primary: #0066f5; --primary-hover: #0055cc; --link: #005bd6; --on-primary: #fff;
   --soft-blue: #ebf3ff; --blue-text: #064aa9; --navy: #0b1f3a;
   --success-bg: #e8f6ee; --success: #16653d; --warning-bg: #fff4db; --warning: #77500a;
   --error-bg: #fff0f0; --error: #a12626; --focus: #0066f5;
   --shadow: 0 12px 36px #16365d0a; --radius: 16px; --radius-sm: 9px;
+  --visual-bg: #0b2244; --visual-text: #f5f8ff; --visual-muted: #acc4e3; --visual-border: #2c4c75; --visual-accent: #8fc1ff;
+  --shadow-hover: 0 12px 32px #0b1f3a12; --radius-lg: 24px;
+  --type-hero: clamp(2.75rem, 4.8vw, 4.5rem); --type-page: clamp(2rem, 3.4vw, 3rem);
+  --type-section: clamp(1.5rem, 2.2vw, 1.875rem); --type-metric: clamp(1.7rem, 2.8vw, 2.5rem);
+  --duration-fast: 160ms; --duration-normal: 220ms; --ease-out: cubic-bezier(.2,.8,.2,1);
+  --space-5: 20px; --space-10: 40px; --space-16: 64px;
   --space-1: 4px; --space-2: 8px; --space-3: 12px; --space-4: 16px; --space-6: 24px; --space-8: 32px; --space-12: 48px;
 }
 :root[data-theme='dark'] {
-  color-scheme: dark; --bg: #0a111d; --surface: #111d2d; --surface-raised: #17263a; --surface-muted: #18283d;
-  --text: #f1f5fb; --muted: #a6b6ca; --border: #2b3d54; --input-border: #60758f;
+  color-scheme: dark; --bg: #090f1c; --surface: #111d30; --surface-raised: #172944; --surface-muted: #15243a;
+  --text: #f5f8ff; --muted: #a8bdd9; --border: #29405c; --input-border: #60758f;
   --primary: #1266d6; --primary-hover: #0c58bd; --link: #83b8ff; --soft-blue: #142e50; --blue-text: #9cc7ff;
   --success-bg: #143729; --success: #92dfb5; --warning-bg: #392e17; --warning: #f1cd80;
-  --error-bg: #3e2029; --error: #ffb2b2; --focus: #83b8ff; --shadow: 0 12px 36px #0003;
+  --error-bg: #3e2029; --error: #ffb2b2; --focus: #83b8ff; --shadow: 0 8px 28px #0002; --shadow-hover: 0 16px 40px #0004;
 }
 * { box-sizing: border-box; }
 body { margin: 0; min-width: 320px; font-size: 15px; line-height: 1.65; }

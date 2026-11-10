@@ -11,7 +11,7 @@ import { renderToStaticMarkup } from 'react-dom/server';
 let folder, displayMoney, transparencyAPI, Transparency, GitHubProgress, Roadmap, MaintainerProfile, MetricCards, credibility, ProjectProgress, ProgressOverview, GitHubActivity, progress;
 before(async () => {
   folder = await mkdtemp(join(import.meta.dirname, '.compiled-'));
-  for (const file of ['api/client.ts', 'api/transparency.ts', 'components/Transparency.tsx', 'components/GitHubProgress.tsx', 'components/Roadmap.tsx', 'api/credibility.ts', 'pages/Maintainer.tsx', 'api/progress.ts', 'components/ProjectProgress.tsx']) {
+  for (const file of ['components/UI.tsx', 'api/client.ts', 'api/transparency.ts', 'components/Transparency.tsx', 'components/GitHubProgress.tsx', 'components/Roadmap.tsx', 'api/credibility.ts', 'pages/Maintainer.tsx', 'api/progress.ts', 'components/ProjectProgress.tsx']) {
     let source = await readFile(new URL('../src/' + file, import.meta.url), 'utf8');
     source = source.replace('import.meta.env', "({ VITE_API_URL: 'https://api.invalid' })");
     source = source.replace("import './Transparency.css';", '');
@@ -150,4 +150,23 @@ test('GitHub titles render as escaped text and sources reject injected URLs', ()
   assert.equal(progress.githubSource('owner/repo', 'issues', 1), 'https://github.com/owner/repo/issues/1');
   assert.throws(() => progress.githubSource('https://evil.invalid', 'issues', 1));
   assert.throws(() => progress.githubSource('owner/..', 'issues', 1));
+});
+
+test('funding progress uses recorded funding and the same-currency project goal', () => {
+  const data = progressFixture(); data.financial.net_recorded_funding_cents = 4000;
+  const html = renderToStaticMarkup(createElement(ProgressOverview, { data, fundingGoalCents: 10000, currency: 'USD' }));
+  assert.match(html, /40\.0%/);
+  assert.match(html, /<progress[^>]*value="4000"[^>]*max="10000"/);
+  assert.match(html, /40\.00 USD recorded \/ 100\.00 USD goal/);
+  for (const props of [{ fundingGoalCents: 0, currency: 'USD' }, { fundingGoalCents: 10000, currency: 'EUR' }, { fundingGoalCents: Number.MAX_SAFE_INTEGER + 1, currency: 'USD' }]) {
+    assert.doesNotMatch(renderToStaticMarkup(createElement(ProgressOverview, { data, ...props })), /<progress/);
+  }
+});
+
+test('overfunded progress preserves the actual amount while bounding the visual bar', () => {
+  const data = progressFixture(); data.financial.net_recorded_funding_cents = 15000;
+  const html = renderToStaticMarkup(createElement(ProgressOverview, { data, fundingGoalCents: 10000, currency: 'USD' }));
+  assert.match(html, /150\.0%/);
+  assert.match(html, /150\.00 USD recorded \/ 100\.00 USD goal/);
+  assert.match(html, /<progress[^>]*value="10000"[^>]*max="10000"/);
 });
