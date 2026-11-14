@@ -1,147 +1,170 @@
 # OpenDev
 
-Fund open-source projects and inspect the evidence behind their spending and delivery.
-OpenDev brings campaign funding, reported expenses, GitHub observations, roadmap
-commitments, reward fulfillment and cited accountability answers into one application.
+### Fund the work. See the proof.
 
-**Status: local synthetic demonstration ready; public deployment NO-GO.** Real
-PayPal Sandbox acceptance, genuine webhook delivery, Supabase, hosted GitHub OAuth
-and real Ollama inference remain unverified. This is not escrow, a payout service,
-a bank balance, a fraud detector or independent delivery certification.
+**OpenDev** is an AI-powered funding and accountability platform for open-source projects. It helps developers raise support for their work while giving backers a clearer picture of **funding, reported expenses, development progress, and project milestones**.
 
-Start with the [local demo runbook](docs/demo-setup.md),
-[6-minute walkthrough](docs/demo-walkthrough.md), [screenshots](docs/submission/screenshots/README.md)
-and [final handoff](docs/phase7-final-handoff.md).
+Instead of stopping at a successful contribution, OpenDev makes it easier to follow what happens next.
 
-## Problem and users
+[Explore the source code](https://github.com/Avnish666/OpenDev) · [Local setup guide](docs/demo-setup.md) · [Project screenshots](docs/submission/screenshots/README.md)
 
-Backers can see that a campaign raised money without being able to connect spending
-to published evidence and delivery commitments. Maintainers need a practical way to
-report progress without turning GitHub activity into an unsupported promise of completion.
-Visitors explore public campaigns; backers inspect funding and rewards; maintainers
-publish budgets, expenses and roadmaps. Public and private records stay separate.
+> **Project status:** OpenDev has been tested locally with PayPal **Sandbox** contributions and an Ollama/Qwen3 accountability answer with a source citation. This does **not** mean the platform is ready to process real money. Live payouts, public hosting, genuine webhook acceptance, and other production security checks need separate validation. The standard synthetic demo uses deterministic answers and does not require external credentials.
 
-## Features
+## Why OpenDev?
 
-- GitHub OAuth, hashed cookie sessions, repository ownership checks, draft campaigns and reward tiers.
-- Backend-priced PayPal Sandbox orders/captures, verified-webhook reconciliation, immutable refund observations and reward entitlements.
-- Published expense ledger, approved-redaction metadata, deterministic budget findings and private PDF/image extraction.
-- Retained GitHub observations, linked roadmap evidence, append-only deadline/status history and Bryntum Community Gantt.
-- Maintainer outcome indicators with explicit samples and limitations, rather than a trust score.
-- Financial/development dashboards, shared filters and bounded CSV exports using AG Grid/Charts Community.
-- Public read-only accountability chat with deterministic answers and citations; optional bounded Ollama orchestration is disabled in the default demo.
+Open-source maintainers need resources to build great software. Backers, meanwhile, want to know how their support is being used and whether promised work is moving forward.
 
-Implementation and synthetic tests do not establish live-provider acceptance.
+OpenDev connects those two sides through a single workspace: **support a project, review its public financial reports, follow its roadmap, and ask questions backed by project evidence**.
 
-## Architecture and stack
+## Key features
+
+- **PayPal Sandbox funding:** Back projects through simulated PayPal payments, with backend-verified captures and reward entitlements.
+- **GitHub integration:** Sign in with GitHub, link repositories you own, and view development observations.
+- **Transparent reporting:** Publish budgets, expense claims, and approved public supporting-document information.
+- **AI Accountability Assistant:** Ask questions about public funding and progress data. The optional **Qwen3 4B model through Ollama** selects read-only evidence tools, while the backend validates and cites the returned records. A deterministic fallback is available.
+- **Project roadmaps:** Use **Bryntum Gantt Community** to explore milestones, deadlines, dependencies, and recorded schedule changes.
+- **Financial and development analytics:** Explore interactive dashboards powered by **AG Grid Community** and **AG Charts Community**, including filters and CSV exports.
+- **Maintainer tools:** Create campaigns, configure rewards, report spending, and update project commitments.
+
+## Screenshots
+
+The images below come from the repository's **earlier local synthetic demo**. They illustrate the available screens, not real-money transfers or a publicly deployed application. The redesigned interface may look different; replace these with fresh, privacy-reviewed captures when ready.
+
+### Explore projects
+![OpenDev project discovery screen](docs/submission/screenshots/01-public-campaigns.png)
+
+### Project overview
+![Project overview with campaign information](docs/submission/screenshots/02-project-overview.png)
+
+### Financial transparency
+![Public financial transparency dashboard](docs/submission/screenshots/03-financial-transparency.png)
+
+### Roadmap with Bryntum Gantt
+![Bryntum Gantt roadmap and project milestones](docs/submission/screenshots/05-bryntum-roadmap.png)
+
+### Financial analytics with AG Charts and AG Grid
+![Community financial analytics dashboard](docs/submission/screenshots/06-community-financial-analytics.png)
+
+### Accountability chat (deterministic demo)
+![Evidence-based accountability chat from the original synthetic demo](docs/submission/screenshots/09-deterministic-chat.png)
+
+See the [complete screenshot gallery](docs/submission/screenshots/README.md) for expense evidence, development analytics, and maintainer history. **The screenshot above shows deterministic mode**; a newer locally verified Ollama/LLM response should be added as a separate, clearly labeled screenshot after checking that it contains no sensitive information.
+
+## Technology stack
+
+| Area | Technologies |
+| --- | --- |
+| Frontend | React 19, TypeScript, Vite 8, CSS |
+| Backend | Python 3.12, FastAPI, SQLAlchemy |
+| Database | PostgreSQL 16, Alembic |
+| Payments | PayPal Sandbox REST APIs (Orders v2, captures, webhooks) |
+| Authentication and activity | GitHub OAuth and GitHub REST API |
+| AI | Ollama, Qwen3 4B, read-only evidence tools |
+| Charts and tables | AG Charts Community, AG Grid Community |
+| Project timeline | Bryntum Gantt Community |
+| Document workflow | Supabase private storage, PDFium, pypdf, Tesseract |
+| Packaging | Docker |
+
+AG Studio is a **separate optional evaluation integration** under `frontend/studio`; it is **not part of the default Community build** and requires appropriate licensing for public use. APIMatic was used for PayPal development guidance, not as a runtime SDK.
+
+## Getting started
+
+There are two ways to explore OpenDev:
+
+**Option A — Reproducible synthetic demo (recommended for reviewers)**
+
+Follow **[docs/demo-setup.md](docs/demo-setup.md)** for the dedicated local-test database, migrations, sample projects, and guarded launchers. This mode doesn't need PayPal credentials or an Ollama model, and it intentionally disables actual checkout, receipt processing, and model inference.
+
+**Option B — Full local development**
+
+For GitHub OAuth, PayPal Sandbox and Ollama testing, use the normal development servers and your own securely configured providers.
+
+**Prerequisites:** Python 3.12, Node.js 24, npm, PostgreSQL 16 (or Docker), and Git. Install Ollama separately if you want to use the AI model. Tesseract is needed for receipt OCR features and native OCR tests.
+
+From the repository root, set up dependencies in **PowerShell**:
+
+```powershell
+python -m venv .venv
+.\.venv\Scripts\Activate.ps1
+python -m pip install -r backend/requirements-dev.txt
+npm ci --prefix frontend
+```
+
+Create a local `backend/.env` from `backend/.env.example`. Use a **local, dedicated database**, set `FRONTEND_URL=http://127.0.0.1:5173`, and configure the credentials for whichever integrations you plan to test. Keep payment, receipt and LLM features disabled until their dependencies are ready. **Never commit `.env` files or secrets.**
+
+Apply database migrations from the repository root:
+
+```powershell
+cd backend
+python -m alembic upgrade head
+python -m alembic check
+```
+
+Start FastAPI in one terminal (from `backend/`):
+
+```powershell
+python -m uvicorn app.main:app --host 127.0.0.1 --port 8000
+```
+
+Start React in another terminal (from `frontend/`):
+
+```powershell
+$env:VITE_API_URL="http://127.0.0.1:8000"
+npm run dev -- --host 127.0.0.1
+```
+
+Open **http://127.0.0.1:5173**. The backend health endpoint is available at **http://127.0.0.1:8000/api/health**.
+
+For local AI testing, install Ollama, pull the supported model with `ollama pull qwen3:4b`, and configure `LLM_ENABLED=true`, `OLLAMA_BASE_URL=http://127.0.0.1:11434`, `OLLAMA_MODEL=qwen3:4b`, and `AGENT_MODE=llm` in the backend environment. Only enable the full PayPal Sandbox checkout after its merchant and buyer test accounts are configured.
+
+## How it works
 
 ```mermaid
 flowchart LR
-  Browser[React + TypeScript] -->|same-origin /api| API[FastAPI modular monolith]
-  API --> Services[Authorization + domain services]
-  Services --> DB[(PostgreSQL + Alembic)]
-  Services --> GitHub[GitHub OAuth / REST]
-  Services --> PayPal[PayPal Sandbox only]
-  Services --> Storage[Private Supabase storage]
-  Services --> Decoder[Bounded PDFium / pypdf / Tesseract processes]
-  API --> Evidence[Read-only public evidence tools]
-  Evidence --> DB
-  Evidence -. optional, disabled .-> Ollama[Private Ollama endpoint]
+    User[Visitors, backers and maintainers] --> UI[React + TypeScript]
+    UI --> API[FastAPI]
+    API --> DB[(PostgreSQL)]
+    API --> GitHub[GitHub OAuth and activity]
+    API --> PayPal[PayPal Sandbox]
+    API --> Evidence[Public evidence tools]
+    Evidence --> DB
+    Evidence --> Ollama[Optional local Ollama / Qwen3]
+    API --> Storage[Private document storage]
 ```
 
-React 19, TypeScript 5.9, Vite 8; Python 3.12, FastAPI, SQLAlchemy and psycopg;
-PostgreSQL 16 and Alembic. Bryntum Community is pinned to 8.0.0-beta.1. The default
-analytics packages are AG Grid Community 36.2.0 and AG Charts Community 14.2.0.
-AG Studio 3.0.0 and its Enterprise dependencies are isolated in `frontend/studio`.
-The application uses HTTPX for PayPal REST; APIMatic supplied development guidance,
-not an invented runtime SDK dependency. See [sponsor evidence](docs/submission/sponsor-integrations.md).
+**Privacy and accuracy matter:** financial totals are based on recorded provider observations and published reports. They are **not** verified bank balances. An uploaded receipt doesn't independently prove payment, and GitHub activity doesn't certify that a milestone has been delivered. The AI assistant is read-only and designed to cite public evidence rather than invent financial facts.
 
-## Local prerequisites and setup
+## Tests and documentation
 
-Use Python 3.12, Node 24 (the combined image's version), npm, PostgreSQL 16 or Docker,
-and Git. Tesseract plus English data is needed for native OCR tests; no Ollama model
-is needed. Linux examples:
+The repository includes backend and frontend tests, along with browser-based demo checks. Run the frontend checks from `frontend/`:
 
-```sh
-python3.12 -m venv .venv
-. .venv/bin/activate
-python -m pip install -r backend/requirements-dev.txt
-npm ci --prefix frontend
-# If not already installed, install tesseract-ocr and tesseract-ocr-eng
-# through your operating system's package manager before native OCR tests.
+```powershell
+npm test
+npx tsc -b
+npm run lint
+npm run build
 ```
 
-`backend/requirements.txt` is a legacy scientific environment; the application uses
-`requirements-app.txt`, `requirements-payments.txt` and `requirements-dev.txt`.
-Optional Studio is not installed by the normal `npm ci` command. No paid license,
-provider credential, model download or production database is required for the demo.
+Backend tests require a **fresh, migrated, never-seeded test database**, separate from any existing demo or contribution data. See the [validation guide](docs/submission/testing-and-limitations.md) before running the full suite.
 
-Follow [demo setup](docs/demo-setup.md) to create a disposable loopback-only database,
-export the explicit testing configuration, migrate it, seed it twice and start the
-API/frontend. It contains complete commands and shutdown instructions. Do not copy
-historical sample credentials or use production Neon. Never commit `.env` files;
-Vite variables are public bundle configuration, not secret storage.
+More details:
 
-The migration and launch commands, after the documented local target validation, are:
+- [Local demo setup](docs/demo-setup.md)
+- [Technical architecture](docs/submission/technical-architecture.md)
+- [Sponsor integrations](docs/submission/sponsor-integrations.md)
+- [Testing and limitations](docs/submission/testing-and-limitations.md)
+- [Deployment and remaining release checks](docs/phase7-release-blockers.md)
 
-```sh
-(cd backend && python -m alembic upgrade head && python -m alembic check)
-python scripts/demo-data.py --environment local-test > /tmp/opendev-demo-manifest.json
-python scripts/local-demo.py
-# In a second terminal with the same explicit demo environment:
-node frontend/demo.mjs
-```
+## Deployment and limitations
 
-Open `http://127.0.0.1:5173/#/explore`. No migrations run during application startup.
-No seed command resets a database or overwrites unrelated records. The launcher
-binds only to loopback and uses the unchanged authorization routes; there is no demo login bypass.
+OpenDev includes a reviewed **same-origin Docker deployment configuration** at `deploy/Dockerfile`, but a working local demo or deployed backend alone does not establish that the entire platform is publicly production-ready. Public deployment requires additional review of secrets, HTTPS OAuth, database backups, PayPal webhook acceptance, document access controls, licensing, and model hosting. PayPal processing remains **Sandbox-only** in the current implementation.
 
-## Validation
+If you host the backend separately, ensure the frontend is configured with the correct API URL and test cookie/session behavior over HTTPS. Ollama running on your personal computer is not automatically accessible to a hosted backend.
 
-With the activated environment and DATABASE_URL/TEST_DATABASE_URL identifying an
-**separate, fresh, migrated and never-seeded** local `opendev_test_*` database (not the demo DB), run the full suite with features enabled
-**only for this test process**, where external providers are mocked:
+## License
 
-```sh
-(cd backend && APP_ENV=testing CHECKOUT_ENABLED=true RECEIPT_PROCESSING_ENABLED=true LLM_ENABLED=true python -m pytest -q)
-(cd frontend && npm test && npx tsc --noEmit -p tsconfig.app.json && npx tsc --noEmit -p tsconfig.node.json && npm run lint && npm run build)
-python -m pip check
-python scripts/release-credential-audit.py --working-only
-```
+A repository-level open-source license must be chosen and added by someone authorized to grant those rights. Until then, do not assume the application itself is licensed for unrestricted reuse. Third-party components have their own licensing and attribution terms; see [license notes](docs/submission/license-notes.md).
 
-Demo acceptance: `python -m pytest -q tests/test_demo_acceptance.py` from backend.
-With both demo servers running and Chromium installed:
-`node frontend/tests/browser-demo.mjs /tmp/opendev-demo-manifest.json`.
-This captures real application screens, not generated mockups. Current totals and
-exact browser/build/image evidence are in [testing and limitations](docs/submission/testing-and-limitations.md).
+---
 
-## Data boundaries and limitations
-
-Public active-project projections expose published expense facts, separately approved
-redaction metadata, roadmap changes, retained public GitHub observations and aggregate
-outcomes. Original receipts, storage keys, raw OCR, reviewer/backer notes, email and
-session secrets remain private. Authorization and read-only tool boundaries run in
-backend code. Public citations identify retrieved projections; they do not guarantee
-semantic relevance or completeness. Numerical answers and accounting stay deterministic.
-
-Receipts do not prove vendor payment. GitHub activity does not certify delivery.
-Unknown historical refunds remain unknown and conservatively excluded. Owner aggregates
-cover current active public ownership, not a lifetime track record. Worker-local limits
-and decoder process limits do not establish full OS containment. Large beta Gantt and
-analytics bundles still need broader device/browser and slow-network acceptance.
-
-## Licensing and deployment
-
-Default Community package declarations are permissive, but the application has **no
-authorized root license decision**. No license grant is invented here. PDFium's bundled
-notices have been inventoried; whole-app distribution, native/transitive notices and
-prior artifacts still need owner signoff. Optional AG Studio/Enterprise is commercial,
-local evaluation only where permitted, and excluded from the default build. Evaluation
-flags or a trial watermark do not authorize public use. See [license notes](docs/submission/license-notes.md).
-
-`deploy/Dockerfile` and `deploy/environment-manifest.json` are review artifacts for a same-origin
-Community image, not evidence of a deployment. Production defaults disable checkout,
-receipt processing and LLM. Keep the [release gates](docs/phase7-release-blockers.md)
-open until actual evidence closes them. Deterministic hosting is the recommended
-zero-budget candidate; model cohosting on Render Free is not established.
-No public demo/submission URL or completed video is claimed.
+**OpenDev — Fund the work. See the proof.**
