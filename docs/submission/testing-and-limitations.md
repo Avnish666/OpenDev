@@ -35,7 +35,7 @@ insufficient_evidence rather than inventing a trend. These cases are included in
 full total, not counted twice. [Actual answers](demo-answers.json) contain only public
 synthetic response data; dynamic dates/hashes are genuine test output.
 
-The new demo browser check captures [nine genuine PNGs](screenshots/README.md), verifies
+The new demo browser check captures [nine synthetic demo captures](https://github.com/Avnish666/OpenDev/blob/d61f7c7d91536076d9886ae950373c03a445a29c/docs/submission/screenshots/README.md), verifies
 actual Community chart/Gantt rendering, expense CSV, cited deterministic chat, private
 project 404 and signed-out creation denial. It runs the guarded loopback app without auth
 or provider overrides. Separate existing chat/analytics browser journeys use real React,

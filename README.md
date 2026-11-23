@@ -28,27 +28,48 @@ OpenDev connects those two sides through a single workspace: **support a project
 
 ## Screenshots
 
-The images below come from the repository's **earlier local synthetic demo**. They illustrate the available screens, not real-money transfers or a publicly deployed application. The redesigned interface may look different; replace these with fresh, privacy-reviewed captures when ready.
+These screenshots show the OpenDev app running locally. Funding figures shown in the app come from PayPal Sandbox records.
 
-### Explore projects
-![OpenDev project discovery screen](docs/submission/screenshots/01-public-campaigns.png)
+### Landing page and project discovery
 
-### Project overview
-![Project overview with campaign information](docs/submission/screenshots/02-project-overview.png)
+![OpenDev landing page with links to explore projects and create a campaign](docs/submission/screenshots/landing-page.png)
 
-### Financial transparency
-![Public financial transparency dashboard](docs/submission/screenshots/03-financial-transparency.png)
+![Project directory with campaign cards, funding goals, and search](docs/submission/screenshots/explore-projects.png)
 
-### Roadmap with Bryntum Gantt
-![Bryntum Gantt roadmap and project milestones](docs/submission/screenshots/05-bryntum-roadmap.png)
+### Financial accountability and budget analytics
 
-### Financial analytics with AG Charts and AG Grid
-![Community financial analytics dashboard](docs/submission/screenshots/06-community-financial-analytics.png)
+![Recorded Sandbox funding, reported spending, and evidence coverage](docs/submission/screenshots/financial-accountability.png)
 
-### Accountability chat (deterministic demo)
-![Evidence-based accountability chat from the original synthetic demo](docs/submission/screenshots/09-deterministic-chat.png)
+![AG Charts Community chart comparing planned allocations and reported spending](docs/submission/screenshots/budget-comparison-chart.png)
 
-See the [complete screenshot gallery](docs/submission/screenshots/README.md) for expense evidence, development analytics, and maintainer history. **The screenshot above shows deterministic mode**; a newer locally verified Ollama/LLM response should be added as a separate, clearly labeled screenshot after checking that it contains no sensitive information.
+![Sortable budget table with exact category amounts](docs/submission/screenshots/budget-categories.png)
+
+### AI Accountability Assistant
+
+The assistant answers questions about public project records. The captured answers show the deterministic mode, including a fallback after an LLM request.
+
+![Deterministic Sandbox funding answer with citation and limitations controls](docs/submission/screenshots/assistant-deterministic-answer.png)
+
+![Expanded limitations, including the reason for deterministic fallback](docs/submission/screenshots/assistant-answer-limitations.png)
+
+<details>
+<summary>More app screenshots</summary>
+
+![Close-up of the OpenDev landing page headline](docs/submission/screenshots/landing-page-detail.png)
+
+![Expense report scope, export limits, and snapshot timestamps](docs/submission/screenshots/expense-reporting-scope.png)
+
+![Accountability Assistant question form and execution-mode selector](docs/submission/screenshots/assistant-question.png)
+
+![Accountability Assistant retrieving public evidence](docs/submission/screenshots/assistant-retrieving-evidence.png)
+
+![Funding question and its returned deterministic answer](docs/submission/screenshots/assistant-question-and-answer.png)
+
+![Close-up of the returned deterministic funding answer](docs/submission/screenshots/assistant-answer-detail.png)
+
+</details>
+
+[Browse the complete screenshot gallery](docs/submission/screenshots/README.md).
 
 ## Technology stack
 

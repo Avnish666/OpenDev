@@ -35,8 +35,7 @@ hidden by a local test count.
    Keep the local/synthetic label, actual deterministic mode and unverified-provider
    disclosures visible. Watch the full recording, remove secrets/private material,
    check audio/legibility and verify the organizer's file/duration rules.
-6. [ ] Select the actual captured screenshots from `screenshots/`; use captions saying
-   local synthetic evidence. Check the nine file hashes and ensure no personal data,
+6. [ ] Select screenshots from the [synthetic demo captures](https://github.com/Avnish666/OpenDev/blob/d61f7c7d91536076d9886ae950373c03a445a29c/docs/submission/screenshots/README.md) and caption them as local synthetic evidence. Check the nine file hashes and ensure no personal data,
    cookies, raw private receipts or provider tokens appear. Optional Studio is not in
    these screenshots; do not claim it is.
 7. [ ] After explicit owner approval only, execute the reviewed commit sequence in the

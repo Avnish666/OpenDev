@@ -236,7 +236,7 @@ alternative if applicable. Separately close public release gates with actual evi
 - `docs/demo-setup.md`, `docs/demo-walkthrough.md`: complete local commands and timed navigation/questions/fallbacks.
 - `docs/submission/project-summary.md`, `technical-architecture.md`, `sponsor-integrations.md`, `demo-script.md`, `testing-and-limitations.md`, `submission-checklist.md`: the six requested core submission documents.
 - `docs/submission/license-notes.md`, `demo-answers.json`, dependency/advisory JSON and `local-container-capacity.json`: scope-limited evidence and remaining signoff.
-- `docs/submission/screenshots/README.md`, `evidence.json`, nine PNGs: genuine browser captures and hash/caption manifest.
+- Nine synthetic demo browser captures and their [original hash and caption manifest](https://github.com/Avnish666/OpenDev/blob/d61f7c7d91536076d9886ae950373c03a445a29c/docs/submission/screenshots/evidence.json).
 - `backend/app/acceptance/demo.py`, `scripts/demo-data.py`, `scripts/local-demo.py`, `frontend/demo.mjs`: guarded fixture and loopback launchers, no auth bypass.
 - `backend/tests/test_demo_acceptance.py`, `frontend/tests/browser-demo.mjs`: safety/idempotence/public acceptance and actual capture automation.
 - Existing chat/analytics browser helpers: document-ready polling fix. Blocker/deployment docs: current handoff links.

@@ -1,29 +1,19 @@
-# Actual local synthetic demonstration screenshots
+# OpenDev app screenshots
 
-These nine PNGs are unaltered captures from a real Chromium browser using the React
-app, loopback API and a seeded disposable PostgreSQL database. They are **local
-synthetic evidence**, not live GitHub/PayPal/Supabase/Ollama verification or screenshots
-of a deployed service. No generated mockups, credential screens, private receipt
-contents or personal identities are included. Community analytics is not AG Studio.
+These local app captures show project discovery, financial reporting, Community analytics, and the Accountability Assistant. Funding figures come from PayPal Sandbox records. The assistant answers shown were returned in deterministic mode.
 
-| Capture | What it shows |
+| Screenshot | What it shows |
 | --- | --- |
-| [01 Public campaigns](01-public-campaigns.png) | Two explicitly labeled fixture campaigns |
-| [02 Project overview](02-project-overview.png) | Goal, budget and fixture identity/repository reference |
-| [03 Financial transparency](03-financial-transparency.png) | 950 USD recorded net funding, 650 USD spending and Hosting overrun |
-| [04 Expense evidence](04-expense-evidence.png) | Published expense with approved fixture metadata, not stored receipt bytes |
-| [05 Bryntum roadmap](05-bryntum-roadmap.png) | Actual Community Gantt tasks/dependency and fixture activity |
-| [06 Community financial analytics](06-community-financial-analytics.png) | Real Community charts fed by public synthetic data |
-| [07 Development analytics](07-development-analytics.png) | Community development/commitment charts |
-| [08 Maintainer history](08-maintainer-history.png) | Current-owner outcome indicators without a trust score |
-| [09 Deterministic chat](09-deterministic-chat.png) | Actual returned mode, record-derived answer and opened source citation |
-
-[evidence.json](evidence.json) records filenames, captions, SHA-256 hashes, 1440×1000
-viewport and browser acceptance checks. Reproduce with the demo servers running:
-`node frontend/tests/browser-demo.mjs /tmp/opendev-demo-manifest.json` from the root.
-The command refreshes captures. IDs and timestamps can differ on later runs; record
-that new evidence rather than implying pixel-level reproducibility.
-
-No Studio evaluation screenshot was captured; the separate local evaluation journey
-is tested, but recording/sharing rights remain an owner review. No completed video
-or permission to publish the application/commercial assets is implied by these PNGs.
+| [Landing page](landing-page.png) | OpenDev landing page with links to explore projects and create a campaign |
+| [Landing page detail](landing-page-detail.png) | Close-up of the OpenDev landing page headline |
+| [Explore projects](explore-projects.png) | Project directory with campaign cards, funding goals, and search |
+| [Financial accountability](financial-accountability.png) | Recorded Sandbox funding, reported spending, and evidence coverage |
+| [Budget comparison chart](budget-comparison-chart.png) | AG Charts Community chart comparing planned allocations and reported spending |
+| [Budget categories](budget-categories.png) | Sortable budget table with exact category amounts |
+| [Expense reporting scope](expense-reporting-scope.png) | Expense report scope, export limits, and snapshot timestamps |
+| [Assistant question](assistant-question.png) | Accountability Assistant question form and execution-mode selector |
+| [Assistant retrieving evidence](assistant-retrieving-evidence.png) | Accountability Assistant retrieving public evidence |
+| [Assistant deterministic answer](assistant-deterministic-answer.png) | Deterministic Sandbox funding answer with citation and limitations controls |
+| [Assistant question and answer](assistant-question-and-answer.png) | Funding question and its returned deterministic answer |
+| [Assistant answer detail](assistant-answer-detail.png) | Close-up of the returned deterministic funding answer |
+| [Assistant answer limitations](assistant-answer-limitations.png) | Expanded limitations, including the reason for deterministic fallback |
